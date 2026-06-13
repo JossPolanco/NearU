@@ -1,7 +1,10 @@
+import { loginUser } from '../services/auth/authService';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { supabaseClient } from '../utils/supabase';
+import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import React from 'react'
+import { React, useEffect } from 'react'
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -10,18 +13,36 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            console.log("Auth state changed:", event, session);
+            session?.user ? navigate('/home') : navigate('/');
+        });
+    }, []);
+
     const { register, handleSubmit, formState: { errors }, watch } = useForm({
         resolver: zodResolver(loginSchema)
     })
 
-    const handleLogin = (data) => {
-        console.log(data);
-    }
-
     const loginMutation = useMutation({
+        mutationFn: loginUser,
 
+        onSuccess: (data) => {
+            console.log("Login successful:", data);
+            navigate('/home');
+        },
+
+        onError: (error) => {
+            console.log(error);
+        }
     })
 
+    const handleLogin = (data) => {
+        console.log("Data en handleLogin:", data);
+        loginMutation.mutate(data);
+    };
 
     return (
         <div className="hero bg-base-200 min-h-screen">
@@ -42,17 +63,19 @@ export default function Login() {
                                 {errors.email && (
                                     <span className="mt-2 text-sm text-error">{errors.email.message}</span>
                                 )}
+                                
                                 <label className="label">Contraseña</label>
                                 <input type="password" className="input" placeholder="Contraseña" {...register("password")} />
+
                                 {errors.password && (
                                     <span className="mt-2 text-sm text-error">{errors.password.message}</span>
                                 )}
                                 <div className="flex justify-between mt-2">
                                     {/* <div><a className="link link-hover">Forgot password?</a></div> */}
-                                    <div><a className="link link-hover">Crear Cuenta</a></div>
+                                    <div><a className="link link-hover" onClick={() => navigate("/register")}>Crear Cuenta</a></div>
                                 </div>
 
-                                <button className="btn btn-neutral mt-4">Iniciar Sesión</button>
+                                <button type="submit" className="btn btn-neutral mt-4" >Iniciar Sesión</button>
                             </div>
                         </form>
                     </div>

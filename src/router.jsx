@@ -1,5 +1,5 @@
-// import ProtectedRoute from "./features/auth/components/ProtectedRoute";
-import { Register, DrawingPage, Home, TestingPage } from "./pages";
+import AuthProvider from "./utils/AuthContext";
+import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration } from "./pages";
 import { createBrowserRouter } from "react-router";
 import Layout from "./Layout";
 import React from "react";
@@ -11,33 +11,45 @@ export const router = createBrowserRouter([
         element: <App />
     },
     {
-        path: "/home", element: (
-            <Layout>
-                <Home />
-            </Layout>
-        ),
+        path: "*",
+        element: <NotFound />
     },
     {
         path: "/register", element: (
-            // <Layout>
-            // </Layout>
-                <Register />
+            <Register />
+        ),
+    },
+    {
+        path: "/create-password",
+        element: <PasswordRegistration />
+    },
+    {
+        path: "/home", element: (
+            <AuthProvider>
+                <Layout>
+                    <Home />
+                </Layout>
+            </AuthProvider>
         ),
     },
     {
         path: "/drawing",
         element: (
-            <Layout>
-                <DrawingPage />
-            </Layout>
+            <AuthProvider>
+                <Layout>
+                    <DrawingPage />
+                </Layout>
+            </AuthProvider>
         ),
     },
     {
         path: "/testing",
         element: (
-            <Layout>
-                <TestingPage />
-            </Layout>
+            <AuthProvider>
+                <Layout>
+                    <TestingPage />
+                </Layout>
+            </AuthProvider>
         ),
     }
 ]);

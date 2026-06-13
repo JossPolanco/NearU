@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import ReactDOM from "react-dom/client";
 import { router } from "./router";
 import Layout from "./Layout";
-import { React } from "react";
+import React from "react";
 import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

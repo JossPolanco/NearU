@@ -22,7 +22,7 @@ export default function Register() {
         mutationFn: registerUser,
 
         onSuccess: (data) => {
-            navigate('/');
+            navigate('/create-password');
         },
 
         onError: (error) => {
@@ -76,10 +76,7 @@ export default function Register() {
                                 </span>
                             </div>
                         ) : (
-                            <form
-                                onSubmit={handleSubmit(onSubmit)}
-                                className="space-y-4"
-                            >
+                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                                 <div>
                                     <label className="label">
                                         <span className="label-text">
@@ -109,13 +106,7 @@ export default function Register() {
                                     </div>
                                 )}
 
-                                <button
-                                    type="submit"
-                                    className={`btn btn-primary w-full ${sendMagicLinkMutation.isPending
-                                        ? "btn-disabled"
-                                        : ""
-                                        }`}
-                                >
+                                <button type="submit" className={`btn btn-primary w-full ${sendMagicLinkMutation.isPending ? "btn-disabled" : ""}`}>
                                     {sendMagicLinkMutation.isPending ? (
                                         <>
                                             <span className="loading loading-spinner loading-sm"></span>
@@ -133,10 +124,7 @@ export default function Register() {
 
                         <div className="divider">o</div>
 
-                        <Link
-                            to="/login"
-                            className="btn btn-outline w-full"
-                        >
+                        <Link to="/" className="btn btn-outline w-full" >
                             Ya tengo una cuenta
                         </Link>
                     </div>
