@@ -8,8 +8,6 @@ export async function loginUser({ email, password }) {
         password: password,
     })
 
-    console.log("data en loginUser después de la llamada a supabase:", data);
-
     if (error) throw error;
     return data;
 }

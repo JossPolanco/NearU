@@ -1,6 +1,6 @@
+import { useNavigate, Outlet } from "react-router";
 import { useEffect, useState } from "react";
 import { supabaseClient } from "./supabase";
-import { useNavigate } from "react-router";
 
 export default function AuthProvider({ children }) {
     const navigate = useNavigate();
@@ -24,5 +24,5 @@ export default function AuthProvider({ children }) {
         return <div>Loading...</div>;
     }
 
-    return children;
+    return <Outlet />;
 }

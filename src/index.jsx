@@ -4,10 +4,13 @@ import ReactDOM from "react-dom/client";
 import { router } from "./router";
 import Layout from "./Layout";
 import React from "react";
-import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient()
+
+// APPLY THEME
+const savedTheme = localStorage.getItem('theme') || 'valentine';
+document.documentElement.setAttribute('data-theme', savedTheme);
 
 root.render(
     <React.StrictMode>

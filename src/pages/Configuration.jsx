@@ -26,8 +26,7 @@ export default function Configuration() {
     const logoutMutation = useMutation({
         mutationFn: logoutUser,
 
-        onSuccess: () => {
-            console.log("Logout successful");
+        onSuccess: () => {            
             navigate('/');
         },
     })

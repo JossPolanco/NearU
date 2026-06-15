@@ -16,10 +16,11 @@ export default function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        supabaseClient.auth.onAuthStateChange((event, session) => {
-            console.log("Auth state changed:", event, session);
+        const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((event, session) => {
             session?.user ? navigate('/home') : navigate('/');
+            // console.log("USER SESSION:", event, session);
         });
+        return () => subscription.unsubscribe();
     }, []);
 
     const { register, handleSubmit, formState: { errors }, watch } = useForm({
@@ -30,7 +31,6 @@ export default function Login() {
         mutationFn: loginUser,
 
         onSuccess: (data) => {
-            console.log("Login successful:", data);
             navigate('/home');
         },
 
@@ -40,7 +40,6 @@ export default function Login() {
     })
 
     const handleLogin = (data) => {
-        console.log("Data en handleLogin:", data);
         loginMutation.mutate(data);
     };
 
@@ -63,7 +62,7 @@ export default function Login() {
                                 {errors.email && (
                                     <span className="mt-2 text-sm text-error">{errors.email.message}</span>
                                 )}
-                                
+
                                 <label className="label">Contraseña</label>
                                 <input type="password" className="input" placeholder="Contraseña" {...register("password")} />
 

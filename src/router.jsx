@@ -1,18 +1,13 @@
 import AuthProvider from "./utils/AuthContext";
-import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration } from "./pages";
+import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login } from "./pages";
 import { createBrowserRouter } from "react-router";
 import Layout from "./Layout";
 import React from "react";
-import App from "./App";
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <App />
-    },
-    {
-        path: "*",
-        element: <NotFound />
+        element: <Login />
     },
     {
         path: "/register", element: (
@@ -20,46 +15,47 @@ export const router = createBrowserRouter([
         ),
     },
     {
-        path: "/create-password",
-        element: <PasswordRegistration />
+        element: <AuthProvider />,
+        children: [
+            {
+                path: "/home", element: (
+                    <Layout>
+                        <Home />
+                    </Layout>
+                ),
+            },
+            {
+                path: "/create-password",
+                element: <PasswordRegistration />
+            },
+            {
+                path: "/drawing",
+                element: (
+                    <Layout>
+                        <DrawingPage />
+                    </Layout>
+                ),
+            },
+            {
+                path: "/testing",
+                element: (
+                    <Layout>
+                        <TestingPage />
+                    </Layout>
+                ),
+            },
+            {
+                path: "/config",
+                element: (
+                    <Layout>
+                        <Configuration />
+                    </Layout>
+                ),
+            }
+        ]
     },
     {
-        path: "/home", element: (
-            <AuthProvider>
-                <Layout>
-                    <Home />
-                </Layout>
-            </AuthProvider>
-        ),
+        path: "*",
+        element: <NotFound />
     },
-    {
-        path: "/drawing",
-        element: (
-            <AuthProvider>
-                <Layout>
-                    <DrawingPage />
-                </Layout>
-            </AuthProvider>
-        ),
-    },
-    {
-        path: "/testing",
-        element: (
-            <AuthProvider>
-                <Layout>
-                    <TestingPage />
-                </Layout>
-            </AuthProvider>
-        ),
-    },
-    {
-        path: "/config",
-        element: (
-            <AuthProvider>
-                <Layout>
-                    <Configuration />
-                </Layout>
-            </AuthProvider>
-        ),
-    }
 ]);
