@@ -1,0 +1,31 @@
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+
+const Modal = forwardRef(function Modal({ className, modalTitle = "Modal", modalSubtitle = "", children }, ref) {
+    const dialogRef = useRef(null);
+
+    useImperativeHandle(ref, () => ({
+        open: () => dialogRef.current.showModal(),
+        close: () => dialogRef.current.close(),
+    }))
+
+    return (
+        <dialog ref={dialogRef} className="modal sm:modal-middle">
+            <div className={`modal-box w-11/12 max-w-5xl rounded-3xl border border-base-300/60 bg-base-100/95 p-0 shadow-2xl backdrop-blur ${className}`}>
+                <div className="flex justify-end w-full px-4 pt-2">                
+                    <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-soft btn-error animate-pulse">✕</button>
+                    </form>
+                </div>
+                <div className="px-6 pb-6 pt-2">
+                    <h4 className="text-lg font-semibold ">{modalTitle}</h4>
+                        {modalSubtitle ? (
+                            <p className="text-sm text-base-content/70 pb-2">{modalSubtitle}</p>
+                        ) : null}
+                    {children}
+                </div>
+            </div>
+        </dialog>
+    );
+});
+
+export default Modal;
