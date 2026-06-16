@@ -18,8 +18,8 @@ export async function registerUser({ email }) {
     const { data, error } = await supabaseClient.auth.signInWithOtp({
         email: trimmedEmail,
     });
-
-    if (error) throw error;
+    console.log(data, error);
+    if (error) throw error;    
     return data;
 }
 

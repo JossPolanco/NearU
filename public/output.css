@@ -806,6 +806,34 @@
       }
     }
   }
+  .chat-bubble {
+    @layer daisyui.l1.l2.l3 {
+      position: relative;
+      display: block;
+      width: fit-content;
+      border-radius: var(--radius-field);
+      background-color: var(--color-base-300);
+      padding-inline: calc(0.25rem * 4);
+      padding-block: calc(0.25rem * 2);
+      color: var(--color-base-content);
+      grid-row-end: 3;
+      min-height: 2rem;
+      min-width: 2.5rem;
+      max-width: 90%;
+      &:before {
+        position: absolute;
+        bottom: calc(0.25rem * 0);
+        height: calc(0.25rem * 3);
+        width: calc(0.25rem * 3);
+        background-color: inherit;
+        content: "";
+        mask-repeat: no-repeat;
+        mask-image: var(--mask-chat);
+        mask-position: 0px -1px;
+        mask-size: 0.8125rem;
+      }
+    }
+  }
   .avatar {
     @layer daisyui.l1.l2.l3 {
       position: relative;
@@ -878,8 +906,63 @@
   .relative {
     position: relative;
   }
+  .sticky {
+    position: sticky;
+  }
   .inset-0 {
     inset: calc(var(--spacing) * 0);
+  }
+  .chat-end {
+    @layer daisyui.l1.l2 {
+      place-items: end;
+      grid-template-columns: 1fr auto;
+      .chat-header {
+        grid-column-start: 1;
+      }
+      .chat-footer {
+        grid-column-start: 1;
+      }
+      .chat-image {
+        grid-column-start: 2;
+      }
+      .chat-bubble {
+        grid-column-start: 1;
+        border-end-end-radius: 0;
+        &:before {
+          transform: rotateY(180deg);
+          inset-inline-start: 100%;
+        }
+        [dir="rtl"] &:before {
+          transform: rotateY(0deg);
+        }
+      }
+    }
+  }
+  .chat-start {
+    @layer daisyui.l1.l2 {
+      place-items: start;
+      grid-template-columns: auto 1fr;
+      .chat-header {
+        grid-column-start: 2;
+      }
+      .chat-footer {
+        grid-column-start: 2;
+      }
+      .chat-image {
+        grid-column-start: 1;
+      }
+      .chat-bubble {
+        grid-column-start: 2;
+        border-end-start-radius: 0;
+        &:before {
+          transform: rotateY(0deg);
+          inset-inline-start: -0.75rem;
+        }
+        [dir="rtl"] &:before {
+          transform: rotateY(180deg);
+        }
+      }
+    }
   }
   .top-0 {
     top: calc(var(--spacing) * 0);
@@ -942,6 +1025,14 @@
       box-shadow: oklch(0% 0 0/ 0.25) 0px 25px 50px -12px;
       overflow-y: auto;
       overscroll-behavior: contain;
+    }
+  }
+  .chat-header {
+    @layer daisyui.l1.l2.l3 {
+      grid-row-start: 1;
+      display: flex;
+      gap: calc(0.25rem * 1);
+      font-size: 0.6875rem;
     }
   }
   .divider {
@@ -1098,6 +1189,15 @@
       grid-auto-rows: max-content;
     }
   }
+  .chat {
+    @layer daisyui.l1.l2.l3 {
+      display: grid;
+      grid-auto-rows: min-content;
+      column-gap: calc(0.25rem * 3);
+      padding-block: calc(0.25rem * 1);
+      --mask-chat: url("data:image/svg+xml,%3csvg width='13' height='13' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='M0 11.5004C0 13.0004 2 13.0004 2 13.0004H12H13V0.00036329L12.5 0C12.5 0 11.977 2.09572 11.8581 2.50033C11.6075 3.35237 10.9149 4.22374 9 5.50036C6 7.50036 0 10.0004 0 11.5004Z'/%3e%3c/svg%3e");
+    }
+  }
   .card-title {
     @layer daisyui.l1.l2.l3 {
       display: flex;
@@ -1153,6 +1253,9 @@
   }
   .h-72 {
     height: calc(var(--spacing) * 72);
+  }
+  .h-screen {
+    height: 100vh;
   }
   .min-h-60 {
     min-height: calc(var(--spacing) * 60);
@@ -1294,6 +1397,9 @@
   .overflow-hidden {
     overflow: hidden;
   }
+  .overflow-y-auto {
+    overflow-y: auto;
+  }
   .rounded {
     border-radius: 0.25rem;
   }
@@ -1393,6 +1499,9 @@
   .py-1\.5 {
     padding-block: calc(var(--spacing) * 1.5);
   }
+  .py-2 {
+    padding-block: calc(var(--spacing) * 2);
+  }
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
   }
@@ -1407,6 +1516,9 @@
   }
   .pb-6 {
     padding-bottom: calc(var(--spacing) * 6);
+  }
+  .pb-16 {
+    padding-bottom: calc(var(--spacing) * 16);
   }
   .text-center {
     text-align: center;
@@ -1517,6 +1629,9 @@
   }
   .opacity-40 {
     opacity: 40%;
+  }
+  .opacity-50 {
+    opacity: 50%;
   }
   .opacity-60 {
     opacity: 60%;

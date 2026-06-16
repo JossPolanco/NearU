@@ -1,5 +1,5 @@
+import { Settings, House, PenLine, MessageCircleMore } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { Settings, House, PenLine } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Dockbar({ children }) {
@@ -19,6 +19,11 @@ export default function Dockbar({ children }) {
                 <button className={active === 'drawing' ? 'dock-active' : ''} onClick={() => setDockActive('drawing', '/drawing')}>
                     <PenLine size={18} />
                     <span className="dock-label">Dibujo</span>
+                </button>
+
+                <button className={active === 'chat' ? 'dock-active' : ''} onClick={() => setDockActive('chat', '/chat')}>
+                    <MessageCircleMore size={18} />
+                    <span className="dock-label">Chat</span>
                 </button>
 
                 <button className={active === 'home' ? 'dock-active' : ''} onClick={() => setDockActive('home', '/home')} >
