@@ -11,6 +11,7 @@ export default function MessageField() {
         mutationFn: sendMessage,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['messages'] });
+            setMessage("")
         },
 
         onError: (error) => {

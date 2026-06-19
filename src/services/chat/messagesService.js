@@ -1,5 +1,25 @@
 import { supabaseClient } from "../../utils/supabase";
 
+// SUSCRIPCION PARA PODER OBTENER LOS MENSAJES CADA VEZ QUE SE INSERTE EN LA TABLA
+export function subscribeToMessages(callback) {
+    const channel = supabaseClient
+        .channel('messages-channel')
+        .on(
+            'postgres_changes',
+            {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'tbl_messages',
+            },
+            (payload) => {
+                callback(payload.new);
+            }
+        )
+        .subscribe();
+
+    return channel;
+}
+
 export async function fetchMessages() {
     const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
 

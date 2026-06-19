@@ -42,3 +42,13 @@ export async function getUserProfile() {
 
     return result.data;
 }
+
+export async function getUserId(){
+    const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
+
+    if (userError) {
+        throw userError;
+    }
+
+    return user.id;
+}
