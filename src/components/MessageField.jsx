@@ -1,16 +1,14 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { sendMessage } from "../services/chat/messagesService";
+import { useMutation } from "@tanstack/react-query";
 import { Send } from 'lucide-react';
 import { useState } from "react";
-import { sendMessage } from "../services/chat/messagesService";
 
 export default function MessageField() {
     const [message, setMessage] = useState("");
-    const queryClient = useQueryClient();
 
     const sendMessageMutation = useMutation({
         mutationFn: sendMessage,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['messages'] });
             setMessage("")
         },
 
@@ -25,6 +23,7 @@ export default function MessageField() {
                 type="text"
                 placeholder="Mensaje..."
                 className="input input-bordered flex-1"
+                value={message}
                 onChange={(e) => setMessage(e.target.value)}
             />
 

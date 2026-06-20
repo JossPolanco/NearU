@@ -22,6 +22,7 @@
     "dev": "vite"
   },
   "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@vitejs/plugin-react": "^5.1.4",
     "vite": "^7.3.1"
   }

@@ -1,11 +1,9 @@
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { fetchMessages, subscribeToMessages } from "../services/chat/messagesService";
-import MessageField from "../components/MessageField";
-
-import ChatConf from "../components/ChatConf";
-import { supabaseClient } from "../utils/supabase";
-import { useEffect } from "react";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { getUserId } from "../services/user/userService";
+import MessageField from "../components/MessageField";
+import ChatConf from "../components/ChatConf";
+import { useEffect } from "react";
 
 export default function ChatPage() {
 
@@ -22,33 +20,9 @@ export default function ChatPage() {
     });
 
     useEffect(() => {
-        const channel = supabaseClient
-            .channel('messages')
-            .on(
-                'postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'tbl_messages',
-                },
-                (payload) => {
-                    queryClient.setQueryData(
-                        ['messages'],
-                        (oldMessages = []) => [
-                            ...oldMessages,
-                            payload.new
-                        ]
-                    );
-                }
-            )
-            .subscribe();
-
-        return () => {
-            supabaseClient.removeChannel(channel);
-        };
+        const unsubscribe = subscribeToMessages(queryClient);
+        return () => unsubscribe();
     }, [queryClient]);
-
-    console.log(messages);
 
     return (
         <div className="h-screen flex flex-col pb-16">

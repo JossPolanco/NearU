@@ -1,9 +1,10 @@
+import { encryptMessage, decryptMessage } from "../../utils/crypto";
 import { supabaseClient } from "../../utils/supabase";
 
 // SUSCRIPCION PARA PODER OBTENER LOS MENSAJES CADA VEZ QUE SE INSERTE EN LA TABLA
-export function subscribeToMessages(callback) {
+export function subscribeToMessages(queryClient) {
     const channel = supabaseClient
-        .channel('messages-channel')
+        .channel('messages')
         .on(
             'postgres_changes',
             {
@@ -11,13 +12,25 @@ export function subscribeToMessages(callback) {
                 schema: 'public',
                 table: 'tbl_messages',
             },
-            (payload) => {
-                callback(payload.new);
+            async (payload) => {
+                const current = queryClient.getQueryData(['messages']) ?? [];
+                if (current.some(m => m.id === payload.new.id)) return;
+
+                const decryptedContent = await decryptMessage(payload.new.content);
+                queryClient.setQueryData(
+                    ['messages'],
+                    (oldMessages = []) => [
+                        ...oldMessages,
+                        { ...payload.new, content: decryptedContent }
+                    ]
+                );
             }
         )
         .subscribe();
 
-    return channel;
+    return () => {
+        supabaseClient.removeChannel(channel);
+    };
 }
 
 export async function fetchMessages() {
@@ -36,11 +49,18 @@ export async function fetchMessages() {
         throw error;
     }
 
-    return data;
+    return Promise.all(data.map(async (message) => ({
+        ...message,
+        content: await decryptMessage(message.content)
+    })));
 }
 
 export async function sendMessage({ contain }) {
     const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
+
+    if (!contain?.trim()) throw new Error("Mensaje vacío");
+
+    const encryptedContent = await encryptMessage(contain);
 
     if (userError) throw userError;
 
@@ -56,7 +76,7 @@ export async function sendMessage({ contain }) {
     // Insertar el mensaje en la tabla 'tbl_messages' con sender_id, receiver_id y content
     const { data, error } = await supabaseClient
         .from('tbl_messages')
-        .insert({ sender_id: user.id, receiver_id: otherUser.id, content: contain });
+        .insert({ sender_id: user.id, receiver_id: otherUser.id, content: encryptedContent });
 
     if (error) throw error;
 

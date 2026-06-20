@@ -54,6 +54,9 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
+      '@vitejs/plugin-basic-ssl':
+        specifier: ^2.3.0
+        version: 2.3.0(vite@7.3.5(jiti@2.7.0)(lightningcss@1.32.0))
       '@vitejs/plugin-react':
         specifier: ^5.1.4
         version: 5.2.0(vite@7.3.5(jiti@2.7.0)(lightningcss@1.32.0))
@@ -704,6 +707,12 @@ packages:
 
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
+
+  '@vitejs/plugin-basic-ssl@2.3.0':
+    resolution: {integrity: sha512-bdyo8rB3NnQbikdMpHaML9Z1OZPBu6fFOBo+OtxsBlvMJtysWskmBcnbIDhUqgC8tcxNv/a+BcV5U+2nQMm1OQ==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
 
   '@vitejs/plugin-react@5.2.0':
     resolution: {integrity: sha512-YmKkfhOAi3wsB1PhJq5Scj3GXMn3WvtQ/JC0xoopuHoXSdmtdStOpFrYaT1kie2YgFBcIe64ROzMYRjCrYOdYw==}
@@ -1551,6 +1560,10 @@ snapshots:
       '@babel/types': 7.29.7
 
   '@types/estree@1.0.9': {}
+
+  '@vitejs/plugin-basic-ssl@2.3.0(vite@7.3.5(jiti@2.7.0)(lightningcss@1.32.0))':
+    dependencies:
+      vite: 7.3.5(jiti@2.7.0)(lightningcss@1.32.0)
 
   '@vitejs/plugin-react@5.2.0(vite@7.3.5(jiti@2.7.0)(lightningcss@1.32.0))':
     dependencies:
