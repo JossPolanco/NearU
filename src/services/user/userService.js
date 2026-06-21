@@ -43,6 +43,22 @@ export async function getUserProfile() {
     return result.data;
 }
 
+export async function getPartnerProfile() {
+    const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
+
+    if (userError) {
+        throw userError;
+    }
+
+    const result = await supabaseClient
+        .from("tbl_profiles")
+        .select("display_name, nickname, avatar_url")
+        .neq("id", user.id)
+        .single();
+
+    return result.data;
+}
+
 export async function getUserId(){
     const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
 

@@ -55,9 +55,9 @@ export const router = createBrowserRouter([
             {
                 path: "/chat",
                 element: (
-                    <Layout>
-                        <ChatPage />
-                    </Layout>
+
+                    <ChatPage />
+
                 )
             }
         ]

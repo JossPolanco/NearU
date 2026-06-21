@@ -169,9 +169,6 @@ export default function Configuration() {
                     </div>
                 </div>
             </div>
-            <br/>
-            <br/>
-            <br/>
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import { sendMessage } from "../services/chat/messagesService";
 import { useMutation } from "@tanstack/react-query";
-import { Send } from 'lucide-react';
+import { Send, Mic, Camera } from 'lucide-react';
 import { useState } from "react";
 
 export default function MessageField() {
@@ -18,18 +18,29 @@ export default function MessageField() {
     });
 
     return (
-        <div className="sticky bottom-0 bg-base-300 px-4 py-2 flex gap-2">
-            <input
-                type="text"
+        <div className="p-2 flex gap-2 justify-center items-center">
+            <textarea
+                rows={1}
                 placeholder="Mensaje..."
-                className="input input-bordered flex-1"
+                className="textarea  textarea-primary rounded-xl flex-1 h-12 min-h-0 resize-none overflow-y-auto"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
             />
 
-            <button className="btn btn-circle btn-primary" onClick={() => {sendMessageMutation.mutate({ contain: message })}}>
-                <Send size={20} />
-            </button>
+            <div>
+                <Camera size={26} />
+            </div>
+
+            {(message.length === 0) ? (
+                <button className="btn btn-circle btn-primary">
+                    <Mic size={20} />
+                </button>
+            ) : (
+
+                <button className="btn btn-circle btn-primary" onClick={() => { sendMessageMutation.mutate({ contain: message }) }}>
+                    <Send size={20} />
+                </button>
+            )}
         </div>
     );
 }

@@ -2,12 +2,12 @@ import { fetchMessages, subscribeToMessages } from "../services/chat/messagesSer
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { getUserId } from "../services/user/userService";
 import MessageField from "../components/MessageField";
-import ChatConf from "../components/ChatConf";
-import { useEffect } from "react";
+import ChatHeader from "../components/ChatHeader";
+import { useEffect, useRef } from "react";
 
 export default function ChatPage() {
-
     const queryClient = useQueryClient();
+    const bottomRef = useRef(null);
 
     const { data: messages } = useQuery({
         queryKey: ['messages'],
@@ -24,9 +24,14 @@ export default function ChatPage() {
         return () => unsubscribe();
     }, [queryClient]);
 
+    // Auto-scroll al fondo cuando lleguen mensajes
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
     return (
-        <div className="h-screen flex flex-col pb-16">
-            <ChatConf />
+        <div className="fixed inset-0  flex flex-col bg-base-300" >
+            <ChatHeader />
 
             <div className="flex-1 overflow-y-auto px-4 ">
                 {messages?.map((message) => (
@@ -57,6 +62,7 @@ export default function ChatPage() {
                         </div>
                     )
                 ))}
+                <div ref={bottomRef} />
             </div>
 
             <MessageField />

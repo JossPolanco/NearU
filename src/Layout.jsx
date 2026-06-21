@@ -5,7 +5,7 @@ export default function Layout({ children, centered = false, className = '' }) {
     if (centered) {
         return (
             <Dockbar>
-                <div className={`min-h-screen bg-base-300 flex items-center justify-center p-4 ${className}`}>
+                <div className={`min-h-screen bg-base-300 flex items-center justify-center p-4 pb-20 ${className}`}>
                     {children}
                 </div>
             </Dockbar>
@@ -13,7 +13,7 @@ export default function Layout({ children, centered = false, className = '' }) {
     }
 
     return (
-        <div className={`min-h-screen bg-base-300 ${className}`}>
+        <div className={`min-h-screen bg-base-300 pb-16 ${className}`}>
             <Dockbar>
                 {children}
             </Dockbar>
