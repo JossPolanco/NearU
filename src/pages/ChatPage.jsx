@@ -1,12 +1,16 @@
 import { fetchMessages, subscribeToMessages } from "../services/chat/messagesService";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { getUserId } from "../services/user/userService";
+import { useReplyState } from "../hooks/useReplyState";
+import MessageBubble from "../components/MessageBubble";
 import MessageField from "../components/MessageField";
 import ChatHeader from "../components/ChatHeader";
 import { useEffect, useRef } from "react";
 
 export default function ChatPage() {
+    const { replyingTo, startReply, cancelReply } = useReplyState();
     const queryClient = useQueryClient();
+    const messageRefs = useRef({});
     const bottomRef = useRef(null);
 
     const { data: messages } = useQuery({
@@ -30,42 +34,30 @@ export default function ChatPage() {
     }, [messages]);
 
     return (
-        <div className="fixed inset-0  flex flex-col bg-base-300" >
+        <div className="fixed inset-0 flex flex-col bg-base-300">
             <ChatHeader />
-
-            <div className="flex-1 overflow-y-auto px-4 ">
+            <div className="flex-1 overflow-y-auto px-4">
                 {messages?.map((message) => (
-                    message.sender_id !== userId ? (
-                        // ES EL DEL OTRO USUARIO
-                        <div key={message.id} className="chat chat-start ">
-                            <div className="chat-header">
-                                <time className="text-xs opacity-50 ">{message.timestamp}</time>
-                            </div>
-                            <div className="chat-bubble chat-bubble-secondary max-w-[75%]" style={{ overflowWrap: 'anywhere' }}>
-                                <p className=" whitespace-pre-wrap">
-                                    {message.content}
-                                </p>
-                            </div>
-                        </div>
-
-                    ) : (
-                        // ES EL DEL USUARIO LOGUEADO
-                        <div key={message.id} className="chat chat-end ">
-                            <div className="chat-header">
-                                <time className="text-xs opacity-50">{message.timestamp}</time>
-                            </div>
-                            <div className="chat-bubble chat-bubble-primary max-w-[75%]" style={{ overflowWrap: 'anywhere' }}>
-                                <p className="whitespace-pre-wrap">
-                                    {message.content}
-                                </p>
-                            </div>
-                        </div>
-                    )
+                    <MessageBubble
+                        key={message.id}
+                        message={message}
+                        isOwn={message.sender_id === userId}
+                        onReply={startReply}
+                        messageRef={(el) => { messageRefs.current[message.id] = el; }}
+                        onScrollToParent={(id) => {
+                            messageRefs.current[id]?.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }}
+                    />
                 ))}
                 <div ref={bottomRef} />
             </div>
-
-            <MessageField />
+            <MessageField
+                replyingTo={replyingTo}
+                onCancelReply={cancelReply}
+            />
         </div>
     );
 }

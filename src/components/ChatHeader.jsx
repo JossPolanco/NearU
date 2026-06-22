@@ -22,7 +22,8 @@ export default function ChatHeader() {
       </div>
 
       <div>
-        <h2 className="card-title">{partnerProfile?.nickname || "Usuario"} </h2>
+        <h2 className="card-title">{partnerProfile?.nickname}</h2>
+        <p className="text-base-content/60 text-sm">{partnerProfile?.display_name}</p>
       </div>
 
       {/* MENSAJES DESTACADOS */}

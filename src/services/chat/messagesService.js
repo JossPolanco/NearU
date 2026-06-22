@@ -17,11 +17,19 @@ export function subscribeToMessages(queryClient) {
                 if (current.some(m => m.id === payload.new.id)) return;
 
                 const decryptedContent = await decryptMessage(payload.new.content);
+                const decryptedPreview = payload.new.reply_preview
+                    ? await decryptMessage(payload.new.reply_preview)
+                    : null;
+
                 queryClient.setQueryData(
                     ['messages'],
                     (oldMessages = []) => [
                         ...oldMessages,
-                        { ...payload.new, content: decryptedContent }
+                        {
+                            ...payload.new,
+                            content: decryptedContent,
+                            reply_preview: decryptedPreview,
+                        }
                     ]
                 );
             }
@@ -42,7 +50,12 @@ export async function fetchMessages() {
 
     const { data, error } = await supabaseClient
         .from('tbl_messages')
-        .select('*')
+        .select(`*, replied_message:reply_to_id (
+            id,
+            sender_id,
+            content,
+            reply_preview)
+        `)
         .order('created_at', { ascending: true });
 
     if (error) {
@@ -51,16 +64,24 @@ export async function fetchMessages() {
 
     return Promise.all(data.map(async (message) => ({
         ...message,
-        content: await decryptMessage(message.content)
+        content: await decryptMessage(message.content),
+        // DESCIFRA EL SNAPSHOT DE LA RESPUESTA SI EXISTE
+        reply_preview: message.reply_preview
+            ? await decryptMessage(message.reply_preview)
+            : null,
     })));
 }
 
-export async function sendMessage({ contain }) {
+export async function sendMessage({ content, replyToId = null, replyPreview = null }) {
     const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
 
-    if (!contain?.trim()) throw new Error("Mensaje vacío");
+    if (!content?.trim()) throw new Error("Mensaje vacío");
 
-    const encryptedContent = await encryptMessage(contain);
+    const encryptedContent = await encryptMessage(content);
+
+    const encryptedPreview = replyPreview
+        ? await encryptMessage(replyPreview)
+        : null;
 
     if (userError) throw userError;
 
@@ -76,9 +97,14 @@ export async function sendMessage({ contain }) {
     // Insertar el mensaje en la tabla 'tbl_messages' con sender_id, receiver_id y content
     const { data, error } = await supabaseClient
         .from('tbl_messages')
-        .insert({ sender_id: user.id, receiver_id: otherUser.id, content: encryptedContent });
+        .insert({
+            sender_id: user.id,
+            receiver_id: otherUser.id,
+            content: encryptedContent,
+            reply_to_id: replyToId,
+            reply_preview: encryptedPreview,
+        });
 
     if (error) throw error;
-
     return data;
 }
