@@ -4,6 +4,7 @@ import { supabaseClient } from "../../utils/supabase";
 // SUSCRIPCION PARA PODER OBTENER LOS MENSAJES CADA VEZ QUE SE INSERTE EN LA TABLA
 export function subscribeToMessages(queryClient) {
     const channel = supabaseClient
+        // SUSCRIPCION PARA NUEVOS MENSAJES
         .channel('messages')
         .on(
             'postgres_changes',
@@ -34,6 +35,23 @@ export function subscribeToMessages(queryClient) {
                 );
             }
         )
+        // SUSCRIPCION PARA PODER ACTUALIZAR EL ESTADO DE LEIDO (read_at) CUANDO EL RECEPTOR MARQUE EL MENSAJE COMO LEIDO
+        .on('postgres_changes', {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'tbl_messages',
+        }, (payload) => {
+            // Solo nos importa cuando cambia read_at (el receiver marcó como leído)
+            if (!payload.new.read_at) return;
+
+            queryClient.setQueryData(['messages'], (old = []) =>
+                old.map(m =>
+                    m.id === payload.new.id
+                        ? { ...m, read_at: payload.new.read_at }
+                        : m
+                )
+            );
+        })
         .subscribe();
 
     return () => {
@@ -107,4 +125,16 @@ export async function sendMessage({ content, replyToId = null, replyPreview = nu
 
     if (error) throw error;
     return data;
+}
+
+export async function markMessagesAsRead(messageIds) {
+    if (!messageIds.length) return;
+
+    const { error } = await supabaseClient
+        .from('tbl_messages')
+        .update({ read_at: new Date().toISOString() })
+        .in('id', messageIds)
+        .is('read_at', null);
+
+    if (error) throw error;
 }

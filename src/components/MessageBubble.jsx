@@ -1,5 +1,6 @@
 // components/MessageBubble.jsx
 import { Reply, Star, Trash2 } from "lucide-react";
+import ReadIndicator from "./ReadIndicator";
 import { useState, useRef } from "react";
 
 export default function MessageBubble({ message, isOwn, onReply, messageRef, onScrollToParent }) {
@@ -20,11 +21,18 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
         clearTimeout(longPressTimer.current);
     };
 
+    const parseTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    const parseDateTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
     return (
-        <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'}`} >
-            <div className="chat-header">
-                <time className="text-xs opacity-50">{message.created_at || "16:40"}</time>
-            </div>
+        <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'}`} data-message-id={message.id} >
 
             <div className={`chat-bubble max-w-[75%] cursor-pointer select-none ${isOwn ? 'chat-bubble-primary' : 'chat-bubble-secondary'}`}
                 style={{ overflowWrap: 'anywhere' }}
@@ -46,7 +54,15 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                     </div>
                 )}
 
+
                 <p className="whitespace-pre-wrap">{message.content}</p>
+            </div>
+            {/* FOOTER MESSAGE */}
+            <div className="chat-footer flex flex-row items-center gap-2">
+                <time className="text-xs opacity-50">{parseTime(message.created_at) || "16:40"}</time>
+                {isOwn && (
+                    <ReadIndicator readAt={message.read_at} />
+                )}
             </div>
 
             {/* Menú contextual */}
@@ -75,7 +91,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                 return (
                     <>
                         <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
-                        <div style={{ left: `${left}px`, top: `${top}px`, width: `${menuWidth}px` }} className="fixed z-50 bg-base-100 shadow-lg rounded-xl flex flex-col gap-1 p-2 border border-base-300">                     
+                        <div style={{ left: `${left}px`, top: `${top}px`, width: `${menuWidth}px` }} className="fixed z-50 bg-base-100 shadow-lg rounded-xl flex flex-col gap-1 p-2 border border-base-300">
                             <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
                                 <Reply size={16} /> Responder
                             </button>
@@ -85,6 +101,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                             <button className="btn btn-ghost btn-sm text-error gap-1 text-left">
                                 <Trash2 size={16} /> Eliminar
                             </button>
+                            <time className="text-xs opacity-50">Leído el: {parseDateTime(message.read_at) || "16:40"}</time>
                         </div>
                     </>
                 );
