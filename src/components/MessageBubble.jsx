@@ -9,6 +9,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
     const [showMenu, setShowMenu] = useState(false);
     const longPressTimer = useRef(null);
     const pointerPos = useRef({ x: 0, y: 0 });
+    const queryClient = useQueryClient();
 
     const handlePressStart = (e) => {
         // Capture pointer/touch coordinates for later menu placement
@@ -31,6 +32,26 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
     const parseDateTime = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    const handleSetStarredMessage = async (messageId) => {
+        await setStarredMessage(message.id);
+
+        queryClient.invalidateQueries({
+            queryKey: ['messages']
+        });
+
+        setShowMenu(false);
+    }
+
+    const handleUnStarredMessage = async (messageId) => {
+        await unStarredMessage(message.id);
+
+        queryClient.invalidateQueries({
+            queryKey: ['messages']
+        });
+
+        setShowMenu(false);
     }
 
     return (
@@ -66,7 +87,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                         <ReadIndicator readAt={message.read_at} />
                     </>
                 )}
-                {message.destacated && message.starred_by == user && <Star size={16} className="text-yellow-400/50" />}
+                {message.starred && message.starred_by == user && <Star size={16} className="text-yellow-400/50" />}
             </div>
 
             {/* Menú contextual */}
@@ -99,12 +120,12 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                             <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
                                 <Reply size={16} /> Responder
                             </button>
-                            {message.destacated ? (
-                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { unStarredMessage(message.id); setShowMenu(false); }}>
+                            {message.starred && message.starred_by == user ? (
+                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { handleUnStarredMessage(message.id); setShowMenu(false); }}>
                                     <Star size={16} /> Quitar destacado
                                 </button>
                             ) : (
-                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { setStarredMessage(message.id); setShowMenu(false); }}>
+                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { handleSetStarredMessage(message.id); setShowMenu(false); }}>
                                     <Star size={16} /> Destacar
                                 </button>
                             )}

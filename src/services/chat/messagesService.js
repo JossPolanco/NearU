@@ -48,7 +48,7 @@ export function subscribeToMessages(queryClient) {
                     return {
                         ...m,
                         read_at: payload.new.read_at,
-                        destacated: payload.new.destacated,
+                        starred: payload.new.starred,
                         active: payload.new.active,
                     };
 
@@ -175,7 +175,7 @@ export async function setStarredMessage(messageId) {
         .select('id, active')
         .eq('message_id', messageId)
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
     if (existing) {
         // SI YA EXISTE, ACTUALIZA EL ESTADO DE ACTIVE (TOGGLE)
@@ -196,7 +196,7 @@ export async function setStarredMessage(messageId) {
 
     const { error } = await supabaseClient
         .from('tbl_messages')
-        .update({ destacated: true, starred_by: user.id })
+        .update({ starred: true, starred_by: user.id })
         .eq('id', messageId)
         .eq('active', true);
 
@@ -207,7 +207,7 @@ export async function unStarredMessage(messageId) {
     if (!messageId) return;
     const { error } = await supabaseClient
         .from('tbl_messages')
-        .update({ destacated: false })
+        .update({ starred: false })
         .eq('id', messageId)
         .eq('active', true);
 
@@ -215,7 +215,7 @@ export async function unStarredMessage(messageId) {
 
     const { updError } = await supabaseClient
         .from('tbl_starred_messages')
-        .update({ active: false })
+        .update({ active: false, starred_by: null })
         .eq('message_id', messageId)
         .eq('active', true);
 
@@ -237,7 +237,8 @@ export async function fetchStarredMessages() {
                 id,
                 content,
                 sender_id,
-                starred_by,                
+                starred_by, 
+                created_at,               
                 reply_to_id,
                 reply_preview,
                 replied_message:reply_to_id (
@@ -248,7 +249,12 @@ export async function fetchStarredMessages() {
         `)
         .eq('active', true)
         .eq('user_id', user.id)
-        .order('tbl_messages (created_at)', { ascending: false });
+        .order('created_at', {
+            referencedTable: 'tbl_messages',
+            ascending: false,
+        })
+
+    if (error) throw error;
 
     const messages = data.map(item => item.tbl_messages);
 
