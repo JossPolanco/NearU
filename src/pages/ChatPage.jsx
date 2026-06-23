@@ -2,11 +2,11 @@ import { fetchMessages, subscribeToMessages } from "../services/chat/messagesSer
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { useReadReceipts } from "../hooks/useReadReceipts";
 import { getUserId } from "../services/user/userService";
-import { useReplyState } from "../hooks/useReplyState";
 import MessageBubble from "../components/MessageBubble";
+import { useReplyState } from "../hooks/useReplyState";
 import MessageField from "../components/MessageField";
-import ChatHeader from "../components/ChatHeader";
 import { useEffect, useRef, useMemo } from "react";
+import ChatHeader from "../components/ChatHeader";
 
 export default function ChatPage() {
     const { replyingTo, startReply, cancelReply } = useReplyState();
@@ -19,7 +19,7 @@ export default function ChatPage() {
         queryFn: fetchMessages,
     });
 
-    const { data: userId } = useQuery({
+    const { data: userId, isLoading } = useQuery({
         queryKey: ["user"],
         queryFn: getUserId,
     });
@@ -49,28 +49,41 @@ export default function ChatPage() {
         <div className="fixed inset-0 flex flex-col bg-base-300">
             <ChatHeader />
             <div className="flex-1 overflow-y-auto px-4">
-                {messages?.map((message, index) => (
-                    <div key={message.id}>
-                        {/* SEPARADOR DE MENSAJES NO LEIDOS */}
-                        {index === firstUnreadIndex && (
-                            <UnreadSeparator count={messages.length - firstUnreadIndex} />
-                        )}
-                        {/* MENSAJE */}
-                        <MessageBubble
-                            key={message.id}
-                            message={message}
-                            isOwn={message.sender_id === userId}
-                            onReply={startReply}
-                            messageRef={(el) => { messageRefs.current[message.id] = el; }}
-                            onScrollToParent={(id) => {
-                                messageRefs.current[id]?.scrollIntoView({
-                                    behavior: 'smooth',
-                                    block: 'center'
-                                });
-                            }}
-                        />
+                {messages?.length === 0 && !isLoading && (
+                    <div className="flex flex-1 items-center justify-center h-full">
+                        <p className="text-center text-base-content/70">Aún no hay mensajes</p>
                     </div>
-                ))}
+                )}
+
+                {(isLoading ? (
+                    <div className="flex flex-1 items-center justify-center h-full">
+                        <span className="loading loading-spinner text-primary"></span>
+                    </div>
+                ) : (
+
+                    messages?.map((message, index) => (
+                        <div key={message.id}>
+                            {/* SEPARADOR DE MENSAJES NO LEIDOS */}
+                            {index === firstUnreadIndex && (
+                                <UnreadSeparator count={messages.length - firstUnreadIndex} />
+                            )}
+                            {/* MENSAJE */}
+                            <MessageBubble
+                                key={message.id}
+                                message={message}
+                                isOwn={message.sender_id === userId}
+                                user={userId}
+                                onReply={startReply}
+                                messageRef={(el) => { messageRefs.current[message.id] = el; }}
+                                onScrollToParent={(id) => {
+                                    messageRefs.current[id]?.scrollIntoView({
+                                        behavior: 'smooth',
+                                        block: 'center'
+                                    });
+                                }}
+                            />
+                        </div>
+                    ))))}
                 <div ref={bottomRef} />
             </div>
             <MessageField

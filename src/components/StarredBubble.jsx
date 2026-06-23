@@ -5,7 +5,7 @@ import { Reply, Star, Trash2 } from "lucide-react";
 import ReadIndicator from "./ReadIndicator";
 import { useState, useRef } from "react";
 
-export default function MessageBubble({ message, isOwn, onReply, messageRef, onScrollToParent, user }) {
+export default function StarredBubble({ message, isOwn, messageRef }) {
     const [showMenu, setShowMenu] = useState(false);
     const longPressTimer = useRef(null);
     const pointerPos = useRef({ x: 0, y: 0 });
@@ -23,10 +23,10 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
         clearTimeout(longPressTimer.current);
     };
 
-    const parseTime = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
+    // const parseTime = (dateString) => {
+    //     const date = new Date(dateString);
+    //     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // }
 
     const parseDateTime = (dateString) => {
         const date = new Date(dateString);
@@ -36,7 +36,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
     return (
         <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'}`} data-message-id={message.id} >
 
-            <div className={`chat-bubble max-w-[75%] cursor-pointer select-none ${isOwn ? 'chat-bubble-primary' : 'chat-bubble-secondary'}`}
+            <div className={`chat-bubble cursor-pointer select-none ${isOwn ? 'chat-bubble-primary' : 'chat-bubble-secondary'}`}
                 style={{ overflowWrap: 'anywhere' }}
                 onMouseDown={handlePressStart}
                 onMouseUp={handlePressEnd}
@@ -60,13 +60,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
             </div>
             {/* FOOTER MESSAGE */}
             <div className="chat-footer flex flex-row items-center gap-2">
-                <time className="text-xs opacity-50">{parseTime(message.created_at) || "16:40"}</time>
-                {isOwn && (
-                    <>
-                        <ReadIndicator readAt={message.read_at} />
-                    </>
-                )}
-                {message.destacated && message.starred_by == user && <Star size={16} className="text-yellow-400/50" />}
+                <time className="text-xs opacity-50">{parseDateTime(message.created_at) || "16:40"}</time>
             </div>
 
             {/* Menú contextual */}
@@ -96,24 +90,10 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                     <>
                         <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
                         <div style={{ left: `${left}px`, top: `${top}px`, width: `${menuWidth}px` }} className="fixed z-50 bg-base-100 shadow-lg rounded-xl flex flex-col gap-1 p-2 border border-base-300">
-                            <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
-                                <Reply size={16} /> Responder
+                            <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { unStarredMessage(message.id); setShowMenu(false); }}>
+                                <Star size={16} /> Quitar destacado
                             </button>
-                            {message.destacated ? (
-                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { unStarredMessage(message.id); setShowMenu(false); }}>
-                                    <Star size={16} /> Quitar destacado
-                                </button>
-                            ) : (
-                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { setStarredMessage(message.id); setShowMenu(false); }}>
-                                    <Star size={16} /> Destacar
-                                </button>
-                            )}
-                            {isOwn && (
-                                <button className="btn btn-ghost btn-sm text-error gap-1 text-left" onClick={() => { deleteMessage(message.id); setShowMenu(false); }}>
-                                    <Trash2 size={16} /> Eliminar
-                                </button>
-                            )}
-                            <time className="text-xs opacity-50">Leído el: {parseDateTime(message.read_at) || "16:40"}</time>
+                            <time className="text-xs opacity-50">Destacado: {parseDateTime(message.created_at) || "16:40"}</time>
                         </div>
                     </>
                 );

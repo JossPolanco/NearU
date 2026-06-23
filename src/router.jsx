@@ -1,6 +1,6 @@
-import AuthProvider from "./utils/AuthContext";
-import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, ChatPage } from "./pages";
+import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, ChatPage, StarredMessages } from "./pages";
 import { createBrowserRouter } from "react-router";
+import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
 import React from "react";
 
@@ -55,9 +55,13 @@ export const router = createBrowserRouter([
             {
                 path: "/chat",
                 element: (
-
                     <ChatPage />
-
+                )
+            },
+            {
+                path: "/starred-messages",
+                element: (
+                    <StarredMessages />
                 )
             }
         ]
