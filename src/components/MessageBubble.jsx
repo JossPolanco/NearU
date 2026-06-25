@@ -1,12 +1,14 @@
 // components/MessageBubble.jsx
-import { setStarredMessage, deleteMessage, unStarredMessage } from "../services/chat/messagesService";
-import { useQueryClient } from "@tanstack/react-query";
-import { Reply, Star, Trash2 } from "lucide-react";
+import { setStarredMessage, deleteMessage, unStarredMessage, editMessage } from "../services/chat/messagesService";
+import { Reply, Star, Trash2, Pencil, Send } from "lucide-react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import ReadIndicator from "./ReadIndicator";
 import { useState, useRef } from "react";
 
 export default function MessageBubble({ message, isOwn, onReply, messageRef, onScrollToParent, user }) {
+    const [messageEdited, setMessageEdited] = useState(message.content);
     const [showMenu, setShowMenu] = useState(false);
+    const [editMode, setEditMode] = useState(false);
     const longPressTimer = useRef(null);
     const pointerPos = useRef({ x: 0, y: 0 });
     const queryClient = useQueryClient();
@@ -54,6 +56,44 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
         setShowMenu(false);
     }
 
+    const editMessageMutation = useMutation({
+        mutationFn: ({ messageId, newContent }) =>
+            editMessage(messageId, newContent),
+        onSuccess: () => {
+            setEditMode(false);
+            queryClient.invalidateQueries({
+                queryKey: ["messages"]
+            });
+        },
+        onError: (error) => {
+            console.error("Error sending message:", error);
+        }
+    })
+
+    const handleEditMessage = (messageId, newContent) => {
+        editMessageMutation.mutate({
+            messageId: messageId,
+            newContent: newContent
+        });
+    };
+
+    const deleteMessageMutation = useMutation({
+        mutationFn: deleteMessage,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["messages"]
+            });
+        },
+        onError: (error) => {
+            console.error("Error deleting message:", error);
+        }
+    })
+
+
+    const handleDeleteMessage = (messageId) => {
+        deleteMessageMutation.mutate(messageId);
+    }
+
     return (
         <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'}`} data-message-id={message.id} >
 
@@ -87,7 +127,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                         <ReadIndicator readAt={message.read_at} />
                     </>
                 )}
-                {message.starred && message.starred_by == user && <Star size={16} className="text-yellow-400/50" />}
+                {message.starred && message.starred_by == user && <Star size={16} className="text-yellow-500" />}
             </div>
 
             {/* Menú contextual */}
@@ -120,6 +160,11 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                             <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
                                 <Reply size={16} /> Responder
                             </button>
+                            {isOwn && (
+                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { setShowMenu(false), setEditMode(true) }}>
+                                    <Pencil size={16} /> Editar
+                                </button>
+                            )}
                             {message.starred && message.starred_by == user ? (
                                 <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { handleUnStarredMessage(message.id); setShowMenu(false); }}>
                                     <Star size={16} /> Quitar destacado
@@ -130,7 +175,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                                 </button>
                             )}
                             {isOwn && (
-                                <button className="btn btn-ghost btn-sm text-error gap-1 text-left" onClick={() => { deleteMessage(message.id); setShowMenu(false); }}>
+                                <button className="btn btn-ghost btn-sm text-error gap-1 text-left" onClick={() => { handleDeleteMessage(message.id); setShowMenu(false); }}>
                                     <Trash2 size={16} /> Eliminar
                                 </button>
                             )}
@@ -140,9 +185,22 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                 );
             })()}
 
-            {/* Overlay para cerrar menú */}
-            {showMenu && (
-                <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
+            {editMode && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/30" onClick={() => setEditMode(false)} >
+                    <div className="bg-base-100 shadow-lg rounded-xl p-4 border border-base-300 flex flex-row items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                        <textarea
+                            rows={1}
+                            placeholder="Mensaje..."
+                            className="textarea textarea-primary rounded-xl flex-1 h-12 min-h-0 resize-none overflow-y-auto"
+                            value={messageEdited}
+                            onChange={(e) => setMessageEdited(e.target.value)}
+                        />
+                        <button className="btn btn-circle btn-primary" onClick={() => { handleEditMessage(message.id, messageEdited); }} disabled={editMessageMutation.isPending} >
+                            <Send size={20} />
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );

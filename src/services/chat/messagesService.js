@@ -131,6 +131,25 @@ export async function sendMessage({ content, replyToId = null, replyPreview = nu
     return data;
 }
 
+export async function editMessage(messageId, newContent) {
+    const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
+
+    if (userError) throw userError;
+
+    // if (!newContent?.trim()) throw new Error("Mensaje vacío");
+
+    const encryptedContent = await encryptMessage(newContent);
+
+    const { data, error } = await supabaseClient
+        .from('tbl_messages')
+        .update({ content: encryptedContent, edited: true })
+        .eq('id', messageId)
+        .eq('sender_id', user.id)
+        .eq('active', true);
+
+    if (error) throw error;
+}
+
 export async function markMessagesAsRead(messageIds) {
     if (!messageIds.length) return;
 
