@@ -1,4 +1,4 @@
-import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, Chat, StarredMessages } from "@/pages";
+import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, Chat, StarredMessages, Anniversary } from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
@@ -70,4 +70,8 @@ export const router = createBrowserRouter([
         path: "*",
         element: <NotFound />
     },
-]);
+    {
+        path: "/anniversary",
+        element: <Anniversary />
+    }
+], { basename: '/NearU' });

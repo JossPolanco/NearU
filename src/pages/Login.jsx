@@ -50,21 +50,23 @@ export default function Login() {
                     <span>💕</span>
                     <h1 className="text-5xl font-bold">NearU</h1>
                     <p className="py-6">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime iste facilis excepturi mollitia veniam velit sequi commodi minima nemo nam amet tempora possimus dolor, harum rem nihil, doloribus aspernatur molestiae.
+                        Hay cosas que no necesitan ser públicas para ser importantes.
+                        Este es un espacio para los dos mi amor: mensajes, recuerdos y pequeños momentos que construyen nuestra historia.
                     </p>
+                    <button className="btn btn-primary" onClick={() => navigate("/anniversary")}>Un mensajito para ti mi amor 😚</button>
                 </div>
                 <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                     <div className="card-body">
                         <form onSubmit={handleSubmit((handleLogin))}>
                             <div className="fieldset">
                                 <label className="label">Email</label>
-                                <input type="email" className="input" placeholder="Email" {...register("email")} />
+                                <input type="email" className="input" placeholder="Email" {...register("email")} disabled/>
                                 {errors.email && (
                                     <span className="mt-2 text-sm text-error">{errors.email.message}</span>
                                 )}
 
                                 <label className="label">Contraseña</label>
-                                <input type="password" className="input" placeholder="Contraseña" {...register("password")} />
+                                <input type="password" className="input" placeholder="Contraseña" {...register("password")} disabled />
 
                                 {errors.password && (
                                     <span className="mt-2 text-sm text-error">{errors.password.message}</span>
@@ -74,7 +76,7 @@ export default function Login() {
                                     <div><a className="link link-hover" onClick={() => navigate("/register")}>Crear Cuenta</a></div>
                                 </div>
 
-                                <button type="submit" className="btn btn-neutral mt-4" >Iniciar Sesión</button>
+                                <button type="submit" className="btn btn-neutral mt-4" disabled>Iniciar Sesión</button>
                             </div>
                         </form>
                     </div>

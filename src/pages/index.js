@@ -14,5 +14,5 @@ export { default as DrawingPage } from "./DrawingPage";
 // OTHER PAGES
 export { default as Configuration } from "./Configuration";
 export { default as TestingPage } from "./TestingPage";
+export { default as Anniversary } from "./Anniversary";
 export { default as NotFound } from "./NotFound";
-
