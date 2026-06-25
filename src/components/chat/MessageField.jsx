@@ -1,7 +1,7 @@
 // components/MessageField.jsx
 import { Send, Mic, Camera, X, CornerUpLeft } from 'lucide-react';
-import { sendMessage } from "../../services/chat/messagesService";
 import { useMutation } from "@tanstack/react-query";
+import { sendMessage } from "../../services/chat";
 import { useState } from "react";
 
 export default function MessageField({ replyingTo, onCancelReply, isOwn }) {

@@ -1,4 +1,4 @@
-import { markMessagesAsRead } from "../services/chat/messagesService";
+import { markMessagesAsRead } from "../../services/chat";
 import { useEffect, useRef, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 

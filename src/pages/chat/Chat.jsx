@@ -1,9 +1,8 @@
 import { UnreadSeparator, MessageField, MessageBubble, ChatHeader } from "@/components";
-import { fetchMessages, subscribeToMessages } from "../../services/chat/messagesService";
+import { fetchMessages, subscribeToMessages } from "../../services/chat";
+import { useReadReceipts, useReplyState } from "@/hooks";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { useReadReceipts } from "../../hooks/useReadReceipts";
 import { getUserId } from "../../services/user/userService";
-import { useReplyState } from "../../hooks/useReplyState";
 import { useEffect, useRef, useMemo } from "react";
 
 export default function Chat() {

@@ -1,5 +1,5 @@
 // components/MessageBubble.jsx
-import { setStarredMessage, deleteMessage, unStarredMessage } from "../../services/chat/messagesService";
+import { setStarredMessage, deleteMessage, unStarredMessage } from "../../services/chat";
 import { useQueryClient } from "@tanstack/react-query";
 import { Reply, Star, Trash2 } from "lucide-react";
 import ReadIndicator from "./ReadIndicator";
