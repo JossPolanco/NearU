@@ -1,14 +1,12 @@
-import { fetchMessages, subscribeToMessages } from "../services/chat/messagesService";
+import { UnreadSeparator, MessageField, MessageBubble, ChatHeader } from "@/components";
+import { fetchMessages, subscribeToMessages } from "../../services/chat/messagesService";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { useReadReceipts } from "../hooks/useReadReceipts";
-import { getUserId } from "../services/user/userService";
-import MessageBubble from "../components/MessageBubble";
-import { useReplyState } from "../hooks/useReplyState";
-import MessageField from "../components/MessageField";
+import { useReadReceipts } from "../../hooks/useReadReceipts";
+import { getUserId } from "../../services/user/userService";
+import { useReplyState } from "../../hooks/useReplyState";
 import { useEffect, useRef, useMemo } from "react";
-import ChatHeader from "../components/ChatHeader";
 
-export default function ChatPage() {
+export default function Chat() {
     const { replyingTo, startReply, cancelReply } = useReplyState();
     const queryClient = useQueryClient();
     const messageRefs = useRef({});
@@ -91,18 +89,6 @@ export default function ChatPage() {
                 onCancelReply={cancelReply}
                 isOwn={replyingTo?.sender_id === userId}
             />
-        </div>
-    );
-}
-
-function UnreadSeparator({ count }) {
-    return (
-        <div className="flex items-center gap-3 my-3 px-2">
-            <div className="flex-1 h-px bg-base-content/20" />
-            <span className="text-xs text-base-content/50 whitespace-nowrap">
-                {count === 1 ? "1 mensaje nuevo" : `${count} mensajes nuevos`}
-            </span>
-            <div className="flex-1 h-px bg-base-content/20" />
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, ChatPage, StarredMessages } from "./pages";
+import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, Chat, StarredMessages } from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
@@ -55,7 +55,7 @@ export const router = createBrowserRouter([
             {
                 path: "/chat",
                 element: (
-                    <ChatPage />
+                    <Chat />
                 )
             },
             {

@@ -173,7 +173,7 @@ export async function deleteMessage(messageId) {
 
     if (error) throw error;
 
-    const { updError } = await supabaseClient
+    const { error: updError } = await supabaseClient
         .from('tbl_starred_messages')
         .update({ active: false })
         .eq('message_id', messageId)
@@ -232,9 +232,9 @@ export async function unStarredMessage(messageId) {
 
     if (error) throw error;
 
-    const { updError } = await supabaseClient
+    const { error: updError } = await supabaseClient
         .from('tbl_starred_messages')
-        .update({ active: false, starred_by: null })
+        .update({ active: false, user_id: null })
         .eq('message_id', messageId)
         .eq('active', true);
 

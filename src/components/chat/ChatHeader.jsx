@@ -1,4 +1,4 @@
-import { getPartnerProfile } from '../services/user/userService';
+import { getPartnerProfile } from '../../services/user/userService';
 import { useQuery } from '@tanstack/react-query';
 import { Star, ArrowLeft } from 'lucide-react';
 import { useNavigate } from "react-router";

@@ -1,0 +1,62 @@
+
+```
+NearU
+├─ Dockerfile
+├─ index.html
+├─ package.json
+├─ pnpm-lock.yaml
+├─ pnpm-workspace.yaml
+├─ public
+│  ├─ img
+│  │  └─ favicon.ico
+│  └─ output.css
+├─ README.md
+├─ src
+│  ├─ components
+│  │  ├─ chat
+│  │  │  ├─ ChatHeader.jsx
+│  │  │  ├─ MessageBubble.jsx
+│  │  │  ├─ MessageField.jsx
+│  │  │  ├─ ReadIndicator.jsx
+│  │  │  ├─ StarredBubble.jsx
+│  │  │  └─ UnreadSeparator.jsx
+│  │  ├─ drawer
+│  │  │  ├─ DrawCanvas.jsx
+│  │  │  └─ DrawnConf.jsx
+│  │  ├─ index.js
+│  │  └─ Modal.jsx
+│  ├─ hooks
+│  │  ├─ useReadReceipts.js
+│  │  └─ useReplyState.js
+│  ├─ index.jsx
+│  ├─ Layout.jsx
+│  ├─ navigation
+│  │  └─ Dockbar.jsx
+│  ├─ pages
+│  │  ├─ ChatPage.jsx
+│  │  ├─ Configuration.jsx
+│  │  ├─ DrawingPage.jsx
+│  │  ├─ Home.jsx
+│  │  ├─ index.js
+│  │  ├─ Login.jsx
+│  │  ├─ NotFound.jsx
+│  │  ├─ PasswordRegistration.jsx
+│  │  ├─ Register.jsx
+│  │  ├─ StarredMessages.jsx
+│  │  └─ TestingPage.jsx
+│  ├─ router.jsx
+│  ├─ services
+│  │  ├─ auth
+│  │  │  └─ authService.js
+│  │  ├─ chat
+│  │  │  └─ messagesService.js
+│  │  └─ user
+│  │     └─ userService.js
+│  └─ utils
+│     ├─ AuthContext.jsx
+│     ├─ crypto.js
+│     └─ supabase.js
+├─ styles.css
+└─ vite.config.js
+
+```

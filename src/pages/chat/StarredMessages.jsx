@@ -1,7 +1,7 @@
-import { fetchStarredMessages } from "../services/chat/messagesService";
+import { fetchStarredMessages } from "../../services/chat/messagesService";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { getUserId } from "../services/user/userService";
-import StarredBubble from "../components/StarredBubble";
+import { getUserId } from "../../services/user/userService";
+import { StarredBubble } from "@/components";
 import { useNavigate } from "react-router";
 import { ArrowLeft } from 'lucide-react';
 import { useRef } from "react";
