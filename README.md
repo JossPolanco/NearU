@@ -22,18 +22,22 @@ NearU
 │  │  │  └─ UnreadSeparator.jsx
 │  │  ├─ drawer
 │  │  │  ├─ DrawCanvas.jsx
-│  │  │  └─ DrawnConf.jsx
+│  │  │  └─ DrawConf.jsx
 │  │  ├─ index.js
 │  │  └─ Modal.jsx
 │  ├─ hooks
-│  │  ├─ useReadReceipts.js
-│  │  └─ useReplyState.js
+│  │  ├─ chat
+│  │  │  ├─ useReadReceipts.js
+│  │  │  └─ useReplyState.js
+│  │  └─ index.js
 │  ├─ index.jsx
 │  ├─ Layout.jsx
 │  ├─ navigation
 │  │  └─ Dockbar.jsx
 │  ├─ pages
-│  │  ├─ ChatPage.jsx
+│  │  ├─ chat
+│  │  │  ├─ Chat.jsx
+│  │  │  └─ StarredMessages.jsx
 │  │  ├─ Configuration.jsx
 │  │  ├─ DrawingPage.jsx
 │  │  ├─ Home.jsx
@@ -42,14 +46,17 @@ NearU
 │  │  ├─ NotFound.jsx
 │  │  ├─ PasswordRegistration.jsx
 │  │  ├─ Register.jsx
-│  │  ├─ StarredMessages.jsx
 │  │  └─ TestingPage.jsx
 │  ├─ router.jsx
 │  ├─ services
 │  │  ├─ auth
 │  │  │  └─ authService.js
 │  │  ├─ chat
-│  │  │  └─ messagesService.js
+│  │  │  ├─ index.js
+│  │  │  ├─ messagesService.js
+│  │  │  ├─ readService.js
+│  │  │  ├─ starredService.js
+│  │  │  └─ subscriptionService.js
 │  │  └─ user
 │  │     └─ userService.js
 │  └─ utils
