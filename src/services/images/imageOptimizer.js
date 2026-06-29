@@ -73,43 +73,34 @@ const getImageDimensions = (blob) => {
     });
 };
 
-
-export const optimizeImage = async (
-    file,
-    profile = "photo",
-    customOptions = {},
-    onProgress = null
-) => {
+// FUNCION 
+export const optimizeImage = async (file, profile = "photo", customOptions = {}, onProgress = null) => {
     try {
         const profileOptions = OPTIMIZATION_PROFILES[profile];
 
         if (!profileOptions) {
-            return {
-                success: false,
-                error: `Perfil de optimización desconocido: "${profile}". Usa: ${Object.keys(OPTIMIZATION_PROFILES).join(", ")}.`,
-            };
+            throw new Error(`Perfil de optimización desconocido: "${profile}". Usa: ${Object.keys(OPTIMIZATION_PROFILES).join(", ")}.`);
         }
 
         const options = {
             ...profileOptions,
             ...customOptions,
-            // El callback de progreso se integra si se proporciona
             ...(onProgress && { onProgress }),
         };
 
         const originalSizeBytes = file.size;
 
-        // Compresión + conversión a WebP en Web Worker
+        // COMPRESION Y CONVERSION A WEVP EN WEB WORKER
         const compressedBlob = await imageCompression(file, options);
 
-        // Construye un File real desde el Blob para que tenga nombre y tipo correctos
+        // CONSTRUYE UN FILE REAL DESDE EL BLOB PARA QUE TENGA NOMBRE Y TIPO CORRECTOS
         const optimizedFile = new File(
             [compressedBlob],
             buildWebpFileName(file.name),
             { type: "image/webp" }
         );
 
-        // Obtiene dimensiones y preview en paralelo (ambos son rápidos)
+        // OBTIENE DIMENSIONES Y PREVIEW EN PARALELO (AMBOS SON RÁPIDOS)
         const [dimensions, previewUrl] = await Promise.all([
             getImageDimensions(compressedBlob),
             blobToDataUrl(compressedBlob),
@@ -137,22 +128,13 @@ export const optimizeImage = async (
         const message = error?.message?.toLowerCase() ?? "";
 
         if (message.includes("exceeded") || message.includes("size")) {
-            return {
-                success: false,
-                error: "No se pudo comprimir la imagen al tamaño requerido. Intenta con una imagen más pequeña.",
-            };
+            throw new Error("No se pudo comprimir la imagen al tamaño requerido. Intenta con una imagen más pequeña.");
         }
 
         if (message.includes("worker") || message.includes("web worker")) {
-            return {
-                success: false,
-                error: "Error en el procesamiento en segundo plano. Recarga la página e intenta nuevamente.",
-            };
+            throw new Error("Error en el procesamiento en segundo plano. Recarga la página e intenta nuevamente.");
         }
 
-        return {
-            success: false,
-            error: "No se pudo optimizar la imagen. Verifica que el archivo no esté dañado.",
-        };
-    }
-};
+        throw new Error("No se pudo optimizar la imagen. Verifica que el archivo no esté dañado.");
+    };
+}

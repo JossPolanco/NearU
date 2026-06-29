@@ -59,7 +59,7 @@ export async function getPartnerProfile() {
     return result.data;
 }
 
-export async function getUserId(){
+export async function getUserId() {
     const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
 
     if (userError) {
@@ -67,4 +67,14 @@ export async function getUserId(){
     }
 
     return user.id;
+}
+
+export async function getCurrentUser() {
+    const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
+
+    if (userError) {
+        throw userError;
+    }
+
+    return user;
 }

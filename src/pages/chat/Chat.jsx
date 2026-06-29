@@ -10,7 +10,7 @@ export default function Chat() {
     const queryClient = useQueryClient();
     const messageRefs = useRef({});
     const bottomRef = useRef(null);
-
+    
     const { data: messages } = useQuery({
         queryKey: ['messages'],
         queryFn: fetchMessages,
