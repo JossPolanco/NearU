@@ -19,7 +19,7 @@ const INITIAL_STATE = {
 };
 
 
-export const useImageUpload = ({ bucket = BUCKETS.PHOTOS, profile = "photo", invalidateQueries = [], } = {}) => {
+export const useImageUpload = ({ bucket = BUCKETS.PHOTOS, gallery = "default", profile = "photo", invalidateQueries = [], } = {}) => {
     const [state, setState] = useState(INITIAL_STATE);
     const queryClient = useQueryClient();
 
@@ -62,7 +62,7 @@ export const useImageUpload = ({ bucket = BUCKETS.PHOTOS, profile = "photo", inv
 
             // Mostrar preview inmediatamente: el usuario ve la imagen mientras se sube
             updateState({ previewUrl, progress: 100 });
-            
+
             // ETAPA: SUBIDA A STORAGE
             updateState({ stage: "uploading" });
 
@@ -74,13 +74,14 @@ export const useImageUpload = ({ bucket = BUCKETS.PHOTOS, profile = "photo", inv
             }
 
             const { storagePath } = upload.data;
-            
+
             // ETAPA: GUARDAR METADATA
             updateState({ stage: "saving" });
 
             const metadata = await saveImageMetadata({
                 uploadedBy: userId,
                 bucket,
+                gallery,
                 storagePath,
                 originalName: file.name,
                 fileSize: optimizedSizeBytes,
@@ -125,7 +126,7 @@ export const useImageUpload = ({ bucket = BUCKETS.PHOTOS, profile = "photo", inv
                 result: metadata.data.image,
             });
         },
-        [bucket, profile, invalidateQueries, queryClient, updateState]
+        [bucket, gallery, profile, invalidateQueries, queryClient, updateState]
     );
 
     /**

@@ -4,7 +4,7 @@ import { supabaseClient } from "../../utils/supabase";
 const TABLE = "image_metadata";
 
 // FUNCION PARA GUARDAR LA IMAGEN EN LA BASE DE DATOS
-export const saveImageMetadata = async ({ uploadedBy, bucket, storagePath, originalName, fileSize, width, height, mimeType = "image/webp", }) => {
+export const saveImageMetadata = async ({ uploadedBy, bucket, gallery = "default", storagePath, originalName, fileSize, width, height, mimeType = "image/webp", }) => {
     if (!uploadedBy || !bucket || !storagePath || !fileSize) {
         throw new Error("Faltan campos requeridos para guardar la metadata.")
     }
@@ -14,6 +14,7 @@ export const saveImageMetadata = async ({ uploadedBy, bucket, storagePath, origi
         .insert({
             uploaded_by: uploadedBy,
             bucket,
+            gallery,
             storage_path: storagePath,
             original_name: originalName ?? null,
             mime_type: mimeType,
@@ -42,15 +43,16 @@ export const saveImageMetadata = async ({ uploadedBy, bucket, storagePath, origi
 };
 
 // FUNCION PARA OBTENER IMAGENES DE UN BUCKET
-export const getImagesByBucket = async (bucket, { limit = 50, offset = 0 } = {}) => {
-    if (!bucket) {
-        throw new Error("Se requiere el nombre del bucket.")
+export const getImagesByBucket = async (bucket, gallery = "default", { limit = 50, offset = 0 } = {}) => {
+    if (!bucket || !gallery) {
+        throw new Error("Se requieren bucket y gallery.")
     }
 
     const { data, error, count } = await supabaseClient
         .from(TABLE)
         .select("*", { count: "exact" })
         .eq("bucket", bucket)
+        .eq("gallery", gallery)
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);
 
@@ -68,15 +70,16 @@ export const getImagesByBucket = async (bucket, { limit = 50, offset = 0 } = {})
 };
 
 // FUNCION PARA OBTENER IMAGENES DE UN USUARIO
-export const getImagesByUser = async (bucket, userId, { limit = 50, offset = 0 } = {}) => {
-    if (!bucket || !userId) {
-        throw new Error("Se requieren bucket y userId.")
+export const getImagesByUser = async (bucket, gallery = "default", userId, { limit = 50, offset = 0 } = {}) => {
+    if (!bucket || !gallery || !userId) {
+        throw new Error("Se requieren bucket, gallery y userId.")
     }
 
     const { data, error, count } = await supabaseClient
         .from(TABLE)
         .select("*", { count: "exact" })
         .eq("bucket", bucket)
+        .eq("gallery", gallery)
         .eq("uploaded_by", userId)
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);

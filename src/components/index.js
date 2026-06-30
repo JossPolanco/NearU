@@ -10,3 +10,7 @@ export { default as DrawConf } from './drawer/DrawConf';
 
 // OTHER COMPONENTS
 export { default as Modal } from './Modal';
+
+// IMGAGES COMPONENTS
+export { default as GalleryPanel } from './images/GalleryPanel'
+export { default as UploadPanel } from './images/UploadPanel'

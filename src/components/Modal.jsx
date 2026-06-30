@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 
-const Modal = forwardRef(function Modal({ className, modalTitle = "Modal", modalSubtitle = "", children }, ref) {
+const Modal = forwardRef(function Modal({ className, modalTitle, modalSubtitle, children }, ref) {
     const dialogRef = useRef(null);
 
     useImperativeHandle(ref, () => ({

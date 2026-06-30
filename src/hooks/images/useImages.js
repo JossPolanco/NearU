@@ -8,15 +8,15 @@ import { useQuery } from "@tanstack/react-query";
 
 export const imageKeys = {
     all: ["images"],
-    list: (bucket) => ["images", bucket],
+    list: (bucket, gallery) => ["images", bucket, gallery],
     detail: (id) => ["images", "detail", id],
 };
 
-export const useImages = (bucket, { limit = 50, offset = 0, enabled = true } = {}) => {
+export const useImages = (bucket, gallery = "default", { limit = 50, offset = 0, enabled = true } = {}) => {
     const { data, isLoading, isError, error, refetch } = useQuery({
-        queryKey: imageKeys.list(bucket),
-        queryFn: () => fetchImagesWithUrls(bucket, { limit, offset }),
-        enabled: Boolean(bucket) && enabled,
+        queryKey: imageKeys.list(bucket, gallery),
+        queryFn: () => fetchImagesWithUrls(bucket, gallery, { limit, offset }),
+        enabled: Boolean(bucket) && Boolean(gallery) && enabled,
 
         // ── Configuración de caché ──────────────────────────────────────────────
         // staleTime: durante 5 minutos, react-query no refetch aunque el componente
@@ -45,9 +45,9 @@ export const useImages = (bucket, { limit = 50, offset = 0, enabled = true } = {
     };
 };
 
-const fetchImagesWithUrls = async (bucket, { limit, offset }) => {
+const fetchImagesWithUrls = async (bucket, gallery, { limit, offset }) => {
     // 1. Obtener metadata desde PostgreSQL
-    const metadataResult = await getImagesByBucket(bucket, { limit, offset });
+    const metadataResult = await getImagesByBucket(bucket, gallery, { limit, offset });
 
     if (!metadataResult.success) {
         throw new Error(metadataResult.error);
