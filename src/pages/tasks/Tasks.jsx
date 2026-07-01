@@ -8,10 +8,12 @@ import { useRef, useState } from "react"
 import z from "zod"
 import { ArrowLeft, Trash2, Sparkles, ClipboardList, Plus, Loader2 } from "lucide-react"
 import { SUGGESTIONS } from "../../utils/getSuggestions"
+import { PRESET_ICONS } from "../../utils/getCategoryIcon"
 
 const createTaskCategorySchema = z.object({
     title: z.string().min(1, "El título es requerido"),
     description: z.string().min(1, "La descripción es requerida"),
+    icon: z.string().optional(),
 })
 
 export default function Tasks() {
@@ -21,8 +23,15 @@ export default function Tasks() {
     const queryClient = useQueryClient()
 
     const { register, handleSubmit, formState: { errors }, watch, reset, setValue } = useForm({
-        resolver: zodResolver(createTaskCategorySchema)
+        resolver: zodResolver(createTaskCategorySchema),
+        defaultValues: {
+            title: "",
+            description: "",
+            icon: "clipboardlist"
+        }
     })
+
+    const watchIcon = watch("icon", "clipboardlist")
 
     const { data, isLoading } = useQuery({
         queryKey: ["task-categories"],
@@ -70,6 +79,7 @@ export default function Tasks() {
                 id: editingCategoryId,
                 title: formData.title,
                 description: formData.description,
+                icon: formData.icon,
             })
         } else {
             addTaskCategoryMutation.mutate(formData)
@@ -78,7 +88,7 @@ export default function Tasks() {
 
     const handleOpenCreateModal = () => {
         setEditingCategoryId(null)
-        reset({ title: "", description: "" })
+        reset({ title: "", description: "", icon: "clipboardlist" })
         refModal.current?.open()
     }
 
@@ -86,6 +96,7 @@ export default function Tasks() {
         setEditingCategoryId(category.id)
         setValue("title", category.title)
         setValue("description", category.description)
+        setValue("icon", category.icon || "clipboardlist")
         refModal.current?.open()
     }
 
@@ -247,6 +258,41 @@ export default function Tasks() {
                                     </span>
                                 </label>
                             )}
+                        </div>
+
+                        {/* Icon Selector */}
+                        <div className="form-control">
+                            <label className="label pb-1.5">
+                                <span className="label-text font-semibold text-base-content/85 text-xs">
+                                    Selecciona un ícono
+                                </span>
+                            </label>
+                            <input type="hidden" {...register("icon")} />
+                            <div className="grid grid-cols-4 gap-2.5">
+                                {PRESET_ICONS.map((preset) => {
+                                    const IconComponent = preset.icon;
+                                    const isSelected = watchIcon === preset.id;
+                                    return (
+                                        <button
+                                            key={preset.id}
+                                            type="button"
+                                            onClick={() => setValue("icon", preset.id)}
+                                            className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all duration-200 hover:scale-102 active:scale-98 ${
+                                                isSelected
+                                                    ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs ring-1 ring-primary/30"
+                                                    : "border-base-200 hover:border-base-300 dark:border-base-800 dark:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
+                                            }`}
+                                        >
+                                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-3xs ${preset.bg}`}>
+                                                <IconComponent className="w-5 h-5" />
+                                            </div>
+                                            <span className="text-[9px] font-medium text-base-content/70 mt-1.5 text-center truncate w-full">
+                                                {preset.label.split(" / ")[0]}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
 
                         {/* Submit Button */}

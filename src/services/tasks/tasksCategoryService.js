@@ -1,18 +1,18 @@
 import { supabaseClient } from "../../utils/supabase";
 
-export async function createTaskCategory({ title, description }) {
+export async function createTaskCategory({ title, description, icon }) {
     const { data, error } = await supabaseClient
         .from('tbl_tasks_category')
-        .insert({ title: title, description: description })
+        .insert({ title: title, description: description, icon: icon })
 
     if (error) throw error
     return data
 }
 
-export async function updateTaskCategory({ id, title, description }) {
+export async function updateTaskCategory({ id, title, description, icon }) {
     const { data, error } = await supabaseClient
         .from('tbl_tasks_category')
-        .update({ title: title, description: description })
+        .update({ title: title, description: description, icon: icon })
         .eq('id', id)
 
     if (error) throw error
