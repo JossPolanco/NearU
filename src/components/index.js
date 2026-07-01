@@ -10,7 +10,10 @@ export { default as DrawConf } from './drawer/DrawConf';
 
 // OTHER COMPONENTS
 export { default as Modal } from './Modal';
-
+export { default as FabAdd } from './FabAdd';
 // IMGAGES COMPONENTS
 export { default as GalleryPanel } from './images/GalleryPanel'
 export { default as UploadPanel } from './images/UploadPanel'
+
+// TASKS COMPONENTS
+export { default as TasksCategory } from './tasks/TasksCategory'

@@ -36,10 +36,9 @@ export async function getUserProfile() {
 
     const result = await supabaseClient
         .from("tbl_profiles")
-        .select("display_name, nickname, avatar_url")
+        .select("display_name, nickname, avatar")
         .eq("id", user.id)
-        .single();
-
+        .single();    
     return result.data;
 }
 
@@ -52,7 +51,7 @@ export async function getPartnerProfile() {
 
     const result = await supabaseClient
         .from("tbl_profiles")
-        .select("display_name, nickname, avatar_url")
+        .select("display_name, nickname, avatar")
         .neq("id", user.id)
         .single();
 

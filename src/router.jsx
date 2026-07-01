@@ -1,4 +1,4 @@
-import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, Chat, StarredMessages, Anniversary } from "@/pages";
+import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail } from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
@@ -62,6 +62,22 @@ export const router = createBrowserRouter([
                 path: "/starred-messages",
                 element: (
                     <StarredMessages />
+                )
+            },
+            {
+                path: "/tasks",
+                element: (
+                    <Layout>
+                        <Tasks />
+                    </Layout>
+                )
+            },
+            {
+                path: "/task/:id",
+                element: (
+                    <Layout>
+                        <TaskDetail />
+                    </Layout>
                 )
             }
         ]

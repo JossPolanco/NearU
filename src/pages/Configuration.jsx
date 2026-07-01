@@ -181,7 +181,7 @@ const updateInfoSchema = z.object({
 export function UpdateInfo({ onSuccess }) {
     const queryClient = useQueryClient();
 
-    const { register, handleSubmit, formState: { errors }, watch } = useForm({
+    const { register, handleSubmit, formState: { errors }, watch, reset} = useForm({
         resolver: zodResolver(updateInfoSchema)
     })
 
@@ -197,6 +197,7 @@ export function UpdateInfo({ onSuccess }) {
                 queryKey: ['userProfile']
             });
             // Cerrar el modal después de actualizar la información
+            reset()
             onSuccess?.();
         },
 

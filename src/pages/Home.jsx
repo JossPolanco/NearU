@@ -11,6 +11,10 @@ export default function Home() {
       <button className="btn btn-primary" onClick={() => navigate('/testing')}>
         Pagina de pruebas
       </button>
+
+      <button className="btn btn-primary" onClick={() => navigate('/tasks')}>
+        Pagina de tareas
+      </button>
     </div>
   )
 }
