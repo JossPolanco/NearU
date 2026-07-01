@@ -119,8 +119,8 @@ export default function TaskDetail() {
     const percentage = totalTasksCount > 0 ? (completedTasksCount / totalTasksCount) * 100 : 0
     const allCompleted = totalTasksCount > 0 && completedTasksCount === totalTasksCount
 
-    const modalTitle = editingTaskId ? "Editar Tarea ✏️" : "Nueva Tarea ✨"
-    const modalSubtitle = editingTaskId ? "Actualiza los detalles de la tarea." : "Añade una tarea para hacer juntos en esta lista."
+    const modalTitle = editingTaskId ? "Editar Tareita ✏️" : "Nueva Tareita ✨"
+    const modalSubtitle = editingTaskId ? "Actualiza los detalles de la tareita." : "Añade una tareita para hacer juntos en esta lista."
     const isPending = createTaskMutation.isPending || updateTaskMutation.isPending
     const isLoading = isLoadingCategory || isLoadingTasks
 
@@ -129,7 +129,7 @@ export default function TaskDetail() {
             {/* Header / Navigation */}
             <div className="flex items-center justify-between py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
                 <button
-                    className="btn btn-circle btn-ghost text-base-content/60 hover:text-primary hover:bg-base-200/50 transition-all duration-200"
+                    className="btn btn-circle btn-secondary text-base-content/60 active:text-primary active:bg-base-200/50 md:hover:text-primary md:hover:bg-base-200/50 transition-all duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -290,8 +290,8 @@ export default function TaskDetail() {
                                     </>
                                 ) : (
                                     <>
-                                        <Plus className="w-4 h-4" />
-                                        <span>{editingTaskId ? "Guardar cambios" : "Añadir para los dos"}</span>
+                                        {/* <Plus className="w-4 h-4" /> */}
+                                        <span>{editingTaskId ? "Guardar cambios" : "Añadir tareita"}</span>
                                     </>
                                 )}
                             </button>

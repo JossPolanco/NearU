@@ -101,13 +101,13 @@ export default function Tasks() {
     }
 
     const handleDeleteCategory = (id) => {
-        if (confirm("¿Estás seguro de que quieres eliminar esta categoría?")) {
+        if (confirm("¿Estás seguro de que quieres eliminar esta listita?")) {
             deleteTaskCategoryMutation.mutate({ id })
         }
     }
 
-    const modalTitle = editingCategoryId ? "Editar categoría" : "Nueva categoría de tareas"
-    const modalSubtitle = editingCategoryId ? "Actualiza los detalles de la categoría." : "Añade una nueva categoría de tareas."
+    const modalTitle = editingCategoryId ? "Editar listita" : "Nueva listita"
+    const modalSubtitle = editingCategoryId ? "Actualiza los detalles de la listita." : "Añade una nueva listita."
     const isPending = addTaskCategoryMutation.isPending || updateTaskCategoryMutation.isPending
 
     const isEmpty = !data || data.length === 0
@@ -117,7 +117,7 @@ export default function Tasks() {
             {/* Header / Navigation */}
             <div className="flex items-center justify-between py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
                 <button
-                    className="btn btn-circle btn-ghost text-base-content/60 hover:text-primary hover:bg-base-200/50 transition-all duration-200"
+                    className="btn btn-circle btn-secondary text-base-content/60 active:text-primary active:bg-base-200/50 md:hover:text-primary md:hover:bg-base-200/50 transition-all duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -125,7 +125,7 @@ export default function Tasks() {
                 </button>
                 <div className="flex items-end gap-1.5 text-xs font-semibold text-base-content/60 bg-base-100 px-4 py-1.5 rounded-full border border-base-300/40 shadow-3xs">
                     <ClipboardList className="w-3.5 h-3.5 text-primary fill-primary/15 animate-pulse" />
-                    <span>Listas de tareas</span>
+                    <span>Listas de tareitas</span>
                 </div>
             </div>
 
@@ -155,15 +155,15 @@ export default function Tasks() {
                     <div className="w-16 h-16 rounded-2xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-5 text-primary">
                         <ClipboardList className="w-8 h-8 text-primary" />
                     </div>
-                    <h3 className="text-lg font-bold text-base-content leading-snug">¿Comenzamos algo juntos?</h3>
+                    <h3 className="text-lg font-bold text-base-content leading-snug">¿Comenzamos algo juntitos?</h3>
                     <p className="text-xs text-base-content/50 max-w-sm mt-2 leading-relaxed">
-                        Aún no hay listas de tareas creadas. Agrega una lista para organizar planes, pelicuas o cosas por hacer.
+                        Aún no hay listas de tareas creadas. Agrega una lista para organizar planes, peliculas o cositas por hacer.
                     </p>
                     <button
                         onClick={handleOpenCreateModal}
-                        className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs hover:scale-102 transition-all font-semibold"
+                        className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-all font-semibold"
                     >
-                        <Plus className="w-4 h-4" /> Crear primera lista
+                        <Plus className="w-4 h-4" /> Crear primera listita
                     </button>
                 </div>
             ) : (
@@ -191,7 +191,7 @@ export default function Tasks() {
                     {/* Suggestions */}
                     <div className="space-y-2.5">
                         <span className="text-xs font-semibold text-base-content/60 flex items-center gap-1.5">
-                            <Sparkles className="w-3.5 h-3.5 text-primary fill-primary/10" />
+                            {/* <Sparkles className="w-3.5 h-3.5 text-primary fill-primary/10" /> */}
                             💡 Ideas rápidas:
                         </span>
                         <div className="flex flex-wrap gap-2">
@@ -203,7 +203,7 @@ export default function Tasks() {
                                         setValue("title", sug.title);
                                         setValue("description", sug.description);
                                     }}
-                                    className="btn btn-xs rounded-full bg-base-200/60 dark:bg-base-800/40 hover:bg-primary/10 border-none text-base-content/85 transition-all duration-200 font-medium py-1 px-3"
+                                    className="btn btn-xs rounded-full bg-base-200/60 dark:bg-base-800/40 active:bg-primary/10 md:hover:bg-primary/10 border-none text-base-content/85 transition-all duration-200 font-medium py-1 px-3"
                                 >
                                     <span>{sug.emoji}</span>
                                     <span>{sug.title.split(" ")[0]}</span>
@@ -217,7 +217,7 @@ export default function Tasks() {
                         <div className="form-control">
                             <label className="label pb-2">
                                 <span className="label-text font-medium text-base-content/85">
-                                    Nombre de la lista
+                                    Nombre de la listita
                                 </span>
                             </label>
                             <input
@@ -277,10 +277,10 @@ export default function Tasks() {
                                             key={preset.id}
                                             type="button"
                                             onClick={() => setValue("icon", preset.id)}
-                                            className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all duration-200 hover:scale-102 active:scale-98 ${
+                                            className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all duration-200 md:hover:scale-102 active:scale-98 ${
                                                 isSelected
                                                     ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs ring-1 ring-primary/30"
-                                                    : "border-base-200 hover:border-base-300 dark:border-base-800 dark:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
+                                                    : "border-base-200 active:border-primary/20 md:hover:border-base-300 dark:border-base-800 dark:md:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
                                             }`}
                                         >
                                             <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-3xs ${preset.bg}`}>
@@ -308,7 +308,7 @@ export default function Tasks() {
                                 </>
                             ) : (
                                 <>                                    
-                                    <span>{editingCategoryId ? "Guardar cambios" : "Crear lista"}</span>
+                                    <span>{editingCategoryId ? "Guardar cambios" : "Crear listita"}</span>
                                 </>
                             )}
                         </button>

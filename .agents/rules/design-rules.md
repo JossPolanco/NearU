@@ -185,7 +185,7 @@ Buttons should:
 * Have sufficient spacing.
 * Be easy to reach with one thumb.
 
-Avoid relying on hover interactions.
+Avoid relying on hover interactions. Since this application is mobile-first, hover effects (such as border color changes or shadows on hover) must be changed primarily to active/click states on mobile devices (e.g. using `active:border-primary` instead of plain `hover:border-primary`, or restricting `hover:` classes with the `md:` breakpoint like `md:hover:border-primary` so they only apply on desktop/tablet widths).
 
 ---
 

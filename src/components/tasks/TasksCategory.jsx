@@ -15,7 +15,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
     const isImageUrl = typeof icon === 'string' && (icon.startsWith('http') || icon.startsWith('/') || icon.startsWith('.') || icon.startsWith('data:'));
 
     return (
-        <div className={`w-full bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 rounded-3xl p-5 mb-4 shadow-2xs hover:shadow-xs hover:border-primary/20 dark:hover:border-primary/30 transition-all duration-300 active:scale-[0.985] cursor-pointer group `}
+        <div className={`w-full bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 rounded-3xl p-5 mb-4 shadow-2xs active:shadow-xs active:border-primary/20 dark:active:border-primary/30 md:hover:shadow-xs md:hover:border-primary/20 dark:md:hover:border-primary/30 transition-all duration-300 active:scale-[0.985] cursor-pointer group `}
             onClick={handleNavigate}
         >
             <div className="flex gap-4 items-start pb-4 border-b border-base-100 dark:border-base-850/30">
@@ -26,13 +26,13 @@ export default function TasksCategory({ idCategory, title, description, icon, to
                         className="w-12 h-12 rounded-2xl bg-base-200 p-1 object-cover shrink-0"
                     />
                 ) : (
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-3xs transition-transform duration-300 group-hover:scale-105 ${iconBgClass}`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-3xs transition-transform duration-300 group-active:scale-105 md:group-hover:scale-105 ${iconBgClass}`}>
                         <IconComponent className="w-6 h-6 animate-pulse" style={{ animationDuration: '3s' }} />
                     </div>
                 )}
 
                 <div className="flex flex-col min-w-0 flex-1">
-                    <h2 className="text-lg font-bold text-base-content group-hover:text-primary transition-colors duration-300 leading-snug">
+                    <h2 className="text-lg font-bold text-base-content group-active:text-primary md:group-hover:text-primary transition-colors duration-300 leading-snug">
                         {title || "Categoría sin título"}
                     </h2>
                     {description && (
@@ -47,7 +47,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
                     <div
                         tabIndex={0}
                         role="button"
-                        className="btn btn-ghost btn-circle btn-sm text-base-content/60 hover:text-primary hover:bg-base-200/50 transition-colors"
+                        className="btn btn-ghost btn-circle btn-sm text-base-content/60 active:text-primary active:bg-base-200/50 md:hover:text-primary md:hover:bg-base-200/50 transition-colors"
                         aria-label="Opciones de categoría"
                     >
                         <MoreVertical className="w-4.5 h-4.5" />
@@ -63,7 +63,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
                                     e.currentTarget.blur();
                                     onEdit();
                                 }}
-                                className="flex items-center gap-2 text-xs font-medium py-2 rounded-xl text-base-content hover:bg-base-200/60 transition-colors"
+                                className="flex items-center gap-2 text-xs font-medium py-2 rounded-xl text-base-content active:bg-base-200/60 md:hover:bg-base-200/60 transition-colors"
                             >
                                 <Edit2 className="w-3.5 h-3.5" /> Editar
                             </button>
@@ -75,7 +75,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
                                     e.currentTarget.blur();
                                     onDelete();
                                 }}
-                                className="flex items-center gap-2 text-xs font-medium py-2 rounded-xl text-error hover:text-error hover:bg-error/10 transition-colors"
+                                className="flex items-center gap-2 text-xs font-medium py-2 rounded-xl text-error active:text-error active:bg-error/10 md:hover:text-error md:hover:bg-error/10 transition-colors"
                             >
                                 <Trash2 className="w-3.5 h-3.5" /> Eliminar
                             </button>
