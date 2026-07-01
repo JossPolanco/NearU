@@ -1,8 +1,8 @@
-import { getCategoryStyle } from "../../utils/getCategoryStyle"
+import { getCategoryIcon } from "../../utils/getCategoryIcon"
 import { Heart, Sparkles, MoreVertical, Edit2, Trash2 } from "lucide-react"
 import { useNavigate } from "react-router"
 
-export default function TasksCategory({ idCategory, title, description, image, totalTask = 0, completedTask = 0, onEdit, onDelete }) {
+export default function TasksCategory({ idCategory, title, description, icon, totalTask = 0, completedTask = 0, onEdit, onDelete }) {
     const navigate = useNavigate()
     const percentage = totalTask > 0 ? (completedTask / totalTask) * 100 : 0;
     const isCompleted = totalTask > 0 && completedTask === totalTask;
@@ -11,16 +11,16 @@ export default function TasksCategory({ idCategory, title, description, image, t
         navigate(`/task/${idCategory}`)
     }
 
-    const { icon: IconComponent, bg: iconBgClass } = getCategoryStyle(title);
+    const { icon: IconComponent, bg: iconBgClass } = getCategoryIcon(icon);
 
     return (
         <div className={`w-full bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 rounded-3xl p-5 mb-4 shadow-2xs hover:shadow-xs hover:border-primary/20 dark:hover:border-primary/30 transition-all duration-300 active:scale-[0.985] cursor-pointer group `}
             onClick={handleNavigate}
         >
             <div className="flex gap-4 items-start pb-4 border-b border-base-100 dark:border-base-850/30">
-                {image ? (
+                {icon ? (
                     <img
-                        src={image}
+                        src={icon}
                         alt={title || "Category Icon"}
                         className="w-12 h-12 rounded-2xl bg-base-200 p-1 object-cover shrink-0"
                     />
@@ -41,6 +41,7 @@ export default function TasksCategory({ idCategory, title, description, image, t
                     )}
                 </div>
 
+                {/* Opciones de categoría */}
                 <div className="dropdown dropdown-end shrink-0 left-4" onClick={(e) => e.stopPropagation()}>
                     <div
                         tabIndex={0}
@@ -52,7 +53,7 @@ export default function TasksCategory({ idCategory, title, description, image, t
                     </div>
                     <ul
                         tabIndex={0}
-                        className="dropdown-content menu p-1.5 shadow-xl bg-base-100/95 dark:bg-base-950/95 border border-base-200 dark:border-base-800 rounded-2xl w-36 z-[1] backdrop-blur"
+                        className="dropdown-content menu p-1.5 shadow-xl bg-base-100/95 dark:bg-base-950/95 border border-base-200 dark:border-base-800 rounded-2xl w-36 z-1 backdrop-blur"
                     >
                         <li>
                             <button

@@ -164,6 +164,7 @@ export default function Tasks() {
                             title={category.title}
                             description={category.description}
                             totalTask={category.totalTask}
+                            icon={category.icon}
                             completedTask={category.completedTask}
                             onEdit={() => handleOpenEditModal(category)}
                             onDelete={() => handleDeleteCategory(category.id)}

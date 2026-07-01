@@ -1,11 +1,11 @@
-import { getTasks, getTaskCategory, createTask, deleteTask, completeTask } from "../../services/tasks"
+import { getTasks, getTaskCategory, createTask, deleteTask, completeTask, updateTask } from "../../services/tasks"
 import { ArrowLeft, Trash2, Sparkles, Heart, ClipboardList, Plus, Loader2 } from "lucide-react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useParams, useNavigate } from "react-router"
-import { Modal, FabAdd } from "@/components"
+import { Modal, FabAdd, TaskItem } from "@/components"
 import { useForm } from "react-hook-form"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import z from "zod"
 
 const createTaskSchema = z.object({
@@ -18,8 +18,9 @@ export default function TaskDetail() {
     const navigate = useNavigate()
     const queryClient = useQueryClient()
     const refModal = useRef(null)
+    const [editingTaskId, setEditingTaskId] = useState(null)
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
         resolver: zodResolver(createTaskSchema)
     })
 
@@ -68,8 +69,39 @@ export default function TaskDetail() {
         }
     })
 
-    const handleCreateTask = (data) => {
-        createTaskMutation.mutate(data)
+    const updateTaskMutation = useMutation({
+        mutationFn: ({ taskId, taskData }) => updateTask({ id: taskId, category_id: id, ...taskData }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["tasks", id] })
+            queryClient.invalidateQueries({ queryKey: ["task-categories"] })
+            refModal.current?.close()
+            reset()
+            setEditingTaskId(null)
+        },
+        onError: (error) => {
+            console.error("Error updating task:", error)
+        }
+    })
+
+    const handleSubmitTask = (data) => {
+        if (editingTaskId) {
+            updateTaskMutation.mutate({ taskId: editingTaskId, taskData: data })
+        } else {
+            createTaskMutation.mutate(data)
+        }
+    }
+
+    const handleOpenCreateModal = () => {
+        setEditingTaskId(null)
+        reset({ title: "", description: "" })
+        refModal.current?.open()
+    }
+
+    const handleOpenEditModal = (task) => {
+        setEditingTaskId(task.id)
+        setValue("title", task.title)
+        setValue("description", task.description || "")
+        refModal.current?.open()
     }
 
     const handleToggle = (taskId, currentStatus) => {
@@ -87,6 +119,9 @@ export default function TaskDetail() {
     const percentage = totalTasksCount > 0 ? (completedTasksCount / totalTasksCount) * 100 : 0
     const allCompleted = totalTasksCount > 0 && completedTasksCount === totalTasksCount
 
+    const modalTitle = editingTaskId ? "Editar Tarea ✏️" : "Nueva Tarea ✨"
+    const modalSubtitle = editingTaskId ? "Actualiza los detalles de la tarea." : "Añade una tarea para hacer juntos en esta lista."
+    const isPending = createTaskMutation.isPending || updateTaskMutation.isPending
     const isLoading = isLoadingCategory || isLoadingTasks
 
     return (
@@ -174,70 +209,17 @@ export default function TaskDetail() {
                     {/* Tasks List */}
                     <div className="space-y-3">
                         {tasks && tasks.length > 0 ? (
-                            tasks.map((task) => {
-                                const isToggling = toggleTaskMutation.isPending && toggleTaskMutation.variables?.taskId === task.id;
-                                const isDeleting = deleteTaskMutation.isPending && deleteTaskMutation.variables === task.id;
-
-                                return (
-                                    <div
-                                        key={task.id}
-                                        onClick={() => !isToggling && !isDeleting && handleToggle(task.id, task.completed)}
-                                        className={`group flex items-center justify-between gap-4 p-4 rounded-2xl border transition-all duration-300 cursor-pointer select-none active:scale-98
-                                            ${task.completed
-                                                ? "bg-base-200/30 border-base-200 text-base-content/40"
-                                                : "bg-base-100 border-base-200/60 text-base-content hover:border-primary/20 hover:shadow-xs"
-                                            }
-                                            ${isDeleting ? "opacity-50 pointer-events-none scale-95" : ""}
-                                        `}
-                                    >
-                                        <div className="flex items-center gap-3.5 flex-1 min-w-0">
-                                            {/* Custom Beautiful Checkbox Area */}
-                                            <div className="relative flex items-center justify-center w-6 h-6 shrink-0">
-                                                {isToggling ? (
-                                                    <span className="loading loading-spinner loading-xs text-primary"></span>
-                                                ) : (
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={task.completed || false}
-                                                        onChange={() => { }} // Handled by parent div onClick
-                                                        className="checkbox checkbox-primary checkbox-sm rounded-lg border-base-300/80 transition-all duration-300 pointer-events-none"
-                                                    />
-                                                )}
-                                            </div>
-
-                                            {/* Title & Description */}
-                                            <div className="space-y-0.5 min-w-0">
-                                                <h3 className={`font-semibold text-sm leading-tight transition-all duration-300 ${task.completed ? 'line-through text-base-content/40' : 'text-base-content'}`}>
-                                                    {task.title}
-                                                </h3>
-                                                {task.description && (
-                                                    <p className={`text-xs transition-all duration-300 ${task.completed ? 'text-base-content/30' : 'text-base-content/50'} line-clamp-2 leading-relaxed`}>
-                                                        {task.description}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Action Button: Delete */}
-                                        <button
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.stopPropagation() // Prevent toggling when clicking delete
-                                                handleDelete(task.id)
-                                            }}
-                                            className="btn btn-circle btn-ghost btn-xs text-base-content/30 hover:text-error hover:bg-error/10 transition-colors opacity-80 md:opacity-0 md:group-hover:opacity-100"
-                                            disabled={isDeleting}
-                                            aria-label="Eliminar tarea"
-                                        >
-                                            {isDeleting ? (
-                                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                            ) : (
-                                                <Trash2 className="w-3.5 h-3.5" />
-                                            )}
-                                        </button>
-                                    </div>
-                                )
-                            })
+                            tasks.map((task) => (
+                                <TaskItem
+                                    key={task.id}
+                                    task={task}
+                                    onToggle={handleToggle}
+                                    onEdit={() => handleOpenEditModal(task)}
+                                    onDelete={() => handleDelete(task.id)}
+                                    isToggling={toggleTaskMutation.isPending && toggleTaskMutation.variables?.taskId === task.id}
+                                    isDeleting={deleteTaskMutation.isPending && deleteTaskMutation.variables === task.id}
+                                />
+                            ))
                         ) : (
                             <div className="flex flex-col items-center justify-center p-8 border border-dashed border-base-300 rounded-3xl text-center space-y-2">
                                 <span className="text-2xl">🌱</span>
@@ -251,12 +233,12 @@ export default function TaskDetail() {
 
             {/* Floating Action Button (FabAdd) to Add Task */}
             {!isLoading && (
-                <FabAdd onClick={() => refModal.current?.open()} />
+                <FabAdd onClick={handleOpenCreateModal} />
             )}
 
-            {/* Modal for Creating Task */}
-            <Modal ref={refModal} modalTitle="Nueva Tarea ✨" modalSubtitle="Añade una tarea para hacer juntos en esta lista.">
-                <form onSubmit={handleSubmit(handleCreateTask)} className="space-y-4">
+            {/* Modal for Creating/Editing Task */}
+            <Modal ref={refModal} modalTitle={modalTitle} modalSubtitle={modalSubtitle}>
+                <form onSubmit={handleSubmit(handleSubmitTask)} className="space-y-4">
                     <div className="space-y-3">
                         {/* Title Field */}
                         <div className="form-control">
@@ -299,9 +281,9 @@ export default function TaskDetail() {
                             <button
                                 className="btn btn-primary w-full rounded-2xl flex items-center justify-center gap-2"
                                 type="submit"
-                                disabled={createTaskMutation.isPending}
+                                disabled={isPending}
                             >
-                                {createTaskMutation.isPending ? (
+                                {isPending ? (
                                     <>
                                         <span className="loading loading-spinner loading-xs"></span>
                                         <span>Guardando...</span>
@@ -309,7 +291,7 @@ export default function TaskDetail() {
                                 ) : (
                                     <>
                                         <Plus className="w-4 h-4" />
-                                        <span>Añadir para los dos</span>
+                                        <span>{editingTaskId ? "Guardar cambios" : "Añadir para los dos"}</span>
                                     </>
                                 )}
                             </button>

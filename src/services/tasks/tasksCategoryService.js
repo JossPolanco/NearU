@@ -36,6 +36,7 @@ export async function getTaskCategories() {
             id,
             title,
             description,
+            icon,
             tbl_tasks (
                 completed,
                 active
@@ -54,6 +55,7 @@ export async function getTaskCategories() {
             id: category.id,
             title: category.title,
             description: category.description,
+            icon: category.icon,
             totalTask,
             completedTask
         }
