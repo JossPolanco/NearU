@@ -1,14 +1,14 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { createTaskCategory, getTaskCategories, updateTaskCategory, deleteTaskCategory } from "@/services/tasks"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { ArrowLeft, ClipboardList, Plus, Loader2 } from "lucide-react"
 import { FabAdd, Modal, TasksCategory } from "@/components"
+import { PRESET_ICONS } from "../../utils/getCategoryIcon"
+import { SUGGESTIONS } from "../../utils/getSuggestions"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate } from "react-router"
 import { useForm } from "react-hook-form"
 import { useRef, useState } from "react"
 import z from "zod"
-import { ArrowLeft, Trash2, Sparkles, ClipboardList, Plus, Loader2 } from "lucide-react"
-import { SUGGESTIONS } from "../../utils/getSuggestions"
-import { PRESET_ICONS } from "../../utils/getCategoryIcon"
 
 const createTaskCategorySchema = z.object({
     title: z.string().min(1, "El título es requerido"),
@@ -223,9 +223,8 @@ export default function Tasks() {
                             <input
                                 type="text"
                                 placeholder="Ej. Películas por ver, Compras..."
-                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${
-                                    errors.title ? "input-error" : ""
-                                }`}
+                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.title ? "input-error" : ""
+                                    }`}
                                 {...register("title")}
                             />
                             {errors.title && (
@@ -246,9 +245,8 @@ export default function Tasks() {
                             </label>
                             <textarea
                                 placeholder="Escribe aquí de qué trata esta lista..."
-                                className={`textarea textarea-bordered rounded-2xl w-full h-24 resize-none focus:outline-none focus:border-primary transition-all duration-200 ${
-                                    errors.description ? "input-error" : ""
-                                }`}
+                                className={`textarea textarea-bordered rounded-2xl w-full h-24 resize-none focus:outline-none focus:border-primary transition-all duration-200 ${errors.description ? "input-error" : ""
+                                    }`}
                                 {...register("description")}
                             />
                             {errors.description && (
@@ -277,11 +275,10 @@ export default function Tasks() {
                                             key={preset.id}
                                             type="button"
                                             onClick={() => setValue("icon", preset.id)}
-                                            className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all duration-200 md:hover:scale-102 active:scale-98 ${
-                                                isSelected
+                                            className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all duration-200 md:hover:scale-102 active:scale-98 ${isSelected
                                                     ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs ring-1 ring-primary/30"
                                                     : "border-base-200 active:border-primary/20 md:hover:border-base-300 dark:border-base-800 dark:md:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
-                                            }`}
+                                                }`}
                                         >
                                             <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-3xs ${preset.bg}`}>
                                                 <IconComponent className="w-5 h-5" />
@@ -307,7 +304,7 @@ export default function Tasks() {
                                     <span>{editingCategoryId ? "Guardando..." : "Creando..."}</span>
                                 </>
                             ) : (
-                                <>                                    
+                                <>
                                     <span>{editingCategoryId ? "Guardar cambios" : "Crear listita"}</span>
                                 </>
                             )}
