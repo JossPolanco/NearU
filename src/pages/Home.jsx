@@ -15,6 +15,10 @@ export default function Home() {
       <button className="btn btn-primary" onClick={() => navigate('/tasks')}>
         Pagina de tareas
       </button>
+
+      <button className="btn btn-primary" onClick={() => navigate('/dates')}>
+        Pagina de dates
+      </button>
     </div>
   )
 }

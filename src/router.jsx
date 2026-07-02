@@ -1,4 +1,4 @@
-import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail } from "@/pages";
+import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates } from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
@@ -79,7 +79,15 @@ export const router = createBrowserRouter([
                         <TaskDetail />
                     </Layout>
                 )
-            }
+            },
+            {
+                path: "/dates",
+                element: (
+                    <Layout>
+                        <Dates />
+                    </Layout>
+                )
+            },
         ]
     },
     {

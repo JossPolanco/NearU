@@ -20,3 +20,6 @@ export { default as NotFound } from "./NotFound";
 // TASKS PAGES
 export { default as TaskDetail } from "./tasks/TaskDetail";
 export { default as Tasks } from "./tasks/Tasks";
+
+// DATES PAGES
+export { default as Dates } from "./dates/Dates";

@@ -129,7 +129,7 @@ export default function TaskDetail() {
             {/* Header / Navigation */}
             <div className="flex items-center justify-between py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
                 <button
-                    className="btn btn-circle btn-secondary text-base-content/60 active:text-primary active:bg-base-200/50 md:hover:text-primary md:hover:bg-base-200/50 transition-all duration-200"
+                    className="btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >

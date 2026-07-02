@@ -14,7 +14,6 @@
     --color-yellow-400: oklch(85.2% 0.199 91.936);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
     --color-green-500: oklch(72.3% 0.219 149.579);
-    --color-green-600: oklch(62.7% 0.194 149.214);
     --color-cyan-400: oklch(78.9% 0.154 211.53);
     --color-violet-500: oklch(60.6% 0.25 292.717);
     --color-pink-500: oklch(65.6% 0.241 354.308);
@@ -2835,6 +2834,11 @@
       }
     }
   }
+  .mask-heart {
+    @layer daisyui.l1.l2 {
+      mask-image: url("data:image/svg+xml,%3csvg width='200' height='185' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M100 184.606a15.384 15.384 0 0 1-8.653-2.678C53.565 156.28 37.205 138.695 28.182 127.7 8.952 104.264-.254 80.202.005 54.146.308 24.287 24.264 0 53.406 0c21.192 0 35.869 11.937 44.416 21.879a2.884 2.884 0 0 0 4.356 0C110.725 11.927 125.402 0 146.594 0c29.142 0 53.098 24.287 53.4 54.151.26 26.061-8.956 50.122-28.176 73.554-9.023 10.994-25.383 28.58-63.165 54.228a15.384 15.384 0 0 1-8.653 2.673Z' fill='black' fill-rule='nonzero'/%3e%3c/svg%3e");
+    }
+  }
   .fill-amber-400 {
     fill: var(--color-amber-400);
   }
@@ -3570,6 +3574,14 @@
       }
     }
   }
+  .active\:bg-primary\/80 {
+    &:active {
+      background-color: var(--color-primary);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-primary) 80%, transparent);
+      }
+    }
+  }
   .active\:text-error {
     &:active {
       color: var(--color-error);
@@ -3578,6 +3590,11 @@
   .active\:text-primary {
     &:active {
       color: var(--color-primary);
+    }
+  }
+  .active\:text-white {
+    &:active {
+      color: var(--color-white);
     }
   }
   .active\:shadow-xs {
@@ -3770,6 +3787,18 @@
       }
     }
   }
+  .md\:hover\:bg-primary\/80 {
+    @media (width >= 48rem) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--color-primary);
+          @supports (color: color-mix(in lab, red, red)) {
+            background-color: color-mix(in oklab, var(--color-primary) 80%, transparent);
+          }
+        }
+      }
+    }
+  }
   .md\:hover\:text-error {
     @media (width >= 48rem) {
       &:hover {
@@ -3784,6 +3813,15 @@
       &:hover {
         @media (hover: hover) {
           color: var(--color-primary);
+        }
+      }
+    }
+  }
+  .md\:hover\:text-white {
+    @media (width >= 48rem) {
+      &:hover {
+        @media (hover: hover) {
+          color: var(--color-white);
         }
       }
     }
