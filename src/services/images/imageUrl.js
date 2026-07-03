@@ -122,3 +122,43 @@ export const getTransformedUrl = async (storagePath, bucket, transform = {}, exp
         data: { signedUrl: data.signedUrl },
     };
 };
+
+/**
+ * Generic helper to resolve signed URLs for any list of items containing a relationship to image_metadata.
+ * It batches the requests to Supabase storage to optimize performance.
+ */
+export const resolveSignedUrlsForItems = async (items, pathKey = "image_metadata.storage_path", bucketKey = "image_metadata.bucket", urlOutputKey = "coverUrl") => {
+    const getNested = (obj, path) => {
+        return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+    }
+
+    if (!items || items.length === 0) return [];
+
+    const itemsWithImages = items.filter(item => getNested(item, pathKey));
+    if (itemsWithImages.length === 0) {
+        return items.map(item => ({ ...item, [urlOutputKey]: null }));
+    }
+
+    try {
+        const imagesForSigned = itemsWithImages.map(item => ({
+            id: item.id,
+            storagePath: getNested(item, pathKey)
+        }));
+
+        const firstItem = itemsWithImages[0];
+        const bucket = getNested(firstItem, bucketKey) || "photos";
+
+        const urlsResult = await getSignedUrls(imagesForSigned, bucket, URL_EXPIRY.GALLERY);
+        if (urlsResult.success) {
+            const urlMap = new Map(urlsResult.data.urls.map(u => [u.id, u.signedUrl]));
+            return items.map(item => ({
+                ...item,
+                [urlOutputKey]: urlMap.get(item.id) ?? null
+            }));
+        }
+    } catch (e) {
+        console.error("Error in resolveSignedUrlsForItems:", e);
+    }
+
+    return items.map(item => ({ ...item, [urlOutputKey]: null }));
+};

@@ -18,3 +18,6 @@ export { default as UploadPanel } from './images/UploadPanel'
 // TASKS COMPONENTS
 export { default as TasksCategory } from './tasks/TasksCategory'
 export { default as TaskItem } from './tasks/TaskItem'
+
+// DATES COMPONENTS
+export { default as DateItem } from './dates/DateItem'

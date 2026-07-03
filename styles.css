@@ -2,3 +2,37 @@
 @plugin "daisyui" {
     themes: light --default, dark --prefersdark, valentine;
 }
+
+/* Customizations for react-day-picker to follow DaisyUI theme colors */
+.rdp-root {
+  --rdp-accent-color: var(--color-primary) !important;
+  --rdp-accent-background-color: var(--color-primary) !important;
+}
+
+/* Selected Day styling */
+.rdp-day_selected,
+.rdp-day_selected:hover,
+.rdp-day_selected:focus,
+.rdp-day_selected:active {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-content) !important;
+}
+
+/* Today styling */
+.rdp-day_today:not(.rdp-day_selected) {
+  color: var(--color-primary) !important;
+  font-weight: bold;
+}
+
+/* Navigation buttons (chevrons and arrows) styling */
+.rdp-chevron {
+  fill: var(--color-base-content) !important;
+}
+
+.rdp-nav_button {
+  color: var(--color-base-content) !important;
+}
+
+.rdp-nav_button:hover {
+  background-color: var(--color-base-200) !important;
+}
