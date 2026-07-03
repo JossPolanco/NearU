@@ -1,6 +1,8 @@
 import { MoreVertical, Edit2, Trash2, Loader2, CalendarHeart } from "lucide-react"
+import { useNavigate } from "react-router";
 
-export default function DateItem({ date, onEdit, onDelete, isDeleting }) {    
+export default function DateItem({ date, onEdit, onDelete, isDeleting }) {
+    const navigate = useNavigate();
     const parseDate = (dateString) => {
         if (!dateString) return ""
         const datePart = dateString.split(/[T ]/)[0]
@@ -8,8 +10,12 @@ export default function DateItem({ date, onEdit, onDelete, isDeleting }) {
         return date.toLocaleDateString()
     }
 
+    const handleNavigate = () => {
+        navigate(`/date/${date.id}`)
+    }
+
     return (
-        <div className="group flex items-center justify-between gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 transition-all duration-300 shadow-2xs select-none active:scale-[0.99] md:hover:shadow-xs active:border-primary/20 md:hover:border-primary/20">
+        <div onClick={handleNavigate} className="group flex items-center justify-between gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 transition-all duration-300 shadow-2xs select-none active:scale-[0.99] md:hover:shadow-xs active:border-primary/20 md:hover:border-primary/20">
             <div className="flex items-center gap-4 flex-1 min-w-0">
                 {/* Cover Image/Placeholder on the Left */}
                 <div className="w-20 h-20 shrink-0 bg-base-200 dark:bg-base-800 rounded-2xl flex items-center justify-center border border-base-300/40 text-base-content/30 shadow-3xs overflow-hidden">

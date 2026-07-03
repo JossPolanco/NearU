@@ -1,8 +1,10 @@
-import { Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates } from "@/pages";
+import {
+    Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration,
+    Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail
+} from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
-import React from "react";
 
 export const router = createBrowserRouter([
     {
@@ -88,6 +90,14 @@ export const router = createBrowserRouter([
                     </Layout>
                 )
             },
+            {
+                path: "/date/:id",
+                element: (
+                    <Layout>
+                        <DateDetail />
+                    </Layout>
+                )
+            }
         ]
     },
     {
