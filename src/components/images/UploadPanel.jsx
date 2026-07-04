@@ -1,6 +1,8 @@
 import { useImageUpload } from "../../hooks/images/useImageUpload";
-import { imageKeys } from "../../hooks/images/useImages";
+import { imageKeys, useSingleImage } from "../../hooks/images/useImages";
 import { useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "../../services/user/userService";
 
 const formatBytes = (bytes) => {
     if (!bytes) return '—'
@@ -20,32 +22,65 @@ const STAGE_LABELS = {
     error: { text: 'Ocurrió un error', badge: 'badge-error', progress: 0, progressColor: 'progress-error' },
 }
 
-export default function UploadPanel({ user, className, background, bucket, profile, gallery = 'default' }) {
+export default function UploadPanel({ user, className = "", bucket = "photos", profile = "photo", gallery = "default", label, value, onChange,
+    background = "card bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 shadow-3xs rounded-3xl" }) {
     const fileInputRef = useRef(null)
+
+    // Fallback query to load the user profile if none is provided
+    const { data: userFromQuery } = useQuery({
+        queryKey: ["user"],
+        queryFn: getCurrentUser,
+        enabled: !user,
+    });
+    const currentUser = user || userFromQuery;
 
     const { upload, state, reset } = useImageUpload({
         bucket: bucket,
         profile: profile,
         gallery: gallery,
         invalidateQueries: [imageKeys.list(bucket, gallery)],
+        onSuccess: (image) => {
+            if (onChange) {
+                onChange(image.id);
+            }
+        }
     })
 
     const { stage, progress, previewUrl, error } = state
     const stageInfo = STAGE_LABELS[stage]
     const isProcessing = ['validating', 'optimizing', 'uploading', 'saving'].includes(stage)
+    const isBtnDisabled = isProcessing || !currentUser;
+
+    // Retrieve single image details when a value is provided and no local upload is in progress
+    const { data: currentImage } = useSingleImage(value, {
+        enabled: Boolean(value) && !previewUrl,
+    });
+
+    const displayPreviewUrl = previewUrl || currentImage?.signedUrl;
 
     const handleFileChange = (e) => {
         const file = e.target.files?.[0]
         if (!file) return
+        if (!currentUser) {
+            console.error("No se pudo subir la imagen porque no hay un usuario autenticado.");
+            return;
+        }
         // Limpia el input para permitir seleccionar el mismo archivo de nuevo
         e.target.value = ''
-        upload(file, user.id)
+        upload(file, currentUser.id)
+    }
+
+    const handleReset = () => {
+        reset();
+        if (onChange) {
+            onChange(null);
+        }
     }
 
     return (
         <div className={`${className} ${background} `}>
             <div className="card-body space-y-4">
-                <h2 className="card-title text-base">Subir imagen</h2>
+                <h2 className="card-title text-base">{label || "Subir imagen"}</h2>
 
                 {/* Zona de selección */}
                 <input
@@ -54,13 +89,14 @@ export default function UploadPanel({ user, className, background, bucket, profi
                     accept="image/jpeg,image/png,image/webp"
                     className="hidden"
                     onChange={handleFileChange}
-                    disabled={isProcessing}
+                    disabled={isBtnDisabled}
                 />
 
                 <button
                     className="btn btn-primary w-full"
                     onClick={() => fileInputRef.current?.click()}
-                    disabled={isProcessing}
+                    disabled={isBtnDisabled}
+                    type="button"
                 >
                     {isProcessing ? (
                         <span className="loading loading-spinner loading-sm" />
@@ -99,33 +135,19 @@ export default function UploadPanel({ user, className, background, bucket, profi
                     )
                 }
 
-                {/* Preview de la imagen optimizada */}
-                {previewUrl && (
+                {/* Preview de la imagen */}
+                {displayPreviewUrl && (
                     <div className="space-y-1">
-                        <p className="text-xs text-base-content/60">Vista previa (WebP optimizado)</p>
+                        <p className="text-xs text-base-content/60">
+                            {previewUrl ? "Vista previa (WebP optimizado)" : "Imagen seleccionada"}
+                        </p>
                         <img
-                            src={previewUrl}
+                            src={displayPreviewUrl}
                             alt="Preview"
                             className="rounded-lg w-full max-h-48 object-cover border border-base-300"
                         />
                     </div>
                 )}
-
-                {/* Resultado exitoso: metadata guardada */}
-                {/* {stage === 'success' && result && (
-                    <div className="bg-success/10 border border-success/30 rounded-lg p-3 space-y-1 text-sm">
-                        <p className="font-medium text-success">Guardado correctamente</p>
-                        <p className="text-base-content/70">
-                            Tamaño: <span className="font-mono">{formatBytes(result.file_size)}</span>
-                        </p>
-                        <p className="text-base-content/70">
-                            Dimensiones: <span className="font-mono">{result.width} × {result.height}px</span>
-                        </p>
-                        <p className="text-base-content/70 break-all">
-                            Path: <span className="font-mono text-xs">{result.storage_path}</span>
-                        </p>
-                    </div>
-                )} */}
 
                 {/* Error */}
                 {stage === 'error' && (
@@ -134,10 +156,10 @@ export default function UploadPanel({ user, className, background, bucket, profi
                     </div>
                 )}
 
-                {/* Botón para reiniciar después de éxito o error */}
-                {(stage === 'success' || stage === 'error') && (
-                    <button className="btn btn-ghost btn-sm" onClick={reset}>
-                        Subir otra imagen
+                {/* Botón para reiniciar después de éxito o error o si ya tiene un valor establecido */}
+                {(stage === 'success' || stage === 'error' || (value && !isProcessing)) && (
+                    <button className="btn btn-ghost btn-sm w-full" onClick={handleReset} type="button">
+                        Eliminar / Subir otra imagen
                     </button>
                 )}
             </div>

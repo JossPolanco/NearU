@@ -19,7 +19,7 @@ const INITIAL_STATE = {
 };
 
 
-export const useImageUpload = ({ bucket = BUCKETS.PHOTOS, gallery = "default", profile = "photo", invalidateQueries = [], } = {}) => {
+export const useImageUpload = ({ bucket = BUCKETS.PHOTOS, gallery = "default", profile = "photo", invalidateQueries = [], onSuccess } = {}) => {
     const [state, setState] = useState(INITIAL_STATE);
     const queryClient = useQueryClient();
 
@@ -125,8 +125,12 @@ export const useImageUpload = ({ bucket = BUCKETS.PHOTOS, gallery = "default", p
                 stage: "success",
                 result: metadata.data.image,
             });
+
+            if (onSuccess) {
+                onSuccess(metadata.data.image);
+            }
         },
-        [bucket, gallery, profile, invalidateQueries, queryClient, updateState]
+        [bucket, gallery, profile, invalidateQueries, queryClient, updateState, onSuccess]
     );
 
     /**

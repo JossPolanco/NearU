@@ -1,7 +1,7 @@
 import { createDate, getAllDates, updateDate, deleteDate } from "@/services/dates";
 import { ArrowLeft, Plus, Loader2, CalendarHeart, Calendar } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FabAdd, Modal, DateItem } from "@/components";
+import { FabAdd, Modal, DateItem, UploadPanel } from "@/components";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useResolveSignedUrls } from "@/hooks";
@@ -264,6 +264,19 @@ export default function Dates() {
                                 </label>
                             )}
                         </div>
+
+                        {/* Cover */}
+                        <Controller
+                            name="coverId"
+                            control={control}
+                            render={({ field: { onChange, value } }) => (
+                                <UploadPanel
+                                    label="Imagen de portadita"
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
 
                         {/* Calendar Selector (DayPicker) */}
                         <div className="form-control">

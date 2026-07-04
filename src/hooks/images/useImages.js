@@ -2,8 +2,8 @@
  * Hook para recuperar imágenes desde PostgreSQL y generar sus Signed URLs..
  */
 
-import { getSignedUrls, getTransformedUrl, URL_EXPIRY } from "@/services/images/imageUrl";
-import { getImagesByBucket } from "@/services/images/imageMetadata";
+import { getSignedUrls, getSignedUrl, getTransformedUrl, URL_EXPIRY } from "@/services/images/imageUrl";
+import { getImagesByBucket, getImageById } from "@/services/images/imageMetadata";
 import { useQuery } from "@tanstack/react-query";
 
 export const imageKeys = {
@@ -114,4 +114,32 @@ export const useImageDetail = (image, enabled = true) => {
         isLoading,
         isError,
     };
+};
+
+export const useSingleImage = (imageId, options = {}) => {
+    return useQuery({
+        queryKey: imageKeys.detail(imageId),
+        queryFn: async () => {
+            if (!imageId) return null;
+            const metadataResult = await getImageById(imageId);
+            if (!metadataResult.success) {
+                throw new Error("No se pudo obtener la metadata de la imagen.");
+            }
+            const img = metadataResult.data.image;
+            const urlResult = await getSignedUrl(img.storage_path, img.bucket, URL_EXPIRY.GALLERY);
+            if (!urlResult.success) {
+                throw new Error("No se pudo firmar la URL de la imagen.");
+            }
+            return {
+                ...img,
+                signedUrl: urlResult.data.signedUrl
+            };
+        },
+        enabled: Boolean(imageId) && (options.enabled ?? true),
+        staleTime: 5 * 60 * 1000,
+        gcTime: 30 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        retry: 1,
+        ...options
+    });
 };

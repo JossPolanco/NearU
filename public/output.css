@@ -1905,6 +1905,48 @@
       }
     }
   }
+  .rating {
+    @layer daisyui.l1.l2.l3 {
+      position: relative;
+      display: inline-flex;
+      vertical-align: middle;
+      --size: var(--size-selector, 0.25rem) * 6;
+      input {
+        cursor: pointer;
+        appearance: none;
+      }
+      * {
+        border-radius: 0;
+        background-color: var(--color-base-content);
+        opacity: 20%;
+        width: calc(var(--size) * 1);
+        height: calc(var(--size));
+        @media (prefers-reduced-motion: no-preference) {
+          animation: rating 0.25s ease-out;
+        }
+      }
+      .rating-hidden {
+        width: calc(0.25rem * 2);
+        background-color: transparent;
+      }
+      :checked, [aria-checked="true"], [aria-current="true"], :has(~ :checked, ~ [aria-checked="true"], ~ [aria-current="true"]) {
+        opacity: 100%;
+      }
+      :focus-visible {
+        scale: 1.1;
+        @media (prefers-reduced-motion: no-preference) {
+          transition: scale 0.2s ease-out;
+        }
+      }
+      :active:focus {
+        animation: none;
+        scale: 1.1;
+      }
+    }
+    @layer daisyui.l1.l2 {
+      --size: var(--size-selector, 0.25rem) * 6;
+    }
+  }
   .drawer {
     @layer daisyui.l1.l2.l3 {
       position: relative;
@@ -3112,12 +3154,6 @@
       border-color: color-mix(in oklab, var(--color-success) 20%, transparent);
     }
   }
-  .border-success\/30 {
-    border-color: var(--color-success);
-    @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklab, var(--color-success) 30%, transparent);
-    }
-  }
   .border-white\/60 {
     border-color: color-mix(in srgb, #fff 60%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -3369,9 +3405,6 @@
   .p-2\.5 {
     padding: calc(var(--spacing) * 2.5);
   }
-  .p-3 {
-    padding: calc(var(--spacing) * 3);
-  }
   .p-4 {
     padding: calc(var(--spacing) * 4);
   }
@@ -3561,9 +3594,6 @@
   .tracking-wider {
     --tw-tracking: var(--tracking-wider);
     letter-spacing: var(--tracking-wider);
-  }
-  .break-all {
-    word-break: break-all;
   }
   .whitespace-nowrap {
     white-space: nowrap;
