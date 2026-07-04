@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Sparkles, Heart, ClipboardList, CalendarHeart } from "lucide-react"
+import { ArrowLeft, Sparkles, Heart, ClipboardList, CalendarHeart, Plus } from "lucide-react"
 import { useParams, useNavigate } from 'react-router'
 import { useRef, useState } from 'react'
 import { getDateById, getDateTasks } from "@/services/dates"
+import { useResolveSignedUrls } from "@/hooks/images/useResolveSignedUrls"
 
 export default function DateDetail() {
     const { id } = useParams()
@@ -11,15 +12,21 @@ export default function DateDetail() {
     const refModal = useRef(null)
     const [editingDateId, setEditingDateId] = useState(null)
 
-    const { data: date, isLoading: isLoadingDate } = useQuery({
-        queryKey: ["date", id],
-        queryFn: () => getDateById(id),
-    })
-
     const { data: tasks, isLoading: isLoadingTasks } = useQuery({
         queryKey: ["DateTasks", id],
         queryFn: () => getDateTasks(id),
     })
+
+    const { data: date, isLoading: isLoadingDate } = useResolveSignedUrls(
+        ["date", id],
+        async () => {
+            const res = await getDateById(id)
+            return [res]
+        },
+        {
+            select: (data) => data?.[0]
+        }
+    )
 
     return (
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
@@ -49,7 +56,7 @@ export default function DateDetail() {
                     <div className="bg-gradient-to-br from-base-200/60 via-base-100/30 to-base-100 dark:from-base-900/50 dark:via-base-900/20 dark:to-base-950 p-5 rounded-3xl border border-base-200/60 dark:border-base-800/60 shadow-xs space-y-3">
                         <div className="flex items-center gap-4">
                             <div className="w-20 h-20 shrink-0 bg-base-200 dark:bg-base-800 rounded-2xl flex items-center justify-center border border-base-300/40 text-base-content/30 shadow-3xs overflow-hidden">
-                                {date.coverUrl ? (
+                                {date?.coverUrl ? (
                                     <img
                                         src={date.coverUrl}
                                         alt={date.title}
@@ -69,7 +76,7 @@ export default function DateDetail() {
                             </div>
                         </div>
 
-                        {date.short_description && (
+                        {date?.short_description && (
                             <div className="relative pl-3 border-l-2 border-primary/30 py-0.5">
                                 <p className="text-sm text-base-content/70 italic leading-relaxed">
                                     {date.short_description}
@@ -78,7 +85,7 @@ export default function DateDetail() {
                         )}
                     </div>
                     <div className="bg-base-100 border border-base-200/80 rounded-3xl p-5 shadow-2xs space-y-3">
-                        {date.description && (
+                        {date?.description && (
                             <div className="relative py-0.5">
                                 <p className="text-sm text-base-content/70 italic leading-relaxed">
                                     {date.description}
@@ -87,6 +94,7 @@ export default function DateDetail() {
                         )}
                     </div>
                     <div>
+                        <h3>Cosas por hacer</h3>
                         {tasks?.length === 0 && (
                             <div className="flex flex-col items-center justify-center py-16 space-y-3">
                                 <p className="text-sm text-base-content/50 font-medium">No hay tareas</p>
@@ -103,7 +111,9 @@ export default function DateDetail() {
                                 isPending={toggleTaskMutation.isPending}
                             />
                         ))}
-                        <button>Añadir tarea</button>
+                        <button className="btn btn-primary btn-circle mt-4 flex items-center justify-center gap-2" type="submit">
+                            <Plus className="w-6 h-6" />
+                        </button>
                     </div>
                 </>
             )}
