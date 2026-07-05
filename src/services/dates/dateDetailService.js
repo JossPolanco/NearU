@@ -12,14 +12,14 @@ export async function getDateById(id) {
     return data
 }
 
-export async function getDateTasks(id) {
+export async function updateDateDescription({ id, description }) {
     const { data, error } = await supabaseClient
-        .from("tbl_date_tasks")
-        .select("*")
-        .eq("date_id", id)
-        .eq("active", true)
+        .from("tbl_dates")
+        .update({ description: description, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .select()
+        .single()
 
     if (error) throw error
     return data
 }
-
