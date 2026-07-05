@@ -3,8 +3,10 @@ import { ArrowLeft, Sparkles, Heart, ClipboardList, CalendarHeart, Plus, Calenda
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useResolveSignedUrls } from "@/hooks/images/useResolveSignedUrls";
 import { useParams, useNavigate } from 'react-router';
-import { TaskItem, Modal } from "@/components";
+import { TaskItem, Modal, GalleryPanel, UploadPanel } from "@/components";
 import { useRef, useState } from 'react';
+import { addImageToDate } from "@/services/images/imageMetadata";
+import { imageKeys } from "@/hooks/images/useImages";
 
 export default function DateDetail() {
     const { id } = useParams()
@@ -87,6 +89,14 @@ export default function DateDetail() {
             refDescriptionModal.current?.close()
         },
         onError: (err) => console.error("Error updating description:", err)
+    })
+
+    const linkImageMutation = useMutation({
+        mutationFn: ({ imageId }) => addImageToDate(id, imageId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: imageKeys.list("photos", "dates", id) })
+        },
+        onError: (err) => console.error("Error al vincular imagen a la cita:", err)
     })
 
     // Interactive Handlers
@@ -256,8 +266,8 @@ export default function DateDetail() {
                             </div>
                         ) : tasks?.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-10 px-4 text-center bg-base-100 dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 shadow-3xs animate-fade-in">
-                                <span className="text-3xl mb-3">✨</span>
-                                <p className="text-sm font-semibold text-base-content/60">¿Qué planearemos hacer hoy?</p>
+                                <span className="text-3xl mb-3">💕</span>
+                                <p className="text-sm font-semibold text-base-content/60">¿Qué haremos?</p>
                                 <p className="text-xs text-base-content/40 mt-1 max-w-60">Añade actividades o cositas pendientes para hacer juntos durante esta cita.</p>
                                 <button
                                     onClick={handleOpenCreateModal}
@@ -281,6 +291,29 @@ export default function DateDetail() {
                                 ))}
                             </div>
                         )}
+                    </div>
+
+                    {/* Galería y Subida de fotos */}
+                    <div className="space-y-4 pt-4 border-t border-base-200/90 dark:border-base-800/40 animate-fade-in">
+                        <div className="flex items-center gap-2">
+                            <Sparkles className="w-5 h-5 text-primary" />
+                            <h2 className="text-lg font-bold text-base-content">Fotitos de la cita</h2>
+                        </div>
+                        <GalleryPanel
+                            bucket="photos"
+                            gallery="dates"
+                            dateId={id}
+                            enableDelete={true}
+                        />
+                        <UploadPanel
+                            bucket="photos"
+                            gallery="dates"
+                            mode="multi"
+                            invalidateQueries={[imageKeys.list("photos", "dates", id)]}
+                            onSuccess={(image) => {
+                                linkImageMutation.mutate({ imageId: image.id });
+                            }}
+                        />
                     </div>
                 </>
             )}

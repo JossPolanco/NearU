@@ -22,8 +22,21 @@ const STAGE_LABELS = {
     error: { text: 'Ocurrió un error', badge: 'badge-error', progress: 0, progressColor: 'progress-error' },
 }
 
-export default function UploadPanel({ user, className = "", bucket = "photos", profile = "photo", gallery = "default", label, value, onChange,
-    background = "card bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 shadow-3xs rounded-3xl" }) {
+export default function UploadPanel({
+    user,
+    className = "",
+    bucket = "photos",
+    profile = "photo",
+    gallery = "default",
+    label,
+    value,
+    onChange,
+    onSuccess,
+    invalidateQueries,
+    relation = null,
+    mode = "single",
+    background = "card bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 shadow-3xs rounded-3xl"
+}) {
     const fileInputRef = useRef(null)
 
     // Fallback query to load the user profile if none is provided
@@ -34,14 +47,26 @@ export default function UploadPanel({ user, className = "", bucket = "photos", p
     });
     const currentUser = user || userFromQuery;
 
+    const customKey = relation
+        ? `${relation.table}-${relation.id}`
+        : null;
+
     const { upload, state, reset } = useImageUpload({
         bucket: bucket,
         profile: profile,
         gallery: gallery,
-        invalidateQueries: [imageKeys.list(bucket, gallery)],
+        invalidateQueries: invalidateQueries || [imageKeys.list(bucket, gallery, customKey)],
         onSuccess: (image) => {
+            if (onSuccess) {
+                onSuccess(image);
+            }
             if (onChange) {
                 onChange(image.id);
+            }
+            if (mode === "multi") {
+                setTimeout(() => {
+                    reset();
+                }, 1500);
             }
         }
     })
@@ -51,12 +76,14 @@ export default function UploadPanel({ user, className = "", bucket = "photos", p
     const isProcessing = ['validating', 'optimizing', 'uploading', 'saving'].includes(stage)
     const isBtnDisabled = isProcessing || !currentUser;
 
-    // Retrieve single image details when a value is provided and no local upload is in progress
+    // Retrieve single image details when a value is provided and no local upload is in progress (only in single mode)
     const { data: currentImage } = useSingleImage(value, {
-        enabled: Boolean(value) && !previewUrl,
+        enabled: mode === "single" && Boolean(value) && !previewUrl,
     });
 
-    const displayPreviewUrl = previewUrl || currentImage?.signedUrl;
+    const displayPreviewUrl = mode === "single"
+        ? (previewUrl || currentImage?.signedUrl)
+        : previewUrl;
 
     const handleFileChange = (e) => {
         const file = e.target.files?.[0]
@@ -80,7 +107,7 @@ export default function UploadPanel({ user, className = "", bucket = "photos", p
     return (
         <div className={`${className} ${background} `}>
             <div className="card-body space-y-4">
-                <h2 className="card-title text-base">{label || "Subir imagen"}</h2>
+                <h2 className="card-title text-base">{label || (mode === "multi" ? "Añadir foto" : "Subir imagen")}</h2>
 
                 {/* Zona de selección */}
                 <input
@@ -101,7 +128,7 @@ export default function UploadPanel({ user, className = "", bucket = "photos", p
                     {isProcessing ? (
                         <span className="loading loading-spinner loading-sm" />
                     ) : (
-                        <span>Seleccionar foto</span>
+                        <span>{mode === "multi" ? "Seleccionar foto" : "Seleccionar foto"}</span>
                     )}
                 </button>
 
@@ -157,9 +184,9 @@ export default function UploadPanel({ user, className = "", bucket = "photos", p
                 )}
 
                 {/* Botón para reiniciar después de éxito o error o si ya tiene un valor establecido */}
-                {(stage === 'success' || stage === 'error' || (value && !isProcessing)) && (
+                {((mode === "single" && (stage === 'success' || stage === 'error' || (value && !isProcessing))) || (mode === "multi" && stage === 'error')) && (
                     <button className="btn btn-ghost btn-sm w-full" onClick={handleReset} type="button">
-                        Eliminar / Subir otra imagen
+                        {stage === 'error' ? "Intentar de nuevo" : "Eliminar / Subir otra imagen"}
                     </button>
                 )}
             </div>

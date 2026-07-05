@@ -53,10 +53,8 @@ export default function TestingPage() {
             </Modal>
 
             {/* Galería de fotos del bucket "photos" */}
-            <GalleryPanel bucket='photos' gallery={activeGallery} />
+            <GalleryPanel bucket='photos' gallery={activeGallery} enableDelete={true} />
 
         </div>
     )
-
-
 }

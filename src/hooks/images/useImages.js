@@ -3,20 +3,25 @@
  */
 
 import { getSignedUrls, getSignedUrl, getTransformedUrl, URL_EXPIRY } from "@/services/images/imageUrl";
-import { getImagesByBucket, getImageById } from "@/services/images/imageMetadata";
-import { useQuery } from "@tanstack/react-query";
+import { getImagesByBucket, getImageById, getDateImages, getRelatedImages, deleteImageMetadata } from "@/services/images/imageMetadata";
+import { deleteImage } from "@/services/images/imageUploader";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const imageKeys = {
     all: ["images"],
-    list: (bucket, gallery) => ["images", bucket, gallery],
+    list: (bucket, gallery, customKey = null) => ["images", bucket, gallery, customKey].filter(Boolean),
     detail: (id) => ["images", "detail", id],
 };
 
-export const useImages = (bucket, gallery = "default", { limit = 50, offset = 0, enabled = true } = {}) => {
+export const useImages = (bucket, gallery = "default", { limit = 50, offset = 0, enabled = true, relation = null, dateId = null } = {}) => {
+    const customKey = relation
+        ? `${relation.table}-${relation.id}`
+        : (dateId ? `date-${dateId}` : null);
+
     const { data, isLoading, isError, error, refetch } = useQuery({
-        queryKey: imageKeys.list(bucket, gallery),
-        queryFn: () => fetchImagesWithUrls(bucket, gallery, { limit, offset }),
-        enabled: Boolean(bucket) && Boolean(gallery) && enabled,
+        queryKey: imageKeys.list(bucket, gallery, customKey),
+        queryFn: () => fetchImagesWithUrls(bucket, gallery, { limit, offset, dateId, relation }),
+        enabled: (Boolean(bucket) && Boolean(gallery) && enabled) || (Boolean(relation?.id) && enabled) || (Boolean(dateId) && enabled),
 
         // ── Configuración de caché ──────────────────────────────────────────────
         // staleTime: durante 5 minutos, react-query no refetch aunque el componente
@@ -45,9 +50,22 @@ export const useImages = (bucket, gallery = "default", { limit = 50, offset = 0,
     };
 };
 
-const fetchImagesWithUrls = async (bucket, gallery, { limit, offset }) => {
-    // 1. Obtener metadata desde PostgreSQL
-    const metadataResult = await getImagesByBucket(bucket, gallery, { limit, offset });
+const fetchImagesWithUrls = async (bucket, gallery, { limit, offset, dateId, relation }) => {
+    // 1. Obtener metadata desde PostgreSQL (usar query de relación genérica si se pasa, de lo contrario cita, de lo contrario normal)
+    let metadataResult;
+    if (relation) {
+        metadataResult = await getRelatedImages({
+            relationTable: relation.table,
+            relationColumn: relation.column,
+            relationId: relation.id,
+            limit,
+            offset
+        });
+    } else if (dateId) {
+        metadataResult = await getDateImages(dateId, { limit, offset });
+    } else {
+        metadataResult = await getImagesByBucket(bucket, gallery, { limit, offset });
+    }
 
     if (!metadataResult.success) {
         throw new Error(metadataResult.error);
@@ -141,5 +159,45 @@ export const useSingleImage = (imageId, options = {}) => {
         refetchOnWindowFocus: false,
         retry: 1,
         ...options
+    });
+};
+
+export const useDeleteImage = ({ bucket, gallery, dateId = null, relation = null, onSuccess, onError } = {}) => {
+    const queryClient = useQueryClient();
+    const customKey = relation
+        ? `${relation.table}-${relation.id}`
+        : (dateId ? `date-${dateId}` : null);
+
+    return useMutation({
+        mutationFn: async (image) => {
+            if (!image || !image.id || !image.storage_path) {
+                throw new Error("Imagen inválida para eliminar.");
+            }
+            // 1. Eliminar metadata en base de datos (con cascade delete para la tabla intermedia)
+            const dbResult = await deleteImageMetadata(image.id);
+            if (!dbResult.success) {
+                throw new Error("No se pudo eliminar la metadata de la imagen.");
+            }
+
+            // 2. Eliminar del Storage
+            const storageResult = await deleteImage(image.storage_path, bucket);
+            if (!storageResult.success) {
+                console.warn("[useDeleteImage] Falló la eliminación del storage, pero la metadata ya fue borrada.", image.storage_path);
+            }
+
+            return image;
+        },
+        onSuccess: (image) => {
+            queryClient.invalidateQueries({ queryKey: imageKeys.list(bucket, gallery, customKey) });
+            if (onSuccess) {
+                onSuccess(image);
+            }
+        },
+        onError: (err) => {
+            console.error("Error al eliminar la imagen:", err);
+            if (onError) {
+                onError(err);
+            }
+        }
     });
 };
