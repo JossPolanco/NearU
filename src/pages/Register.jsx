@@ -79,18 +79,17 @@ export default function Register() {
                             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                                 <div>
                                     <label className="label">
-                                        <span className="label-text">
-                                            Correo electrónico
-                                        </span>
+                                        <span className="label-text font-medium">Correo electrónico</span>
                                     </label>
-
-                                    <input
-                                        type="email"
-                                        placeholder="correo@ejemplo.com"
-                                        className="input input-bordered w-full"
-                                        {...register("email")}
-                                    />
-
+                                    <div className="relative">
+                                        <input
+                                            type="email"
+                                            placeholder="amor@ejemplo.com"
+                                            className="input input-bordered w-full pl-10 focus:border-primary focus:outline-none"
+                                            {...register("email")}
+                                        />
+                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" size={18} />
+                                    </div>
                                     {errors.email && (
                                         <span className="text-error text-sm mt-1 block">
                                             {errors.email.message}
