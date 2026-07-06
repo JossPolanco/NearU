@@ -1,24 +1,27 @@
+import { updateInfo, getUserProfile, uploadAvatar, deleteAvatar } from '../services/user/userService';
+import { Lock, Palette, Camera, Pencil, User, AtSign, Trash2 } from 'lucide-react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { updateInfo, getUserProfile } from '../services/user/userService';
-import { Lock, Palette, Camera, Pencil } from 'lucide-react'
 import { logoutUser } from "../services/auth/authService";
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import { useRef, useEffect } from 'react'
 import Modal from '../components/Modal';
 import { z } from 'zod';
 
 export default function Configuration() {
-    const inputRef = useRef(null);
     const modalRef = useRef(null);
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    const modalSubtitle = "Modifica tus datos visibles."
+    const [currentTheme, setCurrentTheme] = useState(() => {
+        return localStorage.getItem('theme') || 'light';
+    });
 
     const changeTheme = (theme) => {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
+        setCurrentTheme(theme);
     };
 
     const themes = [
@@ -27,9 +30,33 @@ export default function Configuration() {
         'light',
     ]
 
-    const handlePhoto = () => {
-        console.log("JAJAJAJ AUN NO");
-    }
+    const uploadAvatarMutation = useMutation({
+        mutationFn: uploadAvatar,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['userProfile']
+            });
+        },
+        onError: (error) => {
+            console.error("Error al subir el avatar:", error);
+            alert(error.message || "Error al subir la imagen");
+        }
+    });
+
+    const deleteAvatarMutation = useMutation({
+        mutationFn: deleteAvatar,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['userProfile']
+            });
+        },
+        onError: (error) => {
+            console.error("Error al eliminar el avatar:", error);
+            alert(error.message || "Error al eliminar la imagen");
+        }
+    });
+
+    const isAvatarPending = uploadAvatarMutation.isPending || deleteAvatarMutation.isPending;
 
     const logoutMutation = useMutation({
         mutationFn: logoutUser,
@@ -45,120 +72,135 @@ export default function Configuration() {
     });
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6 ">
+        <div className="max-w-2xl mx-auto p-4 space-y-6">
 
             {/* HEADER */}
-            <div>
-                <h1 className="text-3xl font-bold">Configuración</h1>
-                <p className="text-base-content/60">
-                    Personaliza tu experiencia y administra tu cuenta.
+            <div className="space-y-1 py-2 text-center md:text-left">
+                <h1 className="text-3xl font-extrabold tracking-tight text-base-content">Configuración</h1>
+                <p className="text-sm text-base-content/60">
+                    Personaliza tu rincón y administra tu cuenta.
                 </p>
             </div>
 
             {/* USER CARD */}
-            <div className="card bg-base-100 shadow-xl border border-base-300">
-                <div className="card-body">
-                    <div className="flex items-center gap-4">
-
-                        <div className="relative w-20 h-20 shrink-0">
-                            <div className="avatar avatar-online w-20 h-20">
-                                <div className="w-20 rounded-full">
-                                    <img src={profile?.avatar_url || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPySnqxeKdKLTPzZFpDszmCg-e0NGSsFxqaw&s"} alt="Avatar" />
-                                </div>
+            <div className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm">
+                <div className="card-body p-5">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3 min-w-0">
+                            {/* AVATAR */}
+                            <div className="avatar avatar-online w-14 h-14 ring-2 ring-primary/10 rounded-full overflow-hidden shadow-inner shrink-0 relative">
+                                <img
+                                    src={profile?.avatar_url || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPySnqxeKdKLTPzZFpDszmCg-e0NGSsFxqaw&s"}
+                                    alt="Avatar"
+                                    className="w-full h-full object-cover"
+                                />
+                                {isAvatarPending && (
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                        <span className="loading loading-spinner loading-sm text-white" />
+                                    </div>
+                                )}
                             </div>
 
-                            <input
-                                ref={inputRef}
-                                type="file"
-                                accept="image/*"
-                                onChange={handlePhoto}
-                                className="hidden"
-                            />
+                            {/* NAME & NICKNAME */}
+                            <div className="min-w-0">
+                                <h2 className="text-base font-bold text-base-content truncate">{profile?.display_name || "Cosa Linda"}</h2>
+                                <p className="text-xs text-base-content/50 truncate">@{profile?.nickname || "nickname"}</p>
+                            </div>
+                        </div>
 
-                            <button
+                        {/* ACTIONS ROW */}
+                        <div className="flex items-center gap-2 shrink-0">
+                            <button className="btn btn-sm btn-ghost gap-1.5 text-primary text-xs font-semibold px-3 rounded-xl bg-primary/5 active:bg-primary/10 transition-colors"
                                 type="button"
-                                className="absolute bottom-0 right-0 btn btn-primary btn-circle btn-xs z-10"
-                                onClick={() => inputRef.current?.click()}
+                                onClick={() => modalRef.current?.open()}
+                                disabled={isAvatarPending}
                             >
-                                <Camera size={12} />
+                                <Pencil size={12} />
+                                Editar
+                            </button>
+
+                            <button className="btn btn-sm btn-ghost text-error/70 active:text-error active:bg-error/10 hover:bg-error/5 rounded-xl font-medium text-xs px-3"
+                                onClick={() => logoutMutation.mutate()}
+                                disabled={logoutMutation.isPending}
+                            >
+                                {logoutMutation.isPending ? (
+                                    <span className="loading loading-spinner loading-xs" />
+                                ) : (
+                                    "Cerrar sesión"
+                                )}
                             </button>
                         </div>
-                        <button type="button" className="absolute top-0 right-1 ml-4 mt-2 btn btn-primary btn-circle btn-xs z-10" onClick={() => modalRef.current.open()}>
-                            <Pencil size={12} />
-                        </button>
-                        <div>
-
-                            <h2 className="card-title">{profile?.display_name}</h2>
-                            <p className="text-base-content/60">@{profile?.nickname}</p>
-                        </div>
-
-                        <button className="btn btn-error ml-auto text-white" onClick={() => logoutMutation.mutate()}>
-                            Cerrar sesion
-                        </button>
-
-                        <Modal modalTitle="Actualizar información" modalSubtitle={modalSubtitle} ref={modalRef}>
-                            <UpdateInfo onSuccess={() => modalRef.current?.close()} />
-                        </Modal>
                     </div>
+
+                    <Modal modalTitle="Editar Perfil" modalSubtitle="Modifica tus datitos de perfil y fotito." ref={modalRef} className="max-w-md">
+                        <UpdateInfo
+                            profile={profile}
+                            isAvatarPending={isAvatarPending}
+                            onUploadPhoto={(file) => uploadAvatarMutation.mutate(file)}
+                            onDeletePhoto={() => deleteAvatarMutation.mutate()}
+                            onSuccess={() => modalRef.current?.close()}
+                        />
+                    </Modal>
                 </div>
             </div>
 
             {/* PASSWORD */}
-            <div className="card bg-base-100 shadow-xl border border-base-300">
-                <div className="card-body">
-                    <div className="flex justify-between items-center">
+            <div className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm">
+                <div className="card-body p-6 flex flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-3 rounded-2xl bg-warning/10 text-warning shrink-0">
+                            <Lock size={20} />
+                        </div>
                         <div>
-                            <div className="flex items-center gap-2">
-                                <Lock size={18} />
-                                <h2 className="font-semibold">
-                                    Contraseña
-                                </h2>
-                            </div>
-
-                            <p className="text-sm text-base-content/60 mt-1">
-                                Cambia o actualiza tu contraseña para mantener
-                                tu cuenta segura.
+                            <h2 className="font-semibold text-base text-base-content">
+                                Contraseña
+                            </h2>
+                            <p className="text-xs text-base-content/50 mt-0.5">
+                                Cambia tu contraseña para mantener tu cuenta segura.
                             </p>
                         </div>
-
-                        <button className="btn btn-primary" onClick={() => navigate('/create-password')}>
-                            Cambiar
-                        </button>
                     </div>
+
+                    <button className="btn btn-primary btn-sm rounded-full px-5 font-semibold text-xs active:scale-95 transition-transform" onClick={() => navigate('/create-password')}>
+                        Cambiar
+                    </button>
                 </div>
             </div>
 
             {/* THEME */}
-            <div className="card bg-base-100 shadow-xl border border-base-300">
-                <div className="card-body">
-                    <div className="flex items-center gap-2">
-                        <Palette size={18} />
-                        <h2 className="font-semibold">
-                            Tema de la aplicación
-                        </h2>
+            <div className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm">
+                <div className="card-body p-6 flex flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-3 rounded-2xl bg-info/10 text-info shrink-0">
+                            <Palette size={20} />
+                        </div>
+                        <div>
+                            <h2 className="font-semibold text-base text-base-content">
+                                Tema de la aplicación
+                            </h2>
+                            <p className="text-xs text-base-content/50 mt-0.5">
+                                Selecciona el tema visual que prefieras.
+                            </p>
+                        </div>
                     </div>
 
-                    <p className="text-sm text-base-content/60">
-                        Selecciona el tema visual que prefieras.
-                    </p>
-
-                    <div className="dropdown w-full">
-                        <div tabIndex={0} role="button" className="btn m-1">
-                            Theme
+                    <div className="dropdown dropdown-end shrink-0">
+                        <div tabIndex={0} role="button" className="btn btn-sm px-4 font-semibold text-xs capitalize flex items-center gap-1.5">
+                            {currentTheme}
                             <svg
-                                width="12px"
-                                height="12px"
-                                className="inline-block h-2 w-2 fill-current opacity-60"
+                                width="10px"
+                                height="10px"
+                                className="inline-block fill-current opacity-60"
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 2048 2048">
                                 <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
                             </svg>
                         </div>
-                        <ul tabIndex={0} className="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl">
+                        <ul tabIndex={0} className="dropdown-content bg-base-300 rounded-box z-1 w-40 p-2 shadow-2xl mt-1">
                             {themes.map((theme) => (
                                 <li key={theme}>
                                     <button
-                                        className="btn btn-sm btn-ghost justify-start w-full"
+                                        className="btn btn-sm btn-ghost justify-start w-full capitalize"
                                         onClick={() => changeTheme(theme)}
                                     >
                                         {theme}
@@ -170,22 +212,61 @@ export default function Configuration() {
                 </div>
             </div>
         </div>
+
     )
 }
 
 const updateInfoSchema = z.object({
-    name: z.string().max(50, "No puede tener más de 50 caracteres").optional(),
-    nickname: z.string().max(30, "No puede tener más de 30 caracteres").optional(),
+    name: z.string()
+        .min(2, "El nombre debe tener al menos 2 caracteres")
+        .max(50, "No puede tener más de 50 caracteres")
+        .trim(),
+    nickname: z.string()
+        .min(2, "El apodo debe tener al menos 2 caracteres")
+        .max(30, "No puede tener más de 30 caracteres")
+        .trim()
+        .regex(/^[a-zA-Z0-9_]+$/, "El apodo solo puede contener letras, números y guiones bajos (_)"),
 })
 
-export function UpdateInfo({ onSuccess }) {
+export function UpdateInfo({ profile, isAvatarPending, onUploadPhoto, onDeletePhoto, onSuccess }) {
     const queryClient = useQueryClient();
+    const fileInputRef = useRef(null);
 
-    const { register, handleSubmit, formState: { errors }, watch, reset} = useForm({
-        resolver: zodResolver(updateInfoSchema)
-    })
+    const { register, handleSubmit, formState: { errors, isDirty }, reset } = useForm({
+        resolver: zodResolver(updateInfoSchema),
+        defaultValues: {
+            name: profile?.display_name || "",
+            nickname: profile?.nickname || "",
+        }
+    });
+
+    // RECETEA EL FORMULARIO CUANDO SE CARGUEN LOS DATOS DEL PERFIL
+    useEffect(() => {
+        if (profile) {
+            reset({
+                name: profile.display_name || "",
+                nickname: profile.nickname || "",
+            });
+        }
+    }, [profile, reset]);
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            onUploadPhoto?.(file);
+        }
+    };
 
     const handleUpdateInfo = (data) => {
+        // Enviar solo si los datos son diferentes
+        if (data.name === profile?.display_name && data.nickname === profile?.nickname) {
+            onSuccess?.();
+            return;
+        }
         updateInfoMutation.mutate(data);
     }
 
@@ -196,63 +277,126 @@ export function UpdateInfo({ onSuccess }) {
             queryClient.invalidateQueries({
                 queryKey: ['userProfile']
             });
-            // Cerrar el modal después de actualizar la información
-            reset()
             onSuccess?.();
         },
 
         onError: (error) => {
             console.error("Error al actualizar la información:", error);
         }
-    })
+    });
 
     return (
         <form onSubmit={handleSubmit(handleUpdateInfo)} className="space-y-5" >
-            <div className="space-y-4">
-                {/* Nombre */}
-                <div className="form-control">
-                    <label className="label pb-2">
-                        <span className="label-text font-medium">
-                            Nombre
-                        </span>
-                    </label>
 
-                    <input type="text" placeholder="Juan Gabriel" className={`input input-bordered w-full ${errors.name ? "input-error" : ""}`} {...register("name")} />
-
-                    {errors.name && (
-                        <label className="label pt-1">
-                            <span className="label-text-alt text-error">
-                                {errors.name.message}
-                            </span>
-                        </label>
-                    )}
+            {/* AVATAR EDIT SECTION */}
+            <div className="flex flex-col items-center text-center space-y-3 pb-4 border-b border-base-200/50">
+                <div className="relative w-20 h-20">
+                    <div className="avatar w-20 h-20 rounded-full overflow-hidden ring-2 ring-primary/20 shadow-inner">
+                        <img
+                            src={profile?.avatar_url || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPySnqxeKdKLTPzZFpDszmCg-e0NGSsFxqaw&s"}
+                            alt="Avatar"
+                            className="w-full h-full object-cover"
+                        />
+                        {isAvatarPending && (
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-full">
+                                <span className="loading loading-spinner loading-sm text-white" />
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                {/* Apodo */}
-                <div className="form-control">
-                    <label className="label pb-2">
-                        <span className="label-text font-medium">
-                            Apodo
-                        </span>
-                    </label>
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    disabled={isAvatarPending}
+                />
 
-                    <input type="text" placeholder="XxJuanPro777xX" className={`input input-bordered w-full ${errors.nickname ? "input-error" : ""}`} {...register("nickname")} />
-
-                    {errors.nickname && (
-                        <label className="label pt-1">
-                            <span className="label-text-alt text-error">
-                                {errors.nickname.message}
-                            </span>
-                        </label>
+                <div className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={handleUploadClick}
+                        className="btn btn-xs btn-outline btn-primary rounded-full px-3"
+                        disabled={isAvatarPending}
+                    >
+                        <Camera size={10} className="mr-1" />
+                        Subir foto
+                    </button>
+                    {profile?.avatar && (
+                        <button
+                            type="button"
+                            onClick={onDeletePhoto}
+                            className="btn btn-xs btn-outline btn-error rounded-full px-3"
+                            disabled={isAvatarPending}
+                        >
+                            <Trash2 size={10} className="mr-1" />
+                            Eliminar
+                        </button>
                     )}
                 </div>
             </div>
 
-            <button type="submit" className="btn btn-neutral w-full">
+            <div className="space-y-4 pt-2">
+                {/* Nombre */}
+                <div>
+                    <label className="label">
+                        <span className="label-text font-medium">Nombre visible</span>
+                    </label>
+                    <div className="relative">
+                        <input className={`input input-bordered w-full pl-10 focus:border-primary focus:outline-none ${errors.name ? "input-error" : ""}`}
+                            type="text"
+                            placeholder="Juan Gabriel"
+                            {...register("name")}
+                            disabled={updateInfoMutation.isPending || isAvatarPending}
+                        />
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" size={18} />
+                    </div>
+                    {errors.name && (
+                        <span className="text-error text-sm mt-1 block">
+                            {errors.name.message}
+                        </span>
+                    )}
+                </div>
+
+                {/* Apodo */}
+                <div>
+                    <label className="label">
+                        <span className="label-text font-medium">Apodo</span>
+                    </label>
+                    <div className="relative">
+                        <input className={`input input-bordered w-full pl-10 focus:border-primary focus:outline-none ${errors.nickname ? "input-error" : ""}`}
+                            type="text"
+                            placeholder="Apodo"
+                            {...register("nickname")}
+                            disabled={updateInfoMutation.isPending || isAvatarPending}
+                        />
+                        <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" size={18} />
+                    </div>
+                    {errors.nickname && (
+                        <span className="text-error text-sm mt-1 block">
+                            {errors.nickname.message}
+                        </span>
+                    )}
+                </div>
+            </div>
+
+            {updateInfoMutation.isError && (
+                <div className="alert alert-error text-sm py-2.5 px-4 rounded-2xl flex gap-2">
+                    <span className="text-white text-xs leading-relaxed">
+                        {updateInfoMutation.error?.message || "Ocurrió un error al guardar la información. Por favor, intenta de nuevo."}
+                    </span>
+                </div>
+            )}
+
+            <button className="btn btn-primary w-full animate-none rounded-xl" type="submit"
+                disabled={!isDirty || updateInfoMutation.isPending || isAvatarPending}
+            >
                 {updateInfoMutation.isPending ? (
                     <>
                         <span className="loading loading-spinner loading-sm" />
-                        Guardando...
+                        Guardando cambios...
                     </>
                 ) : (
                     "Guardar cambios"
