@@ -4,6 +4,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { Reply, Star, Trash2, Pencil, Send } from "lucide-react";
 import ReadIndicator from "./ReadIndicator";
 import { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 
 export default function MessageBubble({ message, isOwn, onReply, messageRef, onScrollToParent, user }) {
     const [messageEdited, setMessageEdited] = useState(message.content);
@@ -71,6 +72,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
     })
 
     const handleEditMessage = (messageId, newContent) => {
+        if (!newContent.trim()) return;
         editMessageMutation.mutate({
             messageId: messageId,
             newContent: newContent
@@ -89,53 +91,60 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
         }
     })
 
-
     const handleDeleteMessage = (messageId) => {
         deleteMessageMutation.mutate(messageId);
     }
 
     return (
-        <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'}`} data-message-id={message.id} >
+        <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'} relative ${showMenu ? 'z-50' : 'z-0'} transition-all duration-200 my-1.5`} data-message-id={message.id} >
 
-            <div className={`chat-bubble max-w-[75%] cursor-pointer select-none ${isOwn ? 'chat-bubble-primary' : 'chat-bubble-secondary'}`}
+            <div className={`chat-bubble max-w-[75%] cursor-pointer select-none rounded-[18px] px-3.5 py-2.5 text-sm shadow-xs before:hidden ${isOwn ? 'chat-bubble-primary rounded-br-none text-primary-content' : 'chat-bubble-secondary rounded-bl-none text-secondary-content'}`}
                 style={{ overflowWrap: 'anywhere' }}
                 onMouseDown={handlePressStart}
                 onMouseUp={handlePressEnd}
                 onTouchStart={handlePressStart}
                 onTouchEnd={handlePressEnd}
                 onContextMenu={(e) => { e.preventDefault(); const clientX = e.clientX; const clientY = e.clientY; pointerPos.current = { x: clientX, y: clientY }; setShowMenu(true); }}>
-                {/* Bloque de respuesta (si es una respuesta) */}
+
+                {/* BLOQUE DE RESPUESTA (SI ES UNA RESPUESTA) */}
                 {message.reply_to_id && (
-                    <div className="mb-2 px-1 py-1 rounded border-l-2 border-white/60 bg-black/20 text-xs opacity-80 cursor-pointer" onClick={() => onScrollToParent(message.reply_to_id)}>
-                        <p className="font-semibold mb-0.5">
-                            {message.replied_message?.sender_id === message.sender_id ? "Tú mismo" : "Respuesta"}
+                    <div className={`mb-2 px-2.5 py-1.5 rounded-lg border-l-3 text-[11px] cursor-pointer select-none truncate transition-colors ${isOwn
+                            ? 'bg-black/15 border-primary-content/60 text-primary-content/95 hover:bg-black/20'
+                            : 'bg-base-300/50 border-secondary text-base-content/90 hover:bg-base-300/75'
+                            }`}
+                        onClick={() => onScrollToParent(message.reply_to_id)}
+                    >
+                        <p className="font-bold tracking-wider text-[9px] uppercase opacity-75 mb-0.5">
+                            {message.replied_message?.sender_id === message.sender_id ? "Tú" : "Tu amor"}
                         </p>
                         <p className="truncate max-w-50">
-                            {/* reply_preview si el padre fue eliminado, o el contenido del padre */}
                             {message.reply_preview ?? "Mensaje eliminado"}
                         </p>
                     </div>
                 )}
 
-                <p className="whitespace-pre-wrap">{message.content}</p>
-            </div>
-            {/* FOOTER MESSAGE */}
-            <div className="chat-footer flex flex-row items-center gap-2">
-                <time className="text-xs opacity-50">{parseTime(message.created_at) || "16:40"}</time>
-                {isOwn && (
-                    <>
-                        <ReadIndicator readAt={message.read_at} />
-                    </>
-                )}
-                {message.starred && message.starred_by == user && <Star size={16} className="text-yellow-500" />}
+                <div className="flex flex-col ">
+                    <p className="whitespace-pre-wrap leading-relaxed pr-10 text-[14px]">{message.content}</p>
+
+                    {/* METADATOS INTEGRADOS */}
+                    <div className={`flex items-center justify-end gap-1 text-[9px]  -mr-1 -mb-1 select-none pointer-events-none ${isOwn ? 'text-primary-content/70' : 'text-base-content/50'}`}>
+                        {message.starred && message.starred_by == user && (
+                            <Star size={10} className={`${isOwn ? 'text-yellow-300 fill-yellow-300' : 'text-yellow-500 fill-yellow-500'} shrink-0`} />
+                        )}
+                        <time className="text-white">{parseTime(message.created_at) || "16:40"}</time>
+                        {isOwn && (
+                            <ReadIndicator readAt={message.read_at} className="text-primary-content/85" />
+                        )}
+                    </div>
+                </div>
             </div>
 
             {/* Menú contextual */}
             {showMenu && (() => {
                 // Compute fixed-position coordinates for the menu so it never goes off-screen
                 const menuWidth = 200;
-                const menuHeightEstimate = 160;
-                const padding = 8;
+                const menuHeightEstimate = 180;
+                const padding = 12;
                 const winW = window.innerWidth;
                 const winH = window.innerHeight;
                 let left = pointerPos.current.x;
@@ -153,54 +162,73 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                     top = pointerPos.current.y + 10;
                 }
 
-                return (
+                return createPortal(
                     <>
-                        <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
-                        <div style={{ left: `${left}px`, top: `${top}px`, width: `${menuWidth}px` }} className="fixed z-50 bg-base-100 shadow-lg rounded-xl flex flex-col gap-1 p-2 border border-base-300">
-                            <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
-                                <Reply size={16} /> Responder
+                        <div className="fixed inset-0 z-9998 bg-base-300/30 backdrop-blur-xs transition-opacity duration-300 animate-fade-in" onClick={() => setShowMenu(false)} />
+                        <div className="fixed z-9999 bg-base-100/95 backdrop-blur-md shadow-xl rounded-2xl flex flex-col gap-0.5 p-1.5 border border-base-content/5 animate-scale-in" style={{ left: `${left}px`, top: `${top}px`, width: `${menuWidth}px` }}  >
+                            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-all text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
+                                <Reply size={16} className="text-base-content/40" />
+                                <span>Responder</span>
                             </button>
                             {isOwn && (
-                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { setShowMenu(false), setEditMode(true) }}>
-                                    <Pencil size={16} /> Editar
+                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-all text-left" onClick={() => { setShowMenu(false); setEditMode(true); }} >
+                                    <Pencil size={16} className="text-base-content/40" />
+                                    <span>Editar</span>
                                 </button>
                             )}
                             {message.starred && message.starred_by == user ? (
-                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { handleUnStarredMessage(message.id); setShowMenu(false); }}>
-                                    <Star size={16} /> Quitar destacado
+                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-all text-left" onClick={() => { handleUnStarredMessage(message.id); setShowMenu(false); }} >
+                                    <Star size={16} className="text-yellow-500 fill-yellow-500 shrink-0" />
+                                    <span>Quitar destacado</span>
                                 </button>
                             ) : (
-                                <button className="btn btn-ghost btn-sm gap-1 text-left" onClick={() => { handleSetStarredMessage(message.id); setShowMenu(false); }}>
-                                    <Star size={16} /> Destacar
+                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-all text-left" onClick={() => { handleSetStarredMessage(message.id); setShowMenu(false); }} >
+                                    <Star size={16} className="text-base-content/40 shrink-0" />
+                                    <span>Destacar</span>
                                 </button>
                             )}
                             {isOwn && (
-                                <button className="btn btn-ghost btn-sm text-error gap-1 text-left" onClick={() => { handleDeleteMessage(message.id); setShowMenu(false); }}>
-                                    <Trash2 size={16} /> Eliminar
+                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-error hover:bg-error/10 active:scale-98 transition-all text-left" onClick={() => { handleDeleteMessage(message.id); setShowMenu(false); }} >
+                                    <Trash2 size={16} className="shrink-0" />
+                                    <span>Eliminar</span>
                                 </button>
                             )}
-                            <time className="text-xs opacity-50">Leído el: {parseDateTime(message.read_at) || "16:40"}</time>
+                            {message.read_at && (
+                                <div className="px-3 py-1.5 border-t border-base-content/5 mt-1">
+                                    <p className="text-[9px] text-base-content/40 font-medium uppercase tracking-wider">
+                                        Leído el {parseDateTime(message.read_at)}
+                                    </p>
+                                </div>
+                            )}
                         </div>
-                    </>
+                    </>,
+                    document.body
                 );
             })()}
 
-            {editMode && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/30" onClick={() => setEditMode(false)} >
-                    <div className="bg-base-100 shadow-lg rounded-xl p-4 border border-base-300 flex flex-row items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                        <textarea
-                            rows={1}
-                            placeholder="Mensaje..."
-                            className="textarea textarea-primary rounded-xl flex-1 h-12 min-h-0 resize-none overflow-y-auto"
-                            value={messageEdited}
-                            onChange={(e) => setMessageEdited(e.target.value)}
-                        />
-                        <button className="btn btn-circle btn-primary" onClick={() => { handleEditMessage(message.id, messageEdited); }} disabled={editMessageMutation.isPending} >
-                            <Send size={20} />
-                        </button>
+            {editMode && createPortal(
+                <div className="fixed inset-0 z-9998 flex items-center justify-center bg-base-300/40 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setEditMode(false)} >
+                    <div className="bg-base-100 shadow-2xl rounded-2xl p-4 border border-base-content/5 w-full max-w-sm flex flex-col gap-3 animate-scale-in" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="font-bold text-[11px] text-base-content/50 uppercase tracking-widest px-1">Editar mensaje</h3>
+                        <div className="flex gap-2 items-end">
+                            <textarea
+                                rows={2}
+                                className="textarea textarea-primary rounded-xl flex-1 min-h-15 max-h-32 p-3 text-sm resize-none border-base-content/10 focus:border-primary"
+                                value={messageEdited}
+                                onChange={(e) => setMessageEdited(e.target.value)}
+                            />
+                            <button
+                                className="btn btn-circle btn-primary shrink-0 shadow-md shadow-primary/15 active:scale-90 transition-all duration-150"
+                                onClick={() => handleEditMessage(message.id, messageEdited)}
+                                disabled={editMessageMutation.isPending || !messageEdited.trim()}
+                                aria-label="Guardar cambios"
+                            >
+                                <Send size={16} />
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );

@@ -1,15 +1,12 @@
-// Componente del doble check
-export default function ReadIndicator({ readAt }) {
+import { Check, CheckCheck } from "lucide-react";
+
+export default function ReadIndicator({ readAt, className = "" }) {
     if (readAt) {        
         return (
-            <span className="text-xs text-primary opacity-80" title={`Leído`}>
-                ✓✓
-            </span>
+            <CheckCheck size={14} className={`text-primary shrink-0 transition-all duration-200 ${className}`} title="Leído" />
         );
     }    
     return (
-        <span className="text-xs opacity-40">
-            ✓
-        </span>
+        <Check size={14} className={`text-base-content/40 shrink-0 ${className}`} title="Enviado" />
     );
-}
+}

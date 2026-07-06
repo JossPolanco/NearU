@@ -1,16 +1,17 @@
 import { UnreadSeparator, MessageField, MessageBubble, ChatHeader } from "@/components";
 import { fetchMessages, subscribeToMessages } from "../../services/chat";
-import { useReadReceipts, useReplyState } from "@/hooks";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { getUserId } from "../../services/user/userService";
+import { useReadReceipts, useReplyState } from "@/hooks";
 import { useEffect, useRef, useMemo } from "react";
+import { Heart } from "lucide-react";
 
 export default function Chat() {
     const { replyingTo, startReply, cancelReply } = useReplyState();
     const queryClient = useQueryClient();
     const messageRefs = useRef({});
     const bottomRef = useRef(null);
-    
+
     const { data: messages } = useQuery({
         queryKey: ['messages'],
         queryFn: fetchMessages,
@@ -43,46 +44,53 @@ export default function Chat() {
     ]);
 
     return (
-        <div className="fixed inset-0 flex flex-col bg-base-300">
+        <div className="fixed inset-0 flex flex-col bg-base-200">
             <ChatHeader />
-            <div className="flex-1 overflow-y-auto px-4">
-                {messages?.length === 0 && !isLoading && (
-                    <div className="flex flex-1 items-center justify-center h-full">
-                        <p className="text-center text-base-content/70">Aún no hay mensajes</p>
+            
+            <div className="flex-1 overflow-y-auto px-4 py-2 scrollbar-thin">
+                {isLoading ? (
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <span className="loading loading-heart text-primary loading-lg"></span>
                     </div>
-                )}
-
-                {(isLoading ? (
-                    <div className="flex flex-1 items-center justify-center h-full">
-                        <span className="loading loading-spinner text-primary"></span>
+                ) : messages?.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full p-6 text-center select-none animate-fade-in">
+                        <div className="bg-primary/10 text-primary p-4.5 rounded-full mb-3.5 animate-pulse">
+                            <Heart size={36} className="fill-primary/20" />
+                        </div>
+                        <h3 className="font-semibold text-base text-base-content">Comienza su conversación</h3>
+                        <p className="text-xs text-base-content/65 max-w-60 mt-1 leading-relaxed">
+                            Este es su espacio privado para compartir amor, risas y recuerdos cotidianos.
+                        </p>
                     </div>
                 ) : (
-
-                    messages?.map((message, index) => (
-                        <div key={message.id}>
-                            {/* SEPARADOR DE MENSAJES NO LEIDOS */}
-                            {index === firstUnreadIndex && (
-                                <UnreadSeparator count={messages.length - firstUnreadIndex} />
-                            )}
-                            {/* MENSAJE */}
-                            <MessageBubble
-                                key={message.id}
-                                message={message}
-                                isOwn={message.sender_id === userId}
-                                user={userId}
-                                onReply={startReply}
-                                messageRef={(el) => { messageRefs.current[message.id] = el; }}
-                                onScrollToParent={(id) => {
-                                    messageRefs.current[id]?.scrollIntoView({
-                                        behavior: 'smooth',
-                                        block: 'center'
-                                    });
-                                }}
-                            />
-                        </div>
-                    ))))}
+                    <div className="flex flex-col gap-1">
+                        {messages?.map((message, index) => (
+                            <div key={message.id} className="animate-fade-in">
+                                {/* SEPARADOR DE MENSAJES NO LEIDOS */}
+                                {index === firstUnreadIndex && (
+                                    <UnreadSeparator count={messages.length - firstUnreadIndex} />
+                                )}
+                                {/* MENSAJE */}
+                                <MessageBubble
+                                    message={message}
+                                    isOwn={message.sender_id === userId}
+                                    user={userId}
+                                    onReply={startReply}
+                                    messageRef={(el) => { messageRefs.current[message.id] = el; }}
+                                    onScrollToParent={(id) => {
+                                        messageRefs.current[id]?.scrollIntoView({
+                                            behavior: 'smooth',
+                                            block: 'center'
+                                        });
+                                    }}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
                 <div ref={bottomRef} />
             </div>
+            
             <MessageField
                 replyingTo={replyingTo}
                 onCancelReply={cancelReply}
