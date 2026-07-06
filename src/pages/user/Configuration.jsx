@@ -1,12 +1,12 @@
-import { updateInfo, getUserProfile, uploadAvatar, deleteAvatar } from '../services/user/userService';
+import { updateInfo, getUserProfile, uploadAvatar, deleteAvatar } from '../../services/user/userService';
 import { Lock, Palette, Camera, Pencil, User, AtSign, Trash2 } from 'lucide-react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { logoutUser } from "../services/auth/authService";
+import { logoutUser } from "../../services/auth/authService";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import Modal from '../components/Modal';
+import Modal from '../../components/Modal';
 import { z } from 'zod';
 
 export default function Configuration() {

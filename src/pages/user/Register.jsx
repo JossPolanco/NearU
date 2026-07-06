@@ -1,4 +1,4 @@
-import { registerUser } from "../services/auth/authService";
+import { registerUser } from "../../services/auth/authService";
 import { ArrowLeft, Mail, Sparkles } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";

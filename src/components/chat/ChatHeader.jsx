@@ -15,7 +15,7 @@ export default function ChatHeader() {
     <div className="bg-base-100/80 backdrop-blur-md border-b border-base-content/5 px-3 py-2.5 flex items-center justify-between z-10 shadow-xs select-none">
       <div className="flex items-center gap-2 min-w-0">
         {/* VOLVER */}
-        <button className="btn btn-primary btn-circle text-base-content/70 hover:bg-base-200/50 hover:text-base-content active:scale-95 transition-all duration-200" 
+        <button className="btn btn-primary btn-circle text-white hover:bg-base-200/50 hover:text-base-content active:scale-95 transition-all duration-200" 
           onClick={() => navigate(-1)}
           aria-label="Volver"
         >
@@ -47,8 +47,7 @@ export default function ChatHeader() {
       </div>
 
       {/* MENSAJES DESTACADOS */}
-      <button 
-        className="btn btn-ghost btn-circle text-base-content/70 hover:bg-base-200/50 hover:text-yellow-500 active:scale-95 transition-all duration-200" 
+      <button  className="btn btn-ghost btn-circle text-base-content/70 hover:bg-base-200/50 hover:text-yellow-500 active:scale-95 transition-all duration-200" 
         onClick={() => navigate("/starred-messages")}
         aria-label="Mensajes destacados"
       >

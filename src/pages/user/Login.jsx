@@ -1,8 +1,8 @@
 import { Mail, Lock, Heart, Eye, EyeOff } from 'lucide-react';
-import { loginUser } from '../services/auth/authService';
+import { loginUser } from '../../services/auth/authService';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { supabaseClient } from '../utils/supabase';
+import { supabaseClient } from '../../utils/supabase';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
