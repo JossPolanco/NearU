@@ -8,8 +8,8 @@ export { default as Home } from "./Home";
 export { default as StarredMessages } from "./chat/StarredMessages";
 export { default as Chat } from "./chat/Chat";
 
-// DRAWER PAGES
-export { default as DrawingPage } from "./DrawingPage";
+// DRAW PAGES
+export { default as DrawingPage } from "./drawer/DrawingPage";
 
 // OTHER PAGES
 export { default as Configuration } from "./user/Configuration";

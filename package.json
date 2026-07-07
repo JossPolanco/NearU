@@ -10,6 +10,7 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^0.563.0",
     "react": "19.0.0-rc.1",
+    "react-color": "^2.19.3",
     "react-day-picker": "^10.0.1",
     "react-dom": "19.0.0-rc.1",
     "react-hook-form": "^7.77.0",
