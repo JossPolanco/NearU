@@ -1,4 +1,4 @@
-import { createDate, getAllDates, updateDate, deleteDate } from "@/services/dates";
+import { createDate, updateDate, deleteDate, getDatesByStatus } from "@/services/dates";
 import { ArrowLeft, Plus, Loader2, CalendarHeart, Calendar } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FabAdd, Modal, DateItem, UploadPanel } from "@/components";
@@ -17,6 +17,7 @@ const createDateSchema = z.object({
     shortDescription: z.string().min(1, "La descripción es requerida"),
     realizationDate: z.any().refine(val => val !== undefined && val !== null && val !== "", "La fecha es requerida"),
     coverId: z.string().optional(),
+    status: z.string().optional(),
 })
 
 const parseDateStringToLocalDate = (dateVal) => {
@@ -31,6 +32,7 @@ const parseDateStringToLocalDate = (dateVal) => {
 }
 
 export default function Dates() {
+    const [selectedTab, setSelectedTab] = useState("todas")
     const [editingDateId, setEditingDateId] = useState(null)
     const refCalendarModal = useRef(null)
     const queryClient = useQueryClient()
@@ -43,12 +45,15 @@ export default function Dates() {
             title: "",
             shortDescription: "",
             realizationDate: new Date(),
-            coverId: ""
+            coverId: "",
+            status: "nop"
         }
     })
 
+    const watchStatus = watch("status")
+
     // Fetch dates and automatically resolve signed URLs using our custom general-purpose hook
-    const { data, isLoading } = useResolveSignedUrls(["dates"], getAllDates)
+    const { data, isLoading } = useResolveSignedUrls(["dates", selectedTab], () => getDatesByStatus(selectedTab))
 
     const addDateMutation = useMutation({
         mutationFn: createDate,
@@ -104,7 +109,8 @@ export default function Dates() {
             title: formData.title,
             shotDescription: formData.shortDescription,
             realizationDate: formattedDate,
-            coverId: formData.coverId || null
+            coverId: formData.coverId || null,
+            status: formData.status
         }
 
         if (editingDateId) {
@@ -123,7 +129,8 @@ export default function Dates() {
             title: "",
             shortDescription: "",
             realizationDate: new Date(),
-            coverId: ""
+            coverId: "",
+            status: "nop"
         })
         refModal.current?.open()
     }
@@ -139,6 +146,7 @@ export default function Dates() {
             parseDateStringToLocalDate(date.realization_date) || new Date()
         )
         setValue("coverId", date.cover_image_id || "")
+        setValue("status", date.status || "nop")
         refModal.current?.open()
     }
 
@@ -165,6 +173,29 @@ export default function Dates() {
                 </button>
                 <div className="flex items-center justify-center py-4">
                     <Title />
+                </div>
+            </div>
+
+            {/* FILTRO DE CITAS */}
+            <div className="flex justify-center">
+                <div className="grid grid-cols-3 gap-1 bg-base-200/50 dark:bg-base-950/40 p-1.5 rounded-2xl border border-base-200/60 dark:border-base-850/60 w-full max-w-sm">
+                    {[
+                        { id: "todas", label: "Todas" },
+                        { id: "yap", label: "Yap" },
+                        { id: "nop", label: "Nop" }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            type="button"
+                            onClick={() => setSelectedTab(tab.id)}
+                            className={`py-2 px-3 rounded-xl text-xs font-bold transition-all duration-200 transform active:scale-105 ease-in-out ${selectedTab === tab.id
+                                    ? "bg-primary text-white shadow-xs"
+                                    : "text-base-content/60 active:bg-base-300/35 dark:active:bg-base-900/40"
+                                }`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
             </div>
 
@@ -264,19 +295,6 @@ export default function Dates() {
                             )}
                         </div>
 
-                        {/* Cover */}
-                        <Controller
-                            name="coverId"
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                                <UploadPanel
-                                    label="Imagen de portadita (en horizontal se ve mejor)"
-                                    value={value}
-                                    onChange={onChange}
-                                />
-                            )}
-                        />
-
                         {/* Calendar Selector (DayPicker) */}
                         <div className="form-control">
                             <label className="label pb-1.5">
@@ -308,6 +326,54 @@ export default function Dates() {
                         </div>
 
                         <input type="hidden" {...register("coverId")} />
+
+                        {/* ESTADO DE LA CITA "nop" POR DEFAULT */}
+                        <div className="form-control">
+                            <label className="label pb-1.5">
+                                <span className="label-text font-semibold text-xs text-base-content/70">
+                                    Estatus de la cita
+                                </span>
+                            </label>
+                            <div className="grid grid-cols-2 gap-2 bg-base-200/40 dark:bg-base-950/30 p-1.5 rounded-2xl border border-base-200/60 dark:border-base-850/60">
+                                <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold cursor-pointer transition-all duration-200 active:scale-[0.97] select-none ${watchStatus === "yap"
+                                        ? "bg-success/20 text-success border border-success/30 shadow-xs"
+                                        : "text-base-content/50 border border-transparent active:bg-base-250/50 dark:active:bg-base-900/30"
+                                    }`}>
+                                    <input
+                                        type="radio"
+                                        value="yap"
+                                        className="sr-only"
+                                        {...register("status")}
+                                    />
+                                    <span>Yap</span>
+                                </label>
+                                <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold cursor-pointer transition-all duration-200 active:scale-[0.97] select-none ${watchStatus === "nop"
+                                        ? "bg-error/20 text-error border border-error/30 shadow-xs"
+                                        : "text-base-content/50 border border-transparent active:bg-base-250/50 dark:active:bg-base-900/30"
+                                    }`}>
+                                    <input
+                                        type="radio"
+                                        value="nop"
+                                        className="sr-only"
+                                        {...register("status")}
+                                    />
+                                    <span>Nop</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* Cover */}
+                        <Controller
+                            name="coverId"
+                            control={control}
+                            render={({ field: { onChange, value } }) => (
+                                <UploadPanel
+                                    label="Imagen de portadita (en horizontal se ve mejor)"
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
 
                         {/* Submit Button */}
                         <button className="btn btn-primary w-full rounded-2xl mt-4 flex items-center justify-center gap-2" type="submit" disabled={isPending} >
