@@ -1,32 +1,54 @@
-import React from 'react'
-
 export default function CarouselNotes({ notes, isLoading }) {
+
+    const parseDateTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    const getJustifyClass = () => {
+        if (isLoading) return "justify-center";
+        const count = notes?.length || 0;
+        if (count === 1) return "justify-center";
+        if (count === 2) return "justify-start md:justify-center";
+        return "justify-start";
+    };
+
     return (
         <>
             {isLoading ? (
-                <Skeleton
-                    height="100%"
-                    width="100%"
-                    className="rounded-3xl"
-                />
+                <>
+                    <div className="carousel carousel-center backdrop-blur-xs rounded-3xl w-full gap-6 p-6 border border-base-200 shadow-sm mx-auto justify-center animate-pulse">
+                        <div className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 w-70 min-w-70 rotate-[-1.5deg]">
+                            <div className="skeleton rounded-xl w-full aspect-square bg-base-200 dark:bg-base-800" />
+                            <div className="skeleton h-4 w-2/3 mx-auto mt-6 bg-base-200 dark:bg-base-800" />
+                        </div>
+                    </div>
+
+                    <div className="flex w-full justify-center gap-3 py-2 max-w-xs mx-auto animate-pulse">
+                        <div className="skeleton w-7 h-7 mask mask-heart bg-base-200 dark:bg-base-800" />
+                        <div className="skeleton w-7 h-7 mask mask-heart bg-base-200 dark:bg-base-800" />
+                        <div className="skeleton w-7 h-7 mask mask-heart bg-base-200 dark:bg-base-800" />
+                    </div>
+                </>
             ) : (
                 <>
-                    <div className="carousel carousel-centerbackdrop-blur-xs rounded-3xl max-w-sm space-x-6 p-6 border border-base-200 shadow-sm mx-auto">
+                    <div className={`carousel carousel-center backdrop-blur-xs rounded-3xl w-full gap-6 p-6 border border-base-200 shadow-sm mx-auto ${getJustifyClass()}`}>
                         {/* ITEMS */}
-                        {notes.map((note, index) => (
-                            <div key={note.id} id={`item${index + 1}`} className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 max-w-70 rotate-[-1.5deg] transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02]">
+                        {notes?.map((note, index) => (
+                            <div key={note.id} id={`item${index + 1}`} className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 w-70 min-w-70 rotate-[-1.5deg] transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02]">
                                 <img
-                                    src={note.image_metadata?.storage_path}
+                                    src={note.coverUrl || note.image_metadata?.storage_path}
                                     className="rounded-xl w-full aspect-square object-cover pointer-events-none"
                                     alt="Nuestros momentos"
                                 />
                                 <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm">{note.title}</p>
+                                <span className="text-base-content/60 text-xs mt-2">{parseDateTime(note.created_at)}</span>
                             </div>
                         ))}
                     </div>
 
                     <div className="flex w-full justify-center gap-3 py-2 max-w-xs mx-auto">
-                        {notes.map((note, index) => (
+                        {notes?.map((note, index) => (
                             <a key={note.id} href={`#item${index + 1}`} className="btn btn-xs btn-primary mask mask-heart text-white w-7 h-7 flex items-center justify-center p-0 transition-transform active:scale-125 duration-150">
                                 {index + 1}
                             </a>

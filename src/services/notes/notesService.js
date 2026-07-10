@@ -1,6 +1,6 @@
 import { supabaseClient } from "../../utils/supabase";
 
-export async function createNote({ title, image_metadata_id }) {
+export async function createNote({ title, image_id, image_metadata_id }) {
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
 
     if (userError) throw userError;
@@ -9,7 +9,7 @@ export async function createNote({ title, image_metadata_id }) {
         .from('tbl_notes')
         .insert({ 
             title: title, 
-            image_metadata_id: image_metadata_id, 
+            image_id: image_id || image_metadata_id, 
             created_by: user.id 
         })
         .select()
@@ -27,7 +27,7 @@ export async function getNotes() {
             title,
             created_at,
             created_by,
-            image_metadata_id,
+            image_id,
             image_metadata (
                 id,
                 storage_path,
@@ -58,7 +58,7 @@ export async function getLast5Notes() {
             title,
             created_at,
             created_by,
-            image_metadata_id,
+            image_id,
             image_metadata (
                 id,
                 storage_path,

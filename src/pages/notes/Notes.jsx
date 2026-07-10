@@ -1,61 +1,87 @@
 import { ArrowLeft, Plus, Loader2, CalendarHeart, Calendar } from "lucide-react";
-import { useImageUpload } from "../../hooks/images/useImageUpload";
-import { imageKeys, useSingleImage } from "../../hooks/images/useImages";
-import { useNavigate } from 'react-router';
-import { FabAdd, Modal, Drawer, CarouselNotes } from "@/components";
-import { useRef } from 'react'
-import { createNote, getLast5Notes } from "@/services/notes";
+import { useResolveSignedUrls } from "../../hooks/images/useResolveSignedUrls";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { FabAdd, Modal, Drawer, CarouselNotes } from "@/components";
+import { useImageUpload } from "../../hooks/images/useImageUpload";
+import { imageKeys } from "../../hooks/images/useImages";
+import { createNote, getLast5Notes } from "@/services/notes";
+import { getUserId } from "../../services/user/userService";
+import { useNavigate } from 'react-router';
+import { useRef } from 'react';
 
 export default function Notes() {
     const navigate = useNavigate();
     const refModal = useRef();
+    const drawerRef = useRef();
+    const pendingTitleRef = useRef("Sin título");
     const queryClient = useQueryClient();
     const modalTitle = "Añadir nota";
     const modalSubtitle = "Crea una nota para recordar algo";
 
-    const { data: notes, isLoading } = useQuery({
-        queryKey: ["last-five-notes"],
-        queryFn: getLast5Notes,
+    const { data: userId } = useQuery({
+        queryKey: ["user-id"],
+        queryFn: getUserId,
     });
+
+    const { data: notes, isLoading } = useResolveSignedUrls(
+        ["last-five-notes"],
+        getLast5Notes
+    );
 
     const saveNoteMutation = useMutation({
         mutationFn: createNote,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["last-five-notes"] });
+            refModal.current?.close();
+            drawerRef.current?.resetCanvas();
+            reset();
         },
     });
 
     const { upload, state, reset } = useImageUpload({
         bucket: "photos",
-        profile: "profile",
+        profile: "drawing",
         gallery: "notes",
         invalidateQueries: [imageKeys.list("photos", "notes")],
         onSuccess: (image) => {
-            if (onSuccess) {
-                onSuccess(image);
-            }
-            if (onChange) {
-                onChange(image.id);
-                saveNoteMutation.mutate({
-                    title: title,                    
-                    noteId: image.id,
-                });
-                refModal.current?.close()
-
-            }
-            if (mode === "multi") {
-                setTimeout(() => {
-                    reset();
-                }, 1500);
-            }
+            saveNoteMutation.mutate({
+                title: pendingTitleRef.current,
+                image_id: image.id,
+            });
         }
-    })
+    });
 
-    const handleSaveNote = () => {
-        console.log("se guardo jajaja");
-        refModal.current.close();
-    }
+    const isSaving =
+        (state.stage !== "idle" && state.stage !== "success" && state.stage !== "error") ||
+        saveNoteMutation.isPending;
+
+    const handleSaveNote = async () => {
+        try {
+            if (!drawerRef.current) return;
+            const data = await drawerRef.current.getDrawingData();
+            if (!data || data.isEmpty) {
+                alert("Por favor, realiza un dibujo antes de guardar.");
+                return;
+            }
+
+            const response = await fetch(data.dataUrl);
+            const blob = await response.blob();
+            const cleanTitle = data.title.trim() || "Sin título";
+            const filename = `${cleanTitle.toLowerCase().replace(/[^a-z0-9]+/g, "_") || "dibujo"}.png`;
+            const file = new File([blob], filename, { type: "image/png" });
+
+            if (!userId) {
+                alert("Usuario no autenticado.");
+                return;
+            }
+
+            pendingTitleRef.current = cleanTitle;
+            await upload(file, userId);
+        } catch (error) {
+            console.error("Error al guardar la nota:", error);
+            alert("Ocurrió un error al guardar la nota.");
+        }
+    };
 
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6">
@@ -72,7 +98,10 @@ export default function Notes() {
                 </div>
             </div>
 
-            <CarouselNotes notes={notes} isLoading={isLoading} />
+            <div className="w-full">
+                {/* <h2 className="text-xl font-semibold text-center">Ultimas 5 notitas</h2> */}
+                <CarouselNotes notes={notes} isLoading={isLoading} />
+            </div>
 
             <FabAdd onClick={() => refModal.current.open()} />
 
@@ -83,11 +112,22 @@ export default function Notes() {
             </button>
 
             <Modal ref={refModal} modalTitle={modalTitle} modalSubtitle={modalSubtitle}>
-                <Drawer />
+                <Drawer ref={drawerRef} />
 
-                <button className="btn btn-primary w-full mt-4 rounded-xl transform active:scale-110 ease-in-out " onClick={handleSaveNote}>
-                    Guardar notita
+                <button className="btn btn-primary w-full mt-4 rounded-xl transform active:scale-110 ease-in-out" onClick={handleSaveNote} disabled={isSaving}>
+                    {isSaving ? (
+                        <>
+                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                            Guardando...
+                        </>
+                    ) : (
+                        "Guardar notita"
+                    )}
                 </button>
+
+                {state.error && (
+                    <p className="text-error text-xs text-center mt-2 font-semibold">{state.error}</p>
+                )}
             </Modal>
         </div>
     )

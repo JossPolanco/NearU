@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 import { Menu, Pencil, Undo2, Redo2, MoreVertical, Trash2, Download } from "lucide-react";
 import DrawerConf from "./DrawerConf";
@@ -44,7 +44,7 @@ const getStyledColor = (colorHex, style) => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-export default function Drawer() {
+const Drawer = forwardRef((props, ref) => {
     const canvasRef = useRef(null);
     const dropdownRef = useRef(null);
     const extraModal = useRef(null);
@@ -83,6 +83,21 @@ export default function Drawer() {
     // ESTADO PARA EL HISTORIAL DEL CANVAS (deshacer y rehacer)
     const [paths, setPaths] = useState([]);
     const [history, setHistory] = useState([]);
+
+    useImperativeHandle(ref, () => ({
+        getDrawingData: async () => {
+            const dataUrl = await canvasRef.current?.exportImage("png");
+            return {
+                title,
+                dataUrl,
+                isEmpty: paths.length === 0
+            };
+        },
+        resetCanvas: () => {
+            handleClearCanvas();
+            setTitle("Mi dibujo");
+        }
+    }));
 
     // HANDELLERS PARA EL TITULO
     const startEditing = () => {
@@ -313,4 +328,6 @@ export default function Drawer() {
         </div>
 
     );
-}
+});
+
+export default Drawer;
