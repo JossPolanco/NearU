@@ -49,3 +49,26 @@ export async function deleteNote(id) {
 
     if (error) throw error;
 }
+
+export async function getLast5Notes() {
+    const { data, error } = await supabaseClient
+        .from('tbl_notes')
+        .select(`
+            id,
+            title,
+            created_at,
+            created_by,
+            image_metadata_id,
+            image_metadata (
+                id,
+                storage_path,
+                bucket
+            )
+        `)
+        .eq('active', true)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+    if (error) throw error;
+    return data;
+}

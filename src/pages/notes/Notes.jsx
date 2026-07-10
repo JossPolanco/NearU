@@ -4,17 +4,27 @@ import { imageKeys, useSingleImage } from "../../hooks/images/useImages";
 import { useNavigate } from 'react-router';
 import { FabAdd, Modal, Drawer, CarouselNotes } from "@/components";
 import { useRef } from 'react'
-
+import { createNote, getLast5Notes } from "@/services/notes";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
 export default function Notes() {
     const navigate = useNavigate();
     const refModal = useRef();
+    const queryClient = useQueryClient();
     const modalTitle = "Añadir nota";
     const modalSubtitle = "Crea una nota para recordar algo";
 
-    const handleAddNote = () => {
-        refModal.current.open();
-    }
+    const { data: notes, isLoading } = useQuery({
+        queryKey: ["last-five-notes"],
+        queryFn: getLast5Notes,
+    });
+
+    const saveNoteMutation = useMutation({
+        mutationFn: createNote,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["last-five-notes"] });
+        },
+    });
 
     const { upload, state, reset } = useImageUpload({
         bucket: "photos",
@@ -27,6 +37,12 @@ export default function Notes() {
             }
             if (onChange) {
                 onChange(image.id);
+                saveNoteMutation.mutate({
+                    title: title,                    
+                    noteId: image.id,
+                });
+                refModal.current?.close()
+
             }
             if (mode === "multi") {
                 setTimeout(() => {
@@ -56,71 +72,9 @@ export default function Notes() {
                 </div>
             </div>
 
-            {/* Polaroid Carousel */}
-            <div className="flex flex-col items-center justify-center w-full">
-                <div className="carousel carousel-centerbackdrop-blur-xs rounded-3xl max-w-sm space-x-6 p-6 border border-base-200 shadow-sm mx-auto">
-                    {/* Item 1 */}
-                    <div id="item1" className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 max-w-70 rotate-[-1.5deg] transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02]">
-                        <img
-                            src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop"
-                            className="rounded-xl w-full aspect-square object-cover pointer-events-none"
-                            alt="Nuestros momentos"
-                        />
-                        <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm">Nuestros momentos ❤️</p>
-                    </div>
+            <CarouselNotes notes={notes} isLoading={isLoading} />
 
-                    {/* Item 2 */}
-                    <div id="item2" className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 max-w-70 rotate-[1.5deg] transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02]">
-                        <img
-                            src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&auto=format&fit=crop"
-                            className="rounded-xl w-full aspect-square object-cover pointer-events-none"
-                            alt="Trazos de amor"
-                        />
-                        <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm">Trazos de amor ✨</p>
-                    </div>
-
-                    {/* Item 3 */}
-                    <div id="item3" className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 max-w-70 -rotate-1 transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02]">
-                        <img
-                            src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600&auto=format&fit=crop"
-                            className="rounded-xl w-full aspect-square object-cover pointer-events-none"
-                            alt="Para recordar siempre"
-                        />
-                        <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm">Para recordar siempre 💫</p>
-                    </div>
-
-                    {/* Item 4 */}
-                    <div id="item4" className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 max-w-70 rotate-2 transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02]">
-                        <img
-                            src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=600&auto=format&fit=crop"
-                            className="rounded-xl w-full aspect-square object-cover pointer-events-none"
-                            alt="Juntos es mejor"
-                        />
-                        <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm">Juntos es mejor 🌸</p>
-                    </div>
-
-                    {/* Item 5 */}
-                    <div id="item5" className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 max-w-70 -rotate-2 transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02]">
-                        <img
-                            src="https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=600&auto=format&fit=crop"
-                            className="rounded-xl w-full aspect-square object-cover pointer-events-none"
-                            alt="Tú y yo"
-                        />
-                        <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm">Tú y yo 🧸</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Navigation Indicators */}
-            <div className="flex w-full justify-center gap-3 py-2 max-w-xs mx-auto">
-                <a href="#item1" className="btn btn-xs btn-primary mask mask-heart text-white w-7 h-7 flex items-center justify-center p-0 transition-transform active:scale-125 duration-150">1</a>
-                <a href="#item2" className="btn btn-xs btn-primary mask mask-heart text-white w-7 h-7 flex items-center justify-center p-0 transition-transform active:scale-125 duration-150">2</a>
-                <a href="#item3" className="btn btn-xs btn-primary mask mask-heart text-white w-7 h-7 flex items-center justify-center p-0 transition-transform active:scale-125 duration-150">3</a>
-                <a href="#item4" className="btn btn-xs btn-primary mask mask-heart text-white w-7 h-7 flex items-center justify-center p-0 transition-transform active:scale-125 duration-150">4</a>
-                <a href="#item5" className="btn btn-xs btn-primary mask mask-heart text-white w-7 h-7 flex items-center justify-center p-0 transition-transform active:scale-125 duration-150">5</a>
-            </div>
-
-            <FabAdd onClick={handleAddNote} />
+            <FabAdd onClick={() => refModal.current.open()} />
 
             {/* View Previous Notes Button */}
             <button className="btn btn-outline btn-primary rounded-2xl w-full min-h-12 flex items-center justify-center gap-2 border-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98] shadow-xs">
