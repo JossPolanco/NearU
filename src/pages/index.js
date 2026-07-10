@@ -24,3 +24,6 @@ export { default as Tasks } from "./tasks/Tasks";
 // DATES PAGES
 export { default as DateDetail } from "./dates/DateDetail";
 export { default as Dates } from "./dates/Dates";
+
+// NOTES PAGES
+export { default as Notes } from "./notes/Notes";

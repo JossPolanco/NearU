@@ -19,6 +19,10 @@ export default function Home() {
       <button className="btn btn-primary" onClick={() => navigate('/dates')}>
         Pagina de dates
       </button>
+
+      <button className="btn btn-primary" onClick={() => navigate('/notes')}>
+        Pagina de notas
+      </button>
     </div>
   )
 }
