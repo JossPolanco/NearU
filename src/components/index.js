@@ -23,3 +23,6 @@ export { default as TaskItem } from './tasks/TaskItem'
 
 // DATES COMPONENTS
 export { default as DateItem } from './dates/DateItem'
+
+// NOTES COMPONENTS
+export { default as CarouselNotes } from './notes/CarouselNotes'
