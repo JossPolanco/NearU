@@ -28,6 +28,7 @@ export async function getNotes() {
             created_at,
             created_by,
             image_id,
+            favorite,
             image_metadata (
                 id,
                 storage_path,
@@ -59,6 +60,7 @@ export async function getLast5Notes() {
             created_at,
             created_by,
             image_id,
+            favorite,
             image_metadata (
                 id,
                 storage_path,
@@ -68,6 +70,44 @@ export async function getLast5Notes() {
         .eq('active', true)
         .order('created_at', { ascending: false })
         .limit(5);
+
+    if (error) throw error;
+    return data;
+}
+
+export async function toggleFavorite(id){
+
+    const { data, error } = await supabaseClient
+        .from('tbl_notes')
+        .update({ 
+            favorite: !data.favorite, 
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+export async function getFavoriteNotes() {
+    const { data, error } = await supabaseClient
+        .from('tbl_notes')
+        .select(`
+            id,
+            title,
+            created_at,
+            created_by,
+            image_id,
+            image_metadata (
+                id,
+                storage_path,
+                bucket
+            )
+        `)
+        .eq('active', true)
+        .eq('favorite', true)
+        .order('created_at', { ascending: false });
 
     if (error) throw error;
     return data;

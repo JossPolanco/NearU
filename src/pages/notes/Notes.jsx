@@ -136,14 +136,12 @@ export default function Notes() {
 
 export function Title() {
     return (
-        <h2 className="text-2xl font-bold text-center">
-            <span className="text-red-500">❤️</span>
+        <h2 className="text-2xl font-bold text-center">            
             <span className="text-orange-500">N</span>
             <span className="text-yellow-400">O</span>
             <span className="text-green-500">T</span>
             <span className="text-cyan-400">A</span>
-            <span className="text-violet-500">S</span>
-            <span className="text-pink-500">❤️</span>
+            <span className="text-violet-500">S</span>            
         </h2>
     )
 }
