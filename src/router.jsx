@@ -1,6 +1,6 @@
 import {
     Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration,
-    Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail, Notes
+    Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail, Notes, NotesGallery
 } from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
@@ -103,6 +103,14 @@ export const router = createBrowserRouter([
                 element: (
                     <Layout>
                         <Notes />
+                    </Layout>
+                )
+            },
+            {
+                path: "/notes-gallery",
+                element: (
+                    <Layout>
+                        <NotesGallery />
                     </Layout>
                 )
             }

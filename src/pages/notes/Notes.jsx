@@ -1,4 +1,4 @@
-import { ArrowLeft, Plus, Loader2, CalendarHeart, Calendar } from "lucide-react";
+import { ArrowLeft, Plus, Loader2, StickyNote } from "lucide-react";
 import { useResolveSignedUrls } from "../../hooks/images/useResolveSignedUrls";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { FabAdd, Modal, Drawer, CarouselNotes } from "@/components";
@@ -106,8 +106,9 @@ export default function Notes() {
             <FabAdd onClick={() => refModal.current.open()} />
 
             {/* View Previous Notes Button */}
-            <button className="btn btn-outline btn-primary rounded-2xl w-full min-h-12 flex items-center justify-center gap-2 border-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98] shadow-xs">
-                <CalendarHeart className="w-5 h-5" />
+            <button className="btn btn-primary rounded-2xl w-full min-h-12 flex items-center justify-center gap-2 border-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98] shadow-xs"
+                onClick={() => navigate("/notes-gallery")}>
+                <StickyNote className="w-5 h-5" />
                 Notitas 🐜eriores
             </button>
 

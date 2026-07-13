@@ -4708,6 +4708,13 @@
       --btn-soft-bg: initial;
     }
   }
+  .btn-secondary {
+    @layer daisyui.l1.l2 {
+      --btn-color: var(--color-secondary);
+      --btn-fg: var(--color-secondary-content);
+      --btn-soft-bg: initial;
+    }
+  }
   .btn-sm {
     @layer daisyui.l1.l2 {
       --fontsize: 0.75rem;
