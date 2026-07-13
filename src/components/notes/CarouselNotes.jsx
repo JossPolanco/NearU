@@ -1,5 +1,5 @@
+import { X, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { useState } from 'react';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function CarouselNotes({ notes, isLoading }) {
     const [selectedNote, setSelectedNote] = useState(null);
@@ -43,10 +43,10 @@ export default function CarouselNotes({ notes, isLoading }) {
         <>
             {isLoading ? (
                 <>
-                    <div className="carousel carousel-center backdrop-blur-xs rounded-3xl w-full gap-6 p-6  mx-auto justify-center animate-pulse">
-                        <div className="carousel-item flex-col bg-white dark:bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 w-70 min-w-70 rotate-[-1.5deg]">
-                            <div className="skeleton rounded-xl w-full aspect-square bg-base-200 dark:bg-base-800" />
-                            <div className="skeleton h-4 w-2/3 mx-auto mt-6 bg-base-200 dark:bg-base-800" />
+                    <div className="carousel carousel-center backdrop-blur-md rounded-3xl w-full gap-6 p-6 mx-auto justify-center animate-pulse">
+                        <div className="carousel-item flex-col bg-base-100 dark:bg-base-900/50 p-3.5 pb-6 rounded-3xl shadow-md border border-base-200/60 dark:border-base-800/40 w-72 min-w-72 rotate-[-1.5deg]">
+                            <div className="skeleton rounded-2xl w-full aspect-square bg-base-250 dark:bg-base-800" />
+                            <div className="skeleton h-4 w-2/3 mx-auto mt-5 bg-base-250 dark:bg-base-800" />
                         </div>
                     </div>
 
@@ -58,20 +58,27 @@ export default function CarouselNotes({ notes, isLoading }) {
                 </>
             ) : (
                 <>
-                    <div className={`carousel carousel-center backdrop-blur-xs rounded-3xl w-full gap-6 p-6 ${getJustifyClass()}`}>
+                    <div className={`carousel carousel-center backdrop-blur-md rounded-3xl w-full gap-6 p-6 ${getJustifyClass()}`}>
                         {/* ITEMS */}
                         {notes?.map((note, index) => (
-                            <div className="carousel-item flex-col bg-base-200 p-4 pb-10 rounded-2xl shadow-md border border-base-300/40 w-70 min-w-70 rotate-[-1.5deg] transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02] cursor-pointer active:scale-98"
+                            <div className="carousel-item flex-col bg-base-100 dark:bg-base-900/50 p-3.5 pb-6 rounded-3xl shadow-md border border-base-200/60 dark:border-base-800/40 w-72 min-w-72 rotate-[-1.5deg] transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02] cursor-pointer active:scale-98"
                                 key={note.id}
                                 id={`item${index + 1}`}
                                 onClick={() => setSelectedNote(note)}
                             >
-                                <img className="rounded-xl w-full aspect-square object-cover pointer-events-none"
-                                    src={note.coverUrl || note.image_metadata?.storage_path}
-                                    alt="Nuestros momentos"
-                                />
-                                <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm">{note.title}</p>
-                                <span className="text-base-content/60 text-xs mt-2">{parseDateTime(note.created_at)}</span>
+                                <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-base-200/50 dark:bg-base-950/20 border border-base-200/30 dark:border-base-850/20">
+                                    <img className="w-full h-full object-cover pointer-events-none"
+                                        src={note.coverUrl || note.image_metadata?.storage_path}
+                                        alt="Nuestros momentos"
+                                    />
+                                    {note.favorite && (
+                                        <div className="absolute top-2.5 right-2.5 w-8.5 h-8.5 flex items-center justify-center rounded-full bg-base-100/90 dark:bg-base-950/90 text-red-500 shadow-sm border border-base-300/10">
+                                            <Heart className="w-4 h-4 fill-red-500 text-red-500 animate-pulse" />
+                                        </div>
+                                    )}
+                                </div>
+                                <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm px-2 truncate w-full">{note.title}</p>
+                                <span className="text-base-content/50 text-xs mt-1.5 text-center font-mono">{parseDateTime(note.created_at)}</span>
                             </div>
                         ))}
                     </div>

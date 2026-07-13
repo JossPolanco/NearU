@@ -75,18 +75,22 @@ export async function getLast5Notes() {
     return data;
 }
 
-export async function toggleFavorite(id){
+export async function toggleFavorite(id, currentFavoriteStatus){
+
+    console.log("Llego")
+    console.log(currentFavoriteStatus)
 
     const { data, error } = await supabaseClient
         .from('tbl_notes')
         .update({ 
-            favorite: !data.favorite, 
+            favorite: !currentFavoriteStatus            
         })
         .eq('id', id)
         .select()
         .single();
 
     if (error) throw error;
+    console.log("Saliendo")
     return data;
 }
 
@@ -99,6 +103,7 @@ export async function getFavoriteNotes() {
             created_at,
             created_by,
             image_id,
+            favorite,
             image_metadata (
                 id,
                 storage_path,

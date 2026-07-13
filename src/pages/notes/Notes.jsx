@@ -1,11 +1,11 @@
-import { ArrowLeft, Plus, Loader2, StickyNote } from "lucide-react";
 import { useResolveSignedUrls } from "../../hooks/images/useResolveSignedUrls";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { FabAdd, Modal, Drawer, CarouselNotes } from "@/components";
 import { useImageUpload } from "../../hooks/images/useImageUpload";
-import { imageKeys } from "../../hooks/images/useImages";
+import { ArrowLeft, Loader2, StickyNote } from "lucide-react";
 import { createNote, getLast5Notes } from "@/services/notes";
 import { getUserId } from "../../services/user/userService";
+import { imageKeys } from "../../hooks/images/useImages";
 import { useNavigate } from 'react-router';
 import { useRef } from 'react';
 
@@ -32,6 +32,7 @@ export default function Notes() {
         mutationFn: createNote,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["last-five-notes"] });
+            queryClient.invalidateQueries({ queryKey: ["notes"] });
             refModal.current?.close();
             drawerRef.current?.resetCanvas();
             reset();
@@ -91,12 +92,13 @@ export default function Notes() {
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
-                    <ArrowLeft className="w-6 h-6" />
+                    <ArrowLeft className="w-5 h-5" />
                 </button>
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
             </div>
+
 
             <div className="w-full">
                 {/* <h2 className="text-xl font-semibold text-center">Ultimas 5 notitas</h2> */}
@@ -106,10 +108,10 @@ export default function Notes() {
             <FabAdd onClick={() => refModal.current.open()} />
 
             {/* View Previous Notes Button */}
-            <button className="btn btn-primary rounded-2xl w-full min-h-12 flex items-center justify-center gap-2 border-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98] shadow-xs"
+            <button className="btn btn-primary rounded-2xl w-full min-h-12.5 flex items-center justify-center gap-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98] shadow-md border-0"
                 onClick={() => navigate("/notes-gallery")}>
                 <StickyNote className="w-5 h-5" />
-                Notitas 🐜eriores
+                Ver todas las notitas 🐜eriores
             </button>
 
             <Modal ref={refModal} modalTitle={modalTitle} modalSubtitle={modalSubtitle}>
@@ -136,12 +138,22 @@ export default function Notes() {
 
 export function Title() {
     return (
-        <h2 className="text-2xl font-bold text-center">            
+        <h2 className="text-3xl font-extrabold tracking-tight text-center drop-shadow-xs py-1">
             <span className="text-orange-500">N</span>
-            <span className="text-yellow-400">O</span>
-            <span className="text-green-500">T</span>
-            <span className="text-cyan-400">A</span>
-            <span className="text-violet-500">S</span>            
+            <span className="text-amber-400">o</span>
+            <span className="text-yellow-400">t</span>
+            <span className="text-lime-500">i</span>
+            <span className="text-green-500">t</span>
+            <span className="text-emerald-500">a</span>
+            <span className="text-cyan-400">s</span>
+            <span> </span>
+            <span className="text-sky-500">d</span>
+            <span className="text-blue-500">e</span>
+            <span> </span>
+            <span className="text-indigo-500">A</span>
+            <span className="text-violet-500">m</span>
+            <span className="text-fuchsia-500">o</span>
+            <span className="text-pink-500">r</span>
         </h2>
-    )
+    );
 }
