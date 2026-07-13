@@ -423,16 +423,14 @@ export default function Dates() {
 
 export function Title() {
     return (
-        <h2 className="text-2xl font-bold text-center">
-            <span className="text-red-500">❤️</span>
+        <h2 className="text-3xl font-extrabold tracking-tight text-center drop-shadow-xs  bg-base-100  px-4 py-1.5 rounded-full">
             <span className="text-orange-500">C</span>
-            <span className="text-yellow-400">I</span>
-            <span className="text-green-500">T</span>
+            <span className="text-amber-400">I</span>
+            <span className="text-yellow-400">T</span>
+            <span className="text-green-400">A</span>
             <span className="text-cyan-400">A</span>
-            <span className="text-violet-500">A</span>
-            <span className="text-pink-500">A</span>
-            <span className="text-red-500">S</span>
-            <span className="text-pink-500">❤️</span>
+            <span className="text-blue-500">A</span>
+            <span className="text-violet-500">S</span>
         </h2>
-    )
+    );
 }

@@ -138,7 +138,7 @@ export default function Notes() {
 
 export function Title() {
     return (
-        <h2 className="text-3xl font-extrabold tracking-tight text-center drop-shadow-xs py-1">
+        <h2 className="text-3xl font-extrabold tracking-tight text-center drop-shadow-xs bg-base-100 px-4 py-1.5 rounded-full">
             <span className="text-orange-500">N</span>
             <span className="text-amber-400">o</span>
             <span className="text-yellow-400">t</span>

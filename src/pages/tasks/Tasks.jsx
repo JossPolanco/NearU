@@ -115,17 +115,16 @@ export default function Tasks() {
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
-            <div className="flex items-center justify-between py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button
-                    className="btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+            <div className="relative flex items-center justify-center py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
-                    <ArrowLeft className="w-6 h-6" />
+                    <ArrowLeft className="w-5 h-5" />
                 </button>
-                <div className="flex items-end gap-1.5 text-xs font-semibold text-base-content/60 bg-base-100 px-4 py-1.5 rounded-full border border-base-300/40 shadow-3xs">
-                    <ClipboardList className="w-3.5 h-3.5 text-primary fill-primary/15 animate-pulse" />
-                    <span>Listas de tareitas</span>
+
+                <div className="flex items-center justify-center py-4">
+                    <Title />
                 </div>
             </div>
 
@@ -276,8 +275,8 @@ export default function Tasks() {
                                             type="button"
                                             onClick={() => setValue("icon", preset.id)}
                                             className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all duration-200 md:hover:scale-102 active:scale-98 ${isSelected
-                                                    ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs ring-1 ring-primary/30"
-                                                    : "border-base-200 active:border-primary/20 md:hover:border-base-300 dark:border-base-800 dark:md:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
+                                                ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs ring-1 ring-primary/30"
+                                                : "border-base-200 active:border-primary/20 md:hover:border-base-300 dark:border-base-800 dark:md:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
                                                 }`}
                                         >
                                             <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-3xs ${preset.bg}`}>
@@ -316,4 +315,27 @@ export default function Tasks() {
     )
 }
 
-
+export function Title() {
+    return (
+        <h2 className="text-3xl font-extrabold tracking-tight text-center drop-shadow-xs py-1">
+            <span className="text-orange-500">L</span>
+            <span className="text-orange-400">i</span>
+            <span className="text-amber-400">s</span>
+            <span className="text-yellow-400">t</span>
+            <span className="text-lime-500">a</span>
+            <span className="text-green-500">s</span>
+            <span> </span>
+            <span className="text-emerald-500">d</span>
+            <span className="text-cyan-400">e</span>
+            <span> </span>
+            <span className="text-sky-500">t</span>
+            <span className="text-blue-500">a</span>
+            <span className="text-indigo-500">r</span>
+            <span className="text-violet-500">e</span>
+            <span className="text-fuchsia-500">i</span>
+            <span className="text-pink-500">t</span>
+            <span className="text-rose-500">a</span>
+            <span className="text-red-500">s</span>
+        </h2>
+    );
+}

@@ -127,16 +127,16 @@ export default function TaskDetail() {
     return (
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
             {/* Header / Navigation */}
-            <div className="flex items-center justify-between py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+            <div className="relative flex items-center justify-center py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
-                    <ArrowLeft className="w-6 h-6" />
+                    <ArrowLeft className="w-5 h-5" />
                 </button>
-                <div className="flex items-end gap-1.5 text-xs font-semibold text-base-content/60 bg-base-100 px-4 py-1.5 rounded-full border border-base-300/40 shadow-3xs">
-                    <Heart className="w-3.5 h-3.5 text-primary fill-primary/15 animate-pulse" />
-                    <span>Detalles de la tarea</span>
+
+                <div className="flex items-center justify-center py-4">
+                    <Title />
                 </div>
             </div>
 
@@ -300,4 +300,31 @@ export default function TaskDetail() {
             </Modal>
         </div>
     )
+}
+
+export function Title() {
+    return (
+        <h2 className="text-3xl font-extrabold tracking-tight text-center drop-shadow-xs py-1">
+            <span className="text-orange-500">D</span>
+            <span className="text-orange-400">e</span>
+            <span className="text-amber-400">t</span>
+            <span className="text-yellow-400">a</span>
+            <span className="text-lime-500">l</span>
+            <span className="text-green-500">l</span>
+            <span className="text-emerald-500">e</span>
+            <span className="text-cyan-400">s</span>
+            <span> </span>
+            <span className="text-sky-500">d</span>
+            <span className="text-blue-500">e</span>
+            <span> </span>
+            <span className="text-indigo-500">l</span>
+            <span className="text-violet-500">a</span>
+            <span> </span>
+            <span className="text-fuchsia-500">T</span>
+            <span className="text-pink-500">a</span>
+            <span className="text-rose-500">r</span>
+            <span className="text-red-500">e</span>
+            <span className="text-orange-500">a</span>
+        </h2>
+    );
 }

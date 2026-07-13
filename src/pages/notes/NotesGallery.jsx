@@ -203,21 +203,24 @@ export default function NotesGallery() {
 export function Title() {
     return (
         <h2 className="text-3xl font-extrabold tracking-tight text-center drop-shadow-xs py-1">
-            <span className="text-orange-500">N</span>
-            <span className="text-orange-400">u</span>
-            <span className="text-amber-400">e</span>
-            <span className="text-yellow-400">s</span>
-            <span className="text-lime-400">t</span>
-            <span className="text-green-500">r</span>
+            <span className="text-orange-500">G</span>
+            <span className="text-orange-400">a</span>
+            <span className="text-amber-400">l</span>
+            <span className="text-yellow-400">e</span>
+            <span className="text-lime-400">r</span>
+            <span className="text-green-500">í</span>
             <span className="text-emerald-500">a</span>
             <span> </span>
-            <span className="text-cyan-400">G</span>
-            <span className="text-sky-500">a</span>
-            <span className="text-blue-500">l</span>
-            <span className="text-indigo-500">e</span>
-            <span className="text-violet-500">r</span>
-            <span className="text-fuchsia-500">í</span>
-            <span className="text-pink-500">a</span>
+            <span className="text-cyan-400">d</span>
+            <span className="text-sky-500">e</span>
+            <span> </span>
+            <span className="text-blue-500">N</span>
+            <span className="text-indigo-500">o</span>
+            <span className="text-violet-500">t</span>
+            <span className="text-fuchsia-500">i</span>
+            <span className="text-pink-500">t</span>
+            <span className="text-rose-500">a</span>
+            <span className="text-red-500">s</span>
         </h2>
     );
 }
