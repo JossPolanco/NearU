@@ -27,3 +27,7 @@ export { default as DateItem } from './dates/DateItem'
 // NOTES COMPONENTS
 export { default as CarouselNotes } from './notes/CarouselNotes'
 export { default as NoteItem } from './notes/NoteItem'
+
+// DIARY COMPONENTS
+export { default as MonthlyCalendar } from './diary/MonthlyCalendar'
+export { default as YearlyCalendar } from './diary/YearlyCalendar'

@@ -1,5 +1,5 @@
 import {
-    Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration,
+    Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Diary,
     Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail, Notes, NotesGallery
 } from "@/pages";
 import { createBrowserRouter } from "react-router";
@@ -111,6 +111,14 @@ export const router = createBrowserRouter([
                 element: (
                     <Layout>
                         <NotesGallery />
+                    </Layout>
+                )
+            },
+            {
+                path: "/diary",
+                element: (
+                    <Layout>
+                        <Diary />
                     </Layout>
                 )
             }

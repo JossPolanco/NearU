@@ -28,3 +28,6 @@ export { default as Dates } from "./dates/Dates";
 // NOTES PAGES
 export { default as NotesGallery } from "./notes/NotesGallery";
 export { default as Notes } from "./notes/Notes";
+
+// DIARY PAGES
+export { default as Diary } from "./diary/Diary";
