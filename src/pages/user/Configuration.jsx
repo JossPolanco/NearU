@@ -76,8 +76,10 @@ export default function Configuration() {
 
             {/* HEADER */}
             <div className="space-y-1 py-2 text-center md:text-left">
-                <h1 className="text-3xl font-extrabold tracking-tight text-base-content">Configuración</h1>
-                <p className="text-sm text-base-content/60">
+                <div className='flex items-center justify-center'>
+                    <Title />
+                </div>
+                <p className="text-sm text-base-content/60 text-center">
                     Personaliza tu rincón y administra tu cuenta.
                 </p>
             </div>
@@ -403,5 +405,25 @@ export function UpdateInfo({ profile, isAvatarPending, onUploadPhoto, onDeletePh
                 )}
             </button>
         </form>
+    );
+}
+
+export function Title() {
+    return (
+        <h2 className="text-3xl font-extrabold tracking-tight text-center drop-shadow-xs bg-base-100 px-4 py-1.5 rounded-full">
+            <span className="text-orange-500">C</span>
+            <span className="text-orange-400">o</span>
+            <span className="text-amber-400">n</span>
+            <span className="text-yellow-400">f</span>
+            <span className="text-lime-500">i</span>
+            <span className="text-green-500">g</span>
+            <span className="text-emerald-500">u</span>
+            <span className="text-cyan-400">r</span>
+            <span className="text-sky-500">a</span>
+            <span className="text-blue-500">c</span>
+            <span className="text-indigo-500">i</span>
+            <span className="text-violet-500">ó</span>
+            <span className="text-fuchsia-500">n</span>
+        </h2>
     );
 }
