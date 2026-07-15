@@ -30,4 +30,5 @@ export { default as NotesGallery } from "./notes/NotesGallery";
 export { default as Notes } from "./notes/Notes";
 
 // DIARY PAGES
+export { default as DiaryDetail } from "./diary/DiaryDetail";
 export { default as Diary } from "./diary/Diary";

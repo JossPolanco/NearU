@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const MONTH_NAMES = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -9,6 +10,7 @@ const MONTH_NAMES = [
 const WEEKDAYS = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sá", "Do"];
 
 export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
+    const navigate = useNavigate();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
@@ -82,7 +84,65 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
         setCurrentDate(new Date());
     };
 
-    const handleSelectDay = (cellDate) => {
+    const longPressTimer = useRef(null);
+    const isLongPress = useRef(false);
+    const touchStartPos = useRef({ x: 0, y: 0 });
+
+    useEffect(() => {
+        return () => {
+            if (longPressTimer.current) {
+                clearTimeout(longPressTimer.current);
+            }
+        };
+    }, []);
+
+    const startPress = (cellDate) => {
+        isLongPress.current = false;
+        longPressTimer.current = setTimeout(() => {
+            isLongPress.current = true;
+
+            // Navigate to detail on long press
+            const year = cellDate.getFullYear();
+            const month = String(cellDate.getMonth() + 1).padStart(2, '0');
+            const day = String(cellDate.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            navigate(`/diary-detail/${formattedDate}`);
+        }, 600); // 600ms long press duration
+    };
+
+    const cancelPress = () => {
+        if (longPressTimer.current) {
+            clearTimeout(longPressTimer.current);
+            longPressTimer.current = null;
+        }
+    };
+
+    const handleTouchStart = (e, cellDate) => {
+        const touch = e.touches[0];
+        touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+        startPress(cellDate);
+    };
+
+    const handleTouchMove = (e) => {
+        if (!longPressTimer.current) return;
+        const touch = e.touches[0];
+        const dx = touch.clientX - touchStartPos.current.x;
+        const dy = touch.clientY - touchStartPos.current.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance > 10) {
+            cancelPress();
+        }
+    };
+
+    const handleCellClick = (e, cellDate) => {
+        if (isLongPress.current) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Reset for the next interaction
+            isLongPress.current = false;
+            return;
+        }
+        // Normal click selects the day
         setCurrentDate(cellDate);
     };
 
@@ -147,7 +207,14 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
                     return (
                         <button
                             key={`${cell.date.getTime()}-${idx}`}
-                            onClick={() => handleSelectDay(cell.date)}
+                            onMouseDown={() => startPress(cell.date)}
+                            onMouseUp={cancelPress}
+                            onMouseLeave={cancelPress}
+                            onTouchStart={(e) => handleTouchStart(e, cell.date)}
+                            onTouchEnd={cancelPress}
+                            onTouchMove={handleTouchMove}
+                            onClick={(e) => handleCellClick(e, cell.date)}
+                            onContextMenu={(e) => e.preventDefault()}
                             className={`
                                 aspect-square w-full rounded-2xl flex flex-col items-center justify-center relative transition-all duration-300 select-none text-sm font-semibold
                                 ${cell.isCurrentMonth

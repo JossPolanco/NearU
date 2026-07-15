@@ -13,8 +13,7 @@ export default function Diary() {
             }`}>
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button
-                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -29,8 +28,7 @@ export default function Diary() {
             {/* View Switcher Tabs */}
             <div className="flex justify-center">
                 <div className="bg-base-200/60 dark:bg-base-900/40 p-1.5 rounded-2xl flex gap-1 border border-base-200/80 dark:border-base-800/50">
-                    <button
-                        onClick={() => setView("monthly")}
+                    <button onClick={() => setView("monthly")}
                         className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
                             view === "monthly"
                                 ? "bg-base-100 dark:bg-base-800 text-primary shadow-sm"
@@ -39,8 +37,7 @@ export default function Diary() {
                     >
                         Vista Mensual
                     </button>
-                    <button
-                        onClick={() => setView("yearly")}
+                    <button onClick={() => setView("yearly")}
                         className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
                             view === "yearly"
                                 ? "bg-base-100 dark:bg-base-800 text-secondary shadow-sm"

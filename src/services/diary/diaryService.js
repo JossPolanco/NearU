@@ -26,11 +26,13 @@ export async function createDiaryEntry({ title, content, entryDate, mood = 'norm
 
 export async function getDiaryEntryByDate(date) {
     const { data, error } = await supabaseClient
-        .from('tbl_diary_entries')``
+        .from('tbl_diary_entries')
         .select('*')
         .eq('entry_date', date)
-        .single();
+        .maybeSingle();
+
     if (error) throw error;
+
     return data;
 }
 
