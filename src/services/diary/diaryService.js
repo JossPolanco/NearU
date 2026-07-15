@@ -1,39 +1,34 @@
 import { supabaseClient } from "../../utils/supabase";
 
 export async function createDiaryEntry({ title, content, entryDate, mood = 'normal' }) {
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError) {
+        throw userError;
+    }
+
     const { error } = await supabaseClient
         .from('tbl_diary_entries')
         .insert({
             title,
             content,
             entry_date: entryDate,
-            mood
+            mood,
+            author_id: user.id
         });
     if (error) throw error;
     return true;
 }
 
-// export async function getDiaryEntries({ startDate, endDate }) {
-//     const { data, error } = await supabaseClient
-//         .from('tbl_diary_entries')
-//         .select('*')
-//         .gte('entry_date', startDate)
-//         .lte('entry_date', endDate)
-//         .order('entry_date', { ascending: false });
-//     if (error) throw error;
-//     return data;
-// }
-
 export async function getDiaryEntryByDate(date) {
     const { data, error } = await supabaseClient
         .from('tbl_diary_entries')
         .select('*')
-        .eq('entry_date', date)
-        .maybeSingle();
+        .eq('entry_date', date);
 
     if (error) throw error;
 
-    return data;
+    return data || [];
 }
 
 export async function updateDiaryEntry({ id, title, content, entryDate, mood }) {

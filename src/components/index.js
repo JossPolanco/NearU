@@ -30,4 +30,5 @@ export { default as NoteItem } from './notes/NoteItem'
 
 // DIARY COMPONENTS
 export { default as MonthlyCalendar } from './diary/MonthlyCalendar'
-export { default as YearlyCalendar } from './diary/YearlyCalendar'
+export { default as YearlyCalendar } from './diary/YearlyCalendar'
+export { default as MoodSelector } from './diary/MoodSelector'
