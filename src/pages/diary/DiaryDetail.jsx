@@ -194,9 +194,9 @@ export default function DiaryDetail() {
                                         <div className="flex items-center justify-between border-b border-base-200/60 dark:border-base-800/20 pb-3">
                                             <div className="flex items-center gap-3">
                                                 {avatarUrl ? (
-                                                    <img src={avatarUrl} alt={authorName} className={`w-10 h-10 rounded-full object-cover border ${isMe ? "border-primary/20" : "border-secondary/20"}`} />
+                                                    <img src={avatarUrl} alt={authorName} className={`w-16 h-16 rounded-full object-cover border ${isMe ? "border-primary/20" : "border-secondary/20"}`} />
                                                 ) : (
-                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${isMe ? "bg-primary/10 text-primary" : "bg-secondary/10 text-secondary"}`}>
+                                                    <div className={`w-16 h-16 rounded-full flex items-center justify-center font-bold text-sm ${isMe ? "bg-primary/10 text-primary" : "bg-secondary/10 text-secondary"}`}>
                                                         {authorName.charAt(0).toUpperCase()}
                                                     </div>
                                                 )}
@@ -229,7 +229,7 @@ export default function DiaryDetail() {
                     {/* Action button */}
                     <div className="pt-2">
                         <button
-                            className="btn btn-primary rounded-2xl w-full min-h-[48px] font-bold text-white shadow-xs active:scale-98 active:bg-primary/90 transition-all duration-150 flex items-center justify-center gap-2"
+                            className="btn btn-primary rounded-2xl w-full min-h-12 font-bold text-white shadow-xs active:scale-98 active:bg-primary/90 transition-all duration-150 flex items-center justify-center gap-2"
                             onClick={handleOpenModal}
                         >
                             {myEntry ? "✏️ Editar mi entrada" : "✍️ Escribir mi entrada"}
@@ -300,7 +300,7 @@ export default function DiaryDetail() {
 
                     <button
                         type="submit"
-                        className={`btn btn-primary mt-4 rounded-2xl min-h-[48px] font-bold text-white shadow-xs active:scale-98 transition-all duration-150`}
+                        className={`btn btn-primary mt-4 rounded-2xl min-h-12 font-bold text-white shadow-xs active:scale-98 transition-all duration-150`}
                         disabled={isPending}
                     >
                         {isPending && (
