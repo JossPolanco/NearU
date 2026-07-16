@@ -1,6 +1,7 @@
 import {
     Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Diary, DiaryDetail,
-    Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail, Notes, NotesGallery
+    Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail, Notes, NotesGallery,
+    Anniversaries, AnniversaryDetail,
 } from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
@@ -127,6 +128,22 @@ export const router = createBrowserRouter([
                 element: (
                     <Layout>
                         <DiaryDetail />
+                    </Layout>
+                )
+            },
+            {
+                path: "/anniversaries",
+                element: (
+                    <Layout>
+                        <Anniversaries />
+                    </Layout>
+                )
+            },
+            {
+                path: "/anniversary-detail/:id",
+                element: (
+                    <Layout>
+                        <AnniversaryDetail />
                     </Layout>
                 )
             }
