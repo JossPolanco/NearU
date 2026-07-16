@@ -1,19 +1,73 @@
 import { UploadPanel, GalleryPanel, Modal } from "@/components";
-import { getCurrentUser } from '../services/user/userService';
-import { useQuery } from '@tanstack/react-query';
+import { getCurrentUser, getPartnerMood, getUserMood, updateUserMood } from '@/services/user';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
-import { useRef, useState } from "react";
-import { ArrowLeft, Heart } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, Heart, Loader2 } from "lucide-react";
+import { MOODS_MALE, MOODS_FEMALE } from "../utils/getMoods";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const moodFormSchema = z.object({
+    mood: z.string().min(1, "Selecciona un estado de ánimo")
+})
 
 export default function TestingPage() {
     const navigate = useNavigate()
+    const queryClient = useQueryClient();
     const modalRef = useRef(null)
+    const moodModalRef = useRef(null)
     const [activeGallery, setActiveGallery] = useState('default')
+    const [activeMood, setActiveMood] = useState('Normal')
+    const modalTitle = "Actualiza tu estado de ánimo"
+    const modalSubtitle = "Cuéntale a tu parejita cómo te sientes hoy"
+
+    const { register, handleSubmit, formState: { errors }, watch, reset, setValue } = useForm({
+        resolver: zodResolver(moodFormSchema),
+        defaultValues: {
+            mood: activeMood,
+        },
+    })
 
     const { data: user, isLoading } = useQuery({
         queryKey: ["user"],
         queryFn: getCurrentUser,
     });
+
+    const { data: partnerMood } = useQuery({
+        queryKey: ["partnerMood"],
+        queryFn: getPartnerMood,
+    });
+
+    const { data: userMood } = useQuery({
+        queryKey: ["userMood"],
+        queryFn: getUserMood,
+    });
+
+    useEffect(() => {
+        if (userMood?.mood) {
+            setActiveMood(userMood.mood);
+            setValue("mood", userMood.mood);
+        }
+    }, [userMood, setValue]);
+
+    const updateMoodMutation = useMutation({
+        mutationFn: updateUserMood,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["userMood"] });
+            moodModalRef.current?.close();
+        },
+    });
+
+    const onSubmitMood = (formData) => {
+        updateMoodMutation.mutate(formData.mood);
+    };
+
+    const moodsList = userMood?.gender === "female" ? MOODS_FEMALE : MOODS_MALE;
+    const selectedMoodData = moodsList.find(
+        (m) => m.title.toLowerCase() === activeMood.toLowerCase()
+    );
 
     return (
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
@@ -55,6 +109,82 @@ export default function TestingPage() {
 
             {/* Galería de fotos del bucket "photos" */}
             <GalleryPanel bucket='photos' gallery={activeGallery} enableDelete={true} />
+
+            <button className="btn btn-primary" onClick={() => moodModalRef.current?.open()}>
+                Open Mood Modal
+            </button>
+
+            <Modal ref={moodModalRef} modalTitle={modalTitle} modalSubtitle={modalSubtitle}>
+                <form onSubmit={handleSubmit(onSubmitMood)} className="space-y-4">
+                    <div className="space-y-4">
+                        <input type="hidden" {...register("mood")} />
+
+                        <div className="grid grid-cols-3 gap-3">
+                            {moodsList.map((mood, index) => {
+                                const isSelected = activeMood.toLowerCase() === mood.title.toLowerCase();
+                                return (
+                                    <button
+                                        key={index}
+                                        type="button"
+                                        onClick={() => {
+                                            setActiveMood(mood.title);
+                                            setValue("mood", mood.title);
+                                        }}
+                                        className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-200 active:scale-95 ${isSelected
+                                                ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs ring-1 ring-primary/30"
+                                                : "border-base-200 active:border-primary/20 md:hover:border-base-300 dark:border-base-800 dark:md:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
+                                            }`}
+                                    >
+                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-3xs mb-2 transition-transform duration-200 ${isSelected ? "scale-105" : ""
+                                            }`}>
+                                            {mood.photo ? (
+                                                <img
+                                                    src={mood.photo}
+                                                    alt={mood.title}
+                                                    className="w-10 h-10 object-contain rounded-lg"
+                                                />
+                                            ) : (
+                                                <span className="text-2xl select-none" role="img" aria-label={mood.title}>
+                                                    {mood.emoji}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-xs font-semibold text-base-content/85 text-center truncate w-full">
+                                            {mood.title}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {selectedMoodData && (
+                            <div className={`p-3.5 rounded-2xl border transition-all duration-300 animate-fade-in ${selectedMoodData.className}`}>
+                                <p className="text-[10px] font-bold uppercase tracking-wider">Tu estado de ánimo</p>
+                                <p className="text-xs font-medium mt-1 leading-relaxed">
+                                    {selectedMoodData.description}
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="pt-2">
+                            <button
+                                type="submit"
+                                className="btn btn-primary w-full rounded-2xl flex items-center justify-center gap-2"
+                                disabled={updateMoodMutation.isPending}
+                            >
+                                {updateMoodMutation.isPending ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        <span>Guardando...</span>
+                                    </>
+                                ) : (
+                                    <span>Guardar</span>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </Modal>
 
         </div>
     )
