@@ -15,7 +15,7 @@ export default function Configuration() {
     const queryClient = useQueryClient();
 
     const [currentTheme, setCurrentTheme] = useState(() => {
-        return localStorage.getItem('theme') || 'light';
+        return localStorage.getItem('theme') || 'evelyn';
     });
 
     const changeTheme = (theme) => {
@@ -26,8 +26,10 @@ export default function Configuration() {
 
     const themes = [
         'valentine',
+        'evelyn',
         'dark',
         'light',
+        // 'modern-dark',
     ]
 
     const uploadAvatarMutation = useMutation({
