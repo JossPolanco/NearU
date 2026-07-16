@@ -35,8 +35,10 @@
     --color-violet-500: oklch(60.6% 0.25 292.717);
     --color-purple-400: oklch(71.4% 0.203 305.504);
     --color-fuchsia-500: oklch(66.7% 0.295 322.15);
+    --color-pink-100: oklch(94.8% 0.028 342.258);
     --color-pink-400: oklch(71.8% 0.202 349.761);
     --color-pink-500: oklch(65.6% 0.241 354.308);
+    --color-pink-950: oklch(28.4% 0.109 3.907);
     --color-rose-100: oklch(94.1% 0.03 12.58);
     --color-rose-300: oklch(81% 0.117 11.638);
     --color-rose-400: oklch(71.2% 0.194 13.428);
@@ -2627,36 +2629,6 @@
       overscroll-behavior: contain;
     }
   }
-  .stat-value {
-    @layer daisyui.l1.l2.l3 {
-      grid-column-start: 1;
-      white-space: nowrap;
-      font-size: 2rem;
-      font-weight: 800;
-    }
-  }
-  .stat-desc {
-    @layer daisyui.l1.l2.l3 {
-      grid-column-start: 1;
-      white-space: nowrap;
-      color: var(--color-base-content);
-      @supports (color: color-mix(in lab, red, red)) {
-        color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
-      }
-      font-size: 0.75rem;
-    }
-  }
-  .stat-title {
-    @layer daisyui.l1.l2.l3 {
-      grid-column-start: 1;
-      white-space: nowrap;
-      color: var(--color-base-content);
-      @supports (color: color-mix(in lab, red, red)) {
-        color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
-      }
-      font-size: 0.75rem;
-    }
-  }
   .divider {
     @layer daisyui.l1.l2.l3 {
       display: flex;
@@ -2893,20 +2865,28 @@
       flex-direction: var(--tabs-direction);
     }
   }
-  .stat {
+  .footer {
     @layer daisyui.l1.l2.l3 {
-      display: inline-grid;
+      display: grid;
       width: 100%;
+      grid-auto-flow: row;
+      place-items: start;
       column-gap: calc(0.25rem * 4);
-      padding-inline: calc(0.25rem * 6);
-      padding-block: calc(0.25rem * 4);
-      grid-template-columns: repeat(1, 1fr);
-      &:not(:last-child) {
-        border-inline-end: var(--border) dashed currentColor;
-        @supports (color: color-mix(in lab, red, red)) {
-          border-inline-end: var(--border) dashed color-mix(in oklab, currentColor 10%, #0000);
+      row-gap: calc(0.25rem * 10);
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      & > *:not(script, style, template) {
+        display: grid;
+        place-items: start;
+        gap: calc(0.25rem * 2);
+      }
+      &.footer-center {
+        grid-auto-flow: column dense;
+        place-items: center;
+        text-align: center;
+        & > *:not(script, style, template) {
+          place-items: center;
         }
-        border-block-end: none;
       }
     }
   }
@@ -2978,14 +2958,6 @@
       column-gap: calc(0.25rem * 3);
       padding-block: 0.25rem;
       --mask-chat: url("data:image/svg+xml,%3csvg width='13' height='13' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='M0 11.5004C0 13.0004 2 13.0004 2 13.0004H12H13V0.00036329L12.5 0C12.5 0 11.977 2.09572 11.8581 2.50033C11.6075 3.35237 10.9149 4.22374 9 5.50036C6 7.50036 0 10.0004 0 11.5004Z'/%3e%3c/svg%3e");
-    }
-  }
-  .card-actions {
-    @layer daisyui.l1.l2.l3 {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      gap: calc(0.25rem * 2);
     }
   }
   .card-title {
@@ -3458,19 +3430,6 @@
   }
   .list-none {
     list-style-type: none;
-  }
-  .stats-vertical {
-    @layer daisyui.l1.l2 {
-      grid-auto-flow: row;
-      overflow-y: auto;
-      .stat:not(:last-child) {
-        border-inline-end: none;
-        border-block-end: var(--border) dashed currentColor;
-        @supports (color: color-mix(in lab, red, red)) {
-          border-block-end: var(--border) dashed color-mix(in oklab, currentColor 10%, #0000);
-        }
-      }
-    }
   }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -4121,6 +4080,9 @@
       background-color: color-mix(in oklab, var(--color-neutral) 15%, transparent);
     }
   }
+  .bg-pink-100 {
+    background-color: var(--color-pink-100);
+  }
   .bg-primary {
     background-color: var(--color-primary);
   }
@@ -4591,6 +4553,12 @@
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
+  .badge-sm {
+    @layer daisyui.l1.l2 {
+      --size: calc(var(--size-selector, 0.25rem) * 5);
+      font-size: 0.75rem;
+    }
+  }
   .badge-xs {
     @layer daisyui.l1.l2 {
       --size: calc(var(--size-selector, 0.25rem) * 4);
@@ -4743,6 +4711,12 @@
   }
   .text-accent {
     color: var(--color-accent);
+  }
+  .text-accent\/70 {
+    color: var(--color-accent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-accent) 70%, transparent);
+    }
   }
   .text-amber-400 {
     color: var(--color-amber-400);
@@ -5089,10 +5063,6 @@
   }
   .shadow-md {
     --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .shadow-none {
-    --tw-shadow: 0 0 #0000;
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .shadow-none\! {
@@ -5975,21 +5945,6 @@
       max-width: var(--container-sm);
     }
   }
-  .md\:stats-horizontal {
-    @media (width >= 48rem) {
-      @layer daisyui.l1.l2 {
-        grid-auto-flow: column;
-        overflow-x: auto;
-        .stat:not(:last-child) {
-          border-inline-end: var(--border) dashed currentColor;
-          @supports (color: color-mix(in lab, red, red)) {
-            border-inline-end: var(--border) dashed color-mix(in oklab, currentColor 10%, #0000);
-          }
-          border-block-end: none;
-        }
-      }
-    }
-  }
   .md\:grid-cols-2 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -6436,6 +6391,14 @@
       background-color: var(--color-info);
       @supports (color: color-mix(in lab, red, red)) {
         background-color: color-mix(in oklab, var(--color-info) 15%, transparent);
+      }
+    }
+  }
+  .dark\:bg-pink-950\/30 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(28.4% 0.109 3.907) 30%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-pink-950) 30%, transparent);
       }
     }
   }

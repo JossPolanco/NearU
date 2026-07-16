@@ -34,4 +34,4 @@ export { default as YearlyCalendar } from './diary/YearlyCalendar'
 export { default as MoodSelector } from './diary/MoodSelector'
 
 // ANNIVERSARY COMPONENTS
-export { default as Anniversary } from './anniversaries/Anniversary'
+export { default as AnniversaryItem } from './anniversaries/AnniversaryItem'

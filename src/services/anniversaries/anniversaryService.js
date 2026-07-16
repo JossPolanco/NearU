@@ -1,6 +1,6 @@
 import { supabaseClient } from "../../utils/supabase";
 
-export async function createAnniversary({ title, description, eventDate, reccurencyType, reminderDaysBefore }) {
+export async function createAnniversary({ title, description, eventDate, recurrenceType, reminderDaysBefore }) {
     const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
     if (userError) throw userError;
 
@@ -11,7 +11,7 @@ export async function createAnniversary({ title, description, eventDate, reccure
             title,
             description,
             event_date: eventDate,
-            reccurency_type: reccurencyType,
+            recurrence_type: recurrenceType,
             reminder_days_before: reminderDaysBefore
         });
 
@@ -45,7 +45,7 @@ export async function getAnniversariesById(id) {
     return data;
 }
 
-export async function updateAnniversary({ id, title, description, eventDate, reccurencyType, reminderDaysBefore }) {
+export async function updateAnniversary({ id, title, description, eventDate, recurrenceType, reminderDaysBefore }) {
     const { data: { user }, error: userError, } = await supabaseClient.auth.getUser();
     if (userError) throw userError;
 
@@ -56,7 +56,7 @@ export async function updateAnniversary({ id, title, description, eventDate, rec
             title,
             description,
             event_date: eventDate,
-            reccurency_type: reccurencyType,
+            recurrence_type: recurrenceType,
             reminder_days_before: reminderDaysBefore
         })
         .eq("id", id)
