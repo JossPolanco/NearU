@@ -85,7 +85,7 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3.5 min-w-0 flex-1">
                     {/* Pink Heart Icon Box */}
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-3xs transition-transform duration-300 bg-pink-100 dark:bg-pink-950/30 text-pink-500">
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-3xs transition-transform duration-300 bg-error/10 dark:bg-error/15 text-pink-500">
                         <Heart className="w-6 h-6 animate-pulse" style={{ animationDuration: '3s' }} />
                     </div>
 
