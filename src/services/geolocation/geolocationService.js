@@ -11,7 +11,7 @@ export async function getCurrentUserLocation() {
         .eq("user_id", user.id);
     if (error) throw error;
 
-    return data;
+    return data?.[0];
 }
 
 export async function getPartnerLocation() {
@@ -25,7 +25,7 @@ export async function getPartnerLocation() {
         .neq("user_id", user.id);
     if (error) throw error;
 
-    return data;
+    return data?.[0];
 }
 
 export async function getLocations() {
@@ -42,7 +42,6 @@ export async function setCurrentLocation({ latitude, longitude, accuracy_meters 
 
     if (userError) throw userError;
 
-    console.log("DATA: ", latitude, longitude, accuracy_meters);
     const { data, error } = await supabaseClient
         .from("tbl_locations")
         .upsert(
@@ -58,8 +57,6 @@ export async function setCurrentLocation({ latitude, longitude, accuracy_meters 
         .select();
 
     if (error) throw error;
-
-    console.log("UPDATED DATA: ", data);
 
     return data;
 }
