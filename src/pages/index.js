@@ -36,3 +36,6 @@ export { default as Diary } from "./diary/Diary";
 // ANNIVERSARIES PAGES
 export { default as AnniversaryDetail } from "./anniversaries/AnniversaryDetail";
 export { default as Anniversaries } from "./anniversaries/Anniversaries";
+
+// GEOLOCATION PAGES
+export { default as Geolocation } from "./geolocation/Geolocation";

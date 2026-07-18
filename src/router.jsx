@@ -1,7 +1,7 @@
 import {
     Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Diary, DiaryDetail,
     Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail, Notes, NotesGallery,
-    Anniversaries, AnniversaryDetail,
+    Anniversaries, AnniversaryDetail, Geolocation
 } from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
@@ -144,6 +144,14 @@ export const router = createBrowserRouter([
                 element: (
                     <Layout>
                         <AnniversaryDetail />
+                    </Layout>
+                )
+            },
+            {
+                path: "/geolocation",
+                element: (
+                    <Layout>
+                        <Geolocation />
                     </Layout>
                 )
             }

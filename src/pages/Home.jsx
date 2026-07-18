@@ -31,6 +31,10 @@ export default function Home() {
             <button className="btn btn-primary" onClick={() => navigate('/anniversaries')}>
                 Pagina de aniversarios
             </button>
+
+            <button className="btn btn-primary" onClick={() => navigate('/geolocation')}>
+                Pagina de geolocation
+            </button>
         </div>
     )
 }
