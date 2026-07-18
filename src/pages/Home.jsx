@@ -1,8 +1,14 @@
 import { useNavigate } from 'react-router';
 import React from 'react'
+// import { useEffect } from 'react'
+// import { getUserPosition } from '../utils/geolocation'
 
 export default function Home() {
     const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     getUserPosition();
+    // }, []);
 
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6 flex flex-col gap-6">

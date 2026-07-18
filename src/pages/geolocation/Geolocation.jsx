@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, MapPin } from 'lucide-react';
 import { React, useEffect, useState } from 'react'
-
+import { getUserPosition } from '../../utils/geolocation';
+import { setCurrentLocation } from '@/services/geolocation'
 
 
 export default function Geolocation() {
     const navigate = useNavigate();
 
     const [locationPermission, setLocationPermission] = useState("prompt");
+
 
     useEffect(() => {
         async function checkPermission() {
@@ -20,8 +22,15 @@ export default function Geolocation() {
 
                 setLocationPermission(permission.state);
 
+                if (permission.state === "granted") {
+                    getUserPosition();
+                }
+
                 permission.onchange = () => {
                     setLocationPermission(permission.state);
+                    if (permission.state === "granted") {
+                        getUserPosition();
+                    }
                 };
             } catch (error) {
                 console.error(error);
@@ -31,27 +40,6 @@ export default function Geolocation() {
         checkPermission();
     }, []);
 
-    const requestLocationPermission = () => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                console.log(position.coords);
-
-                setLocationPermission("granted");
-            },
-            (error) => {
-                console.error(error);
-
-                if (error.code === error.PERMISSION_DENIED) {
-                    setLocationPermission("denied");
-                }
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0,
-            }
-        );
-    }
 
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6 flex flex-col gap-6">
@@ -69,33 +57,25 @@ export default function Geolocation() {
                 </div>
             </div>
             {locationPermission !== "granted" && (
-                <div className="alert alert-info flex flex-col items-start gap-3">
-
-                    <h2 className="font-bold text-lg">
-                        📍 Compartir ubicación
-                    </h2>
-
-                    <p className="text-sm">
-                        NearU utiliza tu ubicación para que ambos puedan verse
-                        en el mapa. Solo ustedes dos podrán verla.
-                    </p>
-
-                    {locationPermission === "prompt" && (
-                        <button
-                            className="btn btn-primary btn-sm"
-                            onClick={requestLocationPermission}
-                        >
-                            Compartir ubicación
-                        </button>
-                    )}
-
-                    {locationPermission === "denied" && (
-                        <div className="text-warning text-sm">
-                            Has bloqueado el permiso de ubicación. Debes
-                            habilitarlo desde la configuración del navegador.
-                        </div>
-                    )}
-
+                <div className="flex flex-col items-center justify-center flex-1 py-16 text-center max-w-md mx-auto space-y-6">
+                    <div className="p-5 bg-primary/10 text-primary rounded-full animate-pulse shadow-md">
+                        <MapPin size={48} className="stroke-[1.5]" />
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-xl font-bold text-base-content">
+                            Se requiere ubicación
+                        </h3>
+                        <p className="text-sm text-base-content/60 px-4 leading-relaxed">
+                            NearU utiliza tu ubicación para mostrarte en el mapa y que puedas ver a tu persona especial. Solo ustedes dos podrán verla.
+                        </p>
+                    </div>
+                    <button
+                        className="btn btn-primary rounded-full px-8 font-semibold shadow-md active:scale-95 transition-transform"
+                        onClick={() => navigate('/config')}
+                        type="button"
+                    >
+                        Configurar Permisos
+                    </button>
                 </div>
             )}
         </div>

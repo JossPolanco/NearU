@@ -1,5 +1,5 @@
 import { updateInfo, getUserProfile, uploadAvatar, deleteAvatar } from '../../services/user/userService';
-import { Lock, Palette, Camera, Pencil, User, AtSign, Trash2 } from 'lucide-react';
+import { Lock, Palette, Camera, Pencil, User, AtSign, Trash2, MapPin } from 'lucide-react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { logoutUser } from "../../services/auth/authService";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import Modal from '../../components/Modal';
 import { z } from 'zod';
+import { requestLocationPermission } from '../../utils/geolocation';
+import { setCurrentLocation } from '../../services/geolocation';
 
 export default function Configuration() {
     const modalRef = useRef(null);
@@ -17,6 +19,62 @@ export default function Configuration() {
     const [currentTheme, setCurrentTheme] = useState(() => {
         return localStorage.getItem('theme') || 'evelyn';
     });
+
+    const [locationPermission, setLocationPermission] = useState("prompt");
+
+    useEffect(() => {
+        let active = true;
+        let permissionObj = null;
+
+        async function checkPermission() {
+            if (!navigator.permissions) return;
+
+            try {
+                const permission = await navigator.permissions.query({
+                    name: "geolocation",
+                });
+
+                if (!active) return;
+                setLocationPermission(permission.state);
+                permissionObj = permission;
+
+                permission.onchange = () => {
+                    if (active) setLocationPermission(permission.state);
+                };
+            } catch (error) {
+                console.error("Error al verificar permisos de localización:", error);
+            }
+        }
+
+        checkPermission();
+
+        return () => {
+            active = false;
+            if (permissionObj) {
+                permissionObj.onchange = null;
+            }
+        };
+    }, []);
+
+    const handleEnableLocation = () => {
+        requestLocationPermission(
+            (position) => {
+                setLocationPermission("granted");
+                setCurrentLocation({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracy_meters: position.coords.accuracy
+                }).catch((error) => {
+                    console.error("Error al guardar ubicación al conceder permiso:", error);
+                });
+            },
+            (error) => {
+                if (error.code === 1) { // PERMISSION_DENIED
+                    setLocationPermission("denied");
+                }
+            }
+        );
+    };
 
     const changeTheme = (theme) => {
         document.documentElement.setAttribute('data-theme', theme);
@@ -212,6 +270,52 @@ export default function Configuration() {
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                </div>
+            </div>
+
+            {/* LOCATION PERMISSION */}
+            <div className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm">
+                <div className="card-body p-6 flex flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-3 rounded-2xl bg-secondary/10 text-secondary shrink-0">
+                            <MapPin size={20} />
+                        </div>
+                        <div>
+                            <h2 className="font-semibold text-base text-base-content">
+                                Permiso de localización
+                            </h2>
+                            <p className="text-xs text-base-content/50 mt-0.5">
+                                Habilita el acceso a tu ubicación para usar el mapa.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                        {locationPermission === "granted" && (
+                            <span className="badge badge-success gap-1 font-semibold p-3 text-xs">
+                                Permitido
+                            </span>
+                        )}
+                        {locationPermission === "prompt" && (
+                            <button
+                                className="btn btn-primary btn-sm rounded-full px-5 font-semibold text-xs active:scale-95 transition-transform"
+                                type="button"
+                                onClick={handleEnableLocation}
+                            >
+                                Habilitar
+                            </button>
+                        )}
+                        {locationPermission === "denied" && (
+                            <div className="flex flex-col items-end gap-1">
+                                <span className="badge badge-error gap-1 font-semibold p-3 text-xs">
+                                    Bloqueado
+                                </span>
+                                <span className="text-[10px] text-error/80 text-right">
+                                    Actívalo en ajustes del navegador
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
