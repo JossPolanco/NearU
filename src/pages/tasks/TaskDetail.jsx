@@ -127,7 +127,7 @@ export default function TaskDetail() {
     return (
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
+            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
                 <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
@@ -148,7 +148,7 @@ export default function TaskDetail() {
             ) : (
                 <>
                     {/* Category Details Header Card */}
-                    <div className="bg-gradient-to-br from-base-200/60 via-base-100/30 to-base-100 dark:from-base-900/50 dark:via-base-900/20 dark:to-base-950 p-5 rounded-3xl border border-base-200/60 dark:border-base-800/60 shadow-xs space-y-3">
+                    <div className="bg-linear-to-br from-base-200/60 via-base-100/30 to-base-100 dark:from-base-900/50 dark:via-base-900/20 dark:to-base-950 p-5 rounded-3xl border border-base-200/60 dark:border-base-800/60 shadow-xs space-y-3">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-2xl bg-primary/10 dark:bg-primary/15 flex items-center justify-center text-primary shadow-xs">
                                 <ClipboardList className="w-6 h-6" />

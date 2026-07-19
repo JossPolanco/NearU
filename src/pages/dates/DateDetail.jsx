@@ -146,7 +146,7 @@ export default function DateDetail() {
     return (
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
+            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
                 <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
@@ -177,7 +177,7 @@ export default function DateDetail() {
                                     loading="lazy"
                                 />
                             ) : (
-                                <div className="absolute inset-0 bg-gradient-to-tr from-rose-100/40 to-orange-100/30 dark:from-rose-950/10 dark:to-amber-950/10 flex flex-col items-center justify-center p-6 text-center">
+                                <div className="absolute inset-0 bg-linear-to-tr from-rose-100/40 to-orange-100/30 dark:from-rose-950/10 dark:to-amber-950/10 flex flex-col items-center justify-center p-6 text-center">
                                     <CalendarHeart className="w-12 h-12 text-primary/80 opacity-60 animate-pulse" style={{ animationDuration: '3s' }} />
                                     <span className="text-xs text-base-content/40 font-medium mt-2">Un momento para recordar</span>
                                 </div>

@@ -44,7 +44,7 @@ export default function Chat() {
     ]);
 
     return (
-        <div className="fixed inset-0 flex flex-col bg-base-200">
+        <div className="fixed inset-0 flex flex-col bg-base-300">
             <ChatHeader />
             
             <div className="flex-1 overflow-y-auto px-4 py-2 scrollbar-thin">
