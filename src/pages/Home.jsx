@@ -100,13 +100,13 @@ export default function Home() {
                 </button>
 
                 {/* LIENZO DE DIBUJO (2C COLUMNAS DE ANCHO) */}
-                <button onClick={() => navigate('/drawing')} className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-center gap-3 group border-2 active:scale-[0.98] transition-all duration-200">
+                <button onClick={() => navigate('/games')} className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-center gap-3 group border-2 active:scale-[0.98] transition-all duration-200">
                     <div className="p-2 rounded-2xl bg-secondary/10 group-hover:scale-110 transition-transform duration-200">
                         <Palette className="w-6 h-6" />
                     </div>
                     <div className="text-left">
                         <span className="text-sm sm:text-base font-bold block">Juegos</span>
-                        <span className="text-xs opacity-70 font-normal block">Varios juegitos (aun no pongo nada jeje)</span>
+                        <span className="text-xs opacity-70 font-normal block">Juegitos para jugar jeje</span>
                     </div>
                 </button>
 
