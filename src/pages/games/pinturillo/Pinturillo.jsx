@@ -1,10 +1,28 @@
 import React from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router'
+import { getNoResolvedDraws } from '@/services/games/pinturillo'
+import { useQuery } from '@tanstack/react-query'
+import { getPartnerProfile } from '@/services/user'
 
 export default function Pinturillo() {
     const navigate = useNavigate()
-    
+
+    const parseDateTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    const { data: noResolvedDraws, isLoading } = useQuery({
+        queryKey: ["pinturillo-no-resolved-draws"],
+        queryFn: getNoResolvedDraws,
+    })
+
+    const { data: userProfile } = useQuery({
+        queryKey: ["user-profile"],
+        queryFn: getPartnerProfile,
+    })
+
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
@@ -22,9 +40,28 @@ export default function Pinturillo() {
             </div>
 
             <div className='grid grid-cols-1 gap-4 mt-10'>
-                <button className='btn btn-soft btn-primary'>Juegos anteriores</button>  
+                <button className='btn btn-soft btn-primary'>Juegos anteriores</button>
                 <button className='btn btn-primary' onClick={() => navigate('/pinturillo/newgame')}>Nueva partida</button>
             </div>
+
+            { !isLoading && noResolvedDraws?.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4 mt-10">
+                        <h1>Juegos pendientes</h1>
+                        {noResolvedDraws.map((draw) => (
+                            <button key={draw.id} className='btn btn-soft btn-primary' onClick={() => navigate(`/pinturillo/play/${draw.id}`)}>
+                                <div className='flex flex-row items-center gap-4'>
+                                    {parseDateTime(draw.created_at)}
+                                    {userProfile.display_name}
+                                    <img className='h-12 w-12' src={userProfile.avatar_url} alt="" />
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center py-4">
+                        <p className="text-base-content/70">No hay partidas disponibles</p>
+                    </div>
+                )}
         </div>
     )
 }
