@@ -40,10 +40,10 @@ export default function Notes() {
     });
 
     const { upload, state, reset } = useImageUpload({
-        bucket: "photos",
+        bucket: "drawing",
         profile: "drawing",
         gallery: "notes",
-        invalidateQueries: [imageKeys.list("photos", "notes")],
+        invalidateQueries: [imageKeys.list("drawing", "notes")],
         onSuccess: (image) => {
             saveNoteMutation.mutate({
                 title: pendingTitleRef.current,
