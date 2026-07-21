@@ -1,14 +1,36 @@
-import React, { useState } from 'react'
-import { ArrowLeft, Sparkles, RefreshCw, Smile, Zap, Flame, ChevronRight, Check, Palette } from 'lucide-react'
+import { useState, useRef, useEffect, React } from 'react'
+import { ArrowLeft, Sparkles, RefreshCw, Smile, Zap, Flame, ChevronRight, Check, Palette, Lightbulb, Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { default as words } from '../../../utils/words.json'
 import Drawer from '../../../components/drawer/Drawer'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from 'zod'
+import { createGame } from '@/services/games/pinturillo'
+import { useImageUpload } from "../../../hooks/images/useImageUpload";
+import { imageKeys } from "../../../hooks/images/useImages";
+import { getUserId } from "../../../services/user/userService";
+
+const pinturilloSchema = z.object({
+    secretWord: z.string().min(1, "La palabra secreta es requerida"),
+    hint1: z.string().min(1, "Mínimo una pista es requerida"),
+    hint2: z.string().optional(),
+    hint3: z.string().optional(),
+})
 
 export default function PintNewGame() {
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
     const [difficulty, setDifficulty] = useState("")
     const [wordsList, setWordsList] = useState([])
     const [selectedWord, setSelectedWord] = useState("")
+    const drawerRef = useRef(null)
+
+    const { data: userId } = useQuery({
+        queryKey: ["user-id"],
+        queryFn: getUserId,
+    })
 
     const getFiveWords = (diff) => {
         const w = words[diff] || []
@@ -33,6 +55,86 @@ export default function PintNewGame() {
         } else {
             navigate(-1)
         }
+    }
+
+    const createGameMutation = useMutation({
+        mutationFn: createGame,
+        onSuccess: () => {            
+            queryClient.invalidateQueries({ queryKey: ["pinturillo-draws"] });
+            drawerRef.current?.resetCanvas();
+            reset();
+            navigate('/pinturillo');
+        },
+    })
+
+    const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm({
+        resolver: zodResolver(pinturilloSchema),
+        defaultValues: {
+            secretWord: selectedWord,
+            hint1: "",
+            hint2: "",
+            hint3: "",
+        }
+    })
+
+    useEffect(() => {
+        if (selectedWord) {
+            setValue("secretWord", selectedWord);
+        }
+    }, [selectedWord, setValue]);
+
+    const { upload, state } = useImageUpload({
+        bucket: "drawings",
+        profile: "drawing",
+        gallery: "pinturillo",
+        invalidateQueries: [imageKeys.list("drawings", "pinturillo")],
+        onSuccess: (image) => {
+            console.log("se logro", image)
+            
+            createGameMutation.mutate({
+                secretWord: selectedWord,
+                hint1: watch("hint1"),
+                hint2: watch("hint2") || "",
+                hint3: watch("hint3") || "",
+                drawId: image.id,
+            });
+        }
+    });
+
+    const isSaving =
+        (state.stage !== "idle" && state.stage !== "success" && state.stage !== "error") ||
+        createGameMutation.isPending;
+
+    const handleSubmitGame = async () => {
+        try {
+            console.log("Alo?")
+            if (!drawerRef.current) return;
+            const data = await drawerRef.current.getDrawingData();
+            if (!data || data.isEmpty) {
+                alert("Por favor, realiza un dibujo antes de guardar.");
+                return;
+            }
+
+            const response = await fetch(data.dataUrl);
+            const blob = await response.blob();
+            const cleanTitle = selectedWord || "dibujo";
+            const filename = `${cleanTitle.toLowerCase().replace(/[^a-z0-9]+/g, "_") || "dibujo"}.png`;
+            const file = new File([blob], filename, { type: "image/png" });
+
+            if (!userId) {
+                alert("Usuario no autenticado.");
+                return;
+            }
+
+            await upload(file, userId);
+        } catch (error) {
+            console.error("Error al guardar el dibujo:", error);
+            alert("Ocurrió un error al guardar el dibujo.");
+        }
+    }
+
+    const handleValidationError = (errors) => {
+        console.log("Errores de validación en el formulario:", errors)
     }
 
     return (
@@ -174,17 +276,116 @@ export default function PintNewGame() {
                         </span>
                     </div>
 
-                    {/* Lienzo */}
-                    <Drawer />
+                    {/* DRAWER */}
+                    <Drawer ref={drawerRef} />
 
-                    {/* Botón para guardar */}
-                    <button
-                        type="button"
-                        className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-all min-h-12.5 text-base gap-2 flex items-center justify-center"
-                    >
-                        <Check className="w-5 h-5" />
-                        Guardar Dibujo
-                    </button>
+                    {/* FORM DE LAS 3 PISTAS */}
+                    <form onSubmit={handleSubmit(handleSubmitGame, handleValidationError)} className="space-y-4 bg-base-100 p-4.5 rounded-2xl border border-base-200/80 shadow-xs">
+                        <div className="flex items-center gap-2 pb-2.5 border-b border-base-200/60">
+                            <Lightbulb className="w-4 h-4 text-primary shrink-0" />
+                            <span className="text-sm font-bold text-base-content">Pistas de dibujo</span>
+                            <span className="text-xs text-base-content/50 font-normal ml-auto">(mínimo 1 pista)</span>
+                        </div>
+
+                        {/* Pista 1 */}
+                        <div className="form-control">
+                            <label className="label pb-1.5 flex justify-between items-center">
+                                <span className="label-text font-semibold text-xs text-base-content/70">
+                                    Pista 1
+                                </span>
+                                <span className="text-[10px] text-primary font-bold">
+                                    Requerida
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.hint1 ? "input-error" : ""}`}
+                                placeholder="Ej. Es un animal doméstico"
+                                {...register("hint1")}
+                            />
+                            {errors.hint1 && (
+                                <label className="label pt-1 pb-0">
+                                    <span className="label-text-alt text-error font-medium flex items-center gap-1">
+                                        <span>⚠️</span> {errors.hint1.message}
+                                    </span>
+                                </label>
+                            )}
+                        </div>
+
+                        {/* Pista 2 */}
+                        <div className="form-control">
+                            <label className="label pb-1.5 flex justify-between items-center">
+                                <span className="label-text font-semibold text-xs text-base-content/70">
+                                    Pista 2
+                                </span>
+                                <span className="text-[10px] text-base-content/40 font-medium">
+                                    Opcional
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.hint2 ? "input-error" : ""}`}
+                                placeholder="Ej. Le gusta cazar ratones"
+                                {...register("hint2")}
+                            />
+                            {errors.hint2 && (
+                                <label className="label pt-1 pb-0">
+                                    <span className="label-text-alt text-error font-medium flex items-center gap-1">
+                                        <span>⚠️</span> {errors.hint2.message}
+                                    </span>
+                                </label>
+                            )}
+                        </div>
+
+                        {/* Pista 3 */}
+                        <div className="form-control">
+                            <label className="label pb-1.5 flex justify-between items-center">
+                                <span className="label-text font-semibold text-xs text-base-content/70">
+                                    Pista 3
+                                </span>
+                                <span className="text-[10px] text-base-content/40 font-medium">
+                                    Opcional
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.hint3 ? "input-error" : ""}`}
+                                placeholder="Ej. Hace miau"
+                                {...register("hint3")}
+                            />
+                            {errors.hint3 && (
+                                <label className="label pt-1 pb-0">
+                                    <span className="label-text-alt text-error font-medium flex items-center gap-1">
+                                        <span>⚠️</span> {errors.hint3.message}
+                                    </span>
+                                </label>
+                            )}
+                        </div>
+
+                        {/* BOTON PARA GUARDAR */}
+                        <button 
+                            type="submit" 
+                            disabled={isSaving}
+                            className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-all min-h-12.5 text-base gap-2 flex items-center justify-center mt-3 disabled:opacity-50"
+                        >
+                            {isSaving ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    Guardando Dibujo...
+                                </>
+                            ) : (
+                                <>
+                                    <Check className="w-5 h-5" />
+                                    Guardar Dibujo
+                                </>
+                            )}
+                        </button>
+
+                        {errors.message && (
+                            <span className="text-error text-xs text-center mt-2 font-semibold block">{errors.message}</span>
+                        )}
+                    </form>
+
                 </div>
             )}
         </div>
