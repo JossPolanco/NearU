@@ -1,4 +1,3 @@
-// components/StarredBubble.jsx
 import { unStarredMessage } from "../../services/chat";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
@@ -71,7 +70,7 @@ export default function StarredBubble({ message, isOwn, messageRef, onScrollToPa
                     {/* METADATOS INTEGRADOS */}
                     <div className={`flex items-center justify-end gap-1 text-[9px] mt-1 -mr-1 -mb-1 select-none pointer-events-none ${isOwn ? 'text-primary-content/70' : 'text-base-content/50'}`}>
                         <Star size={10} className={`${isOwn ? 'text-yellow-300 fill-yellow-300' : 'text-yellow-500 fill-yellow-500'} shrink-0`} />
-                        <time>{parseDateTime(message.created_at) || "16:40"}</time>
+                        <time className="text-white">{parseDateTime(message.created_at) || "16:40"}</time>
                     </div>
                 </div>
             </div>

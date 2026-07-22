@@ -105,8 +105,6 @@ export async function fetchStarredMessages() {
 
     const messages = data.map(item => item.tbl_messages);
 
-    console.log(messages);
-
     if (error) throw error;
 
     return Promise.all(messages.map(async (message) => ({

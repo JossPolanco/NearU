@@ -26,10 +26,10 @@ export default function Home() {
                             <span>Our App Bbyyyy</span>
                         </div>
                         <h1 className="text-lg sm:text-xl font-bold tracking-tight text-base-content">
-                            TE AMO MUCHO COSA LINDA
+                            FELICES 3 MESESITOS BBYYY
                         </h1>
                         <p className="text-xs sm:text-sm text-base-content/70 font-medium">
-                            Att. Evelyn 💕
+                            Att. Josué 💕
                         </p>
                     </div>
                 </div>

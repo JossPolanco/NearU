@@ -28,7 +28,7 @@ export default function MessageField({ replyingTo, onCancelReply, isOwn }) {
     };
 
     return (
-        <div className="flex flex-col p-3 gap-2 bg-gradient-to-t from-base-300 via-base-300/90 to-base-300/0 z-10">
+        <div className="flex flex-col p-3 gap-2 bg-linear-to-t from-base-300 via-base-300/90 to-base-300/0 z-10">
             {/* Preview del mensaje que se está respondiendo */}
             {replyingTo && (
                 <div className={`flex items-center gap-2.5 bg-base-100/95 backdrop-blur-md rounded-2xl px-3.5 py-2 border-l-4 ${isOwn ? 'border-primary' : 'border-secondary'} shadow-sm animate-slide-up`}>
@@ -74,12 +74,13 @@ export default function MessageField({ replyingTo, onCancelReply, isOwn }) {
                 </div>
 
                 {message.trim().length === 0 ? (
-                    <button 
+                   <button 
                         type="button"
-                        className="btn  mask mask-heart btn-primary shrink-0 shadow-md shadow-primary/15 hover:scale-102 active:scale-95 transition-all duration-150"
-                        aria-label="Enviar nota de voz"
+                        className="btn mask mask-heart btn-primary shrink-0 shadow-md shadow-primary/15 hover:scale-102 active:scale-95 transition-all duration-150"                         
+                        disabled={true}
+                        aria-label="Enviar mensaje"
                     >
-                        <Mic size={18} />
+                        <Send size={18} />
                     </button>
                 ) : (
                     <button 

@@ -24,7 +24,7 @@ export default function StarredMessages() {
     const starredLength = starredMessages?.length || 0;
 
     return (
-        <div className="fixed inset-0 flex flex-col bg-base-200">
+        <div className="fixed inset-0 flex flex-col bg-base-300">
             <div className="bg-base-100/80 backdrop-blur-md border-b border-base-content/5 px-3 py-2.5 flex items-center gap-3 z-10 shadow-xs select-none">
                 {/* VOLVER */}
                 <button className="btn btn-primary btn-circle text-white hover:bg-base-200/50 hover:text-base-content active:scale-95 transition-all duration-200"
@@ -65,7 +65,7 @@ export default function StarredMessages() {
                             <Star size={36} className="text-primary/70 fill-primary/10" />
                         </div>
                         <h3 className="font-semibold text-base text-base-content">Sin mensajes destacados</h3>
-                        <p className="text-xs text-base-content/65 max-w-[240px] mt-1 leading-relaxed">
+                        <p className="text-xs text-base-content/65 max-w-60 mt-1 leading-relaxed">
                             Mantén presionado cualquier mensaje en el chat y selecciona "Destacar" para guardarlo aquí.
                         </p>
                     </div>

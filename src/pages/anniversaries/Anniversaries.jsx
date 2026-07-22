@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createAnniversary, getAnniversaries, updateAnniversary, deleteAnniversary } from '@/services/anniversaries';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from 'react-hook-form';
-import { ArrowLeft, Calendar, Loader2, Plus, Heart } from 'lucide-react';
+import { ArrowLeft, Calendar, Loader2, Plus, Heart, Trash2 } from 'lucide-react';
 import { FabAdd, Modal, AnniversaryItem } from '@/components';
 import { useNavigate } from 'react-router';
 import { DayPicker } from "react-day-picker";
@@ -214,6 +214,12 @@ export default function Anniversaries() {
                     ))}
                 </div>
             )}
+
+            <div className="flex items-center justify-center">
+                <button className="btn btn-primary mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-all font-semibold" onClick={() => navigate('/anniversary')}>
+                    Un mensajito para ti mi amor 😚
+                </button>
+            </div>
 
             {!isLoading && (
                 <FabAdd onClick={handleOpenCreateModal} />
