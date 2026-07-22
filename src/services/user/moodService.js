@@ -48,7 +48,7 @@ export async function getPartnerMood() {
 
     const result = await supabaseClient
         .from("tbl_profiles")
-        .select("mood")
+        .select("gender, mood")
         .neq("id", user.id)
         .single();
 

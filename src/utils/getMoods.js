@@ -146,3 +146,13 @@ export const MOODS_FEMALE = [
         emoji: "😈",
     },
 ];
+
+export function getMoodsByGender(gender) {
+    return gender === "female" ? MOODS_FEMALE : MOODS_MALE;
+}
+
+export function getMoodData(gender, moodTitle) {
+    const list = getMoodsByGender(gender);
+    if (!moodTitle) return list[0];
+    return list.find((m) => m.title.toLowerCase() === moodTitle.toLowerCase()) || list[0];
+}

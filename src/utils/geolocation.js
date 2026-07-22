@@ -37,8 +37,7 @@ export const getUserPosition = () => {
     }
 
     navigator.geolocation.getCurrentPosition(
-        (position) => {
-            console.log("Ubicación obtenida con éxito:", position.coords);
+        (position) => {            
             setCurrentLocation({
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,

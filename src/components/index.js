@@ -35,3 +35,6 @@ export { default as MoodSelector } from './diary/MoodSelector'
 
 // ANNIVERSARY COMPONENTS
 export { default as AnniversaryItem } from './anniversaries/AnniversaryItem'
+
+// USER COMPONENTS
+export { default as UserMoodCard } from './user/UserMoodCard'

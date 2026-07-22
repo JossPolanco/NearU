@@ -1,7 +1,8 @@
 import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, Sparkle } from 'lucide-react';
-// import { getUserPosition } from '../utils/geolocation;'
+// import { getUserPosition } from '@/utils/geolocation';
+import { UserMoodCard } from '@/components';
 import { useNavigate } from 'react-router';
-import { React, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -34,7 +35,11 @@ export default function Home() {
                 </div>
             </div>
 
+            {/* TARJETA DE ESTADO DE ÁNIMO */}
+            <UserMoodCard />
+
             {/* GRID PARA LOS BOTONES */}
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
 
                 {/* DIARIO (2C COLUMNAS DE ANCHO) */}
