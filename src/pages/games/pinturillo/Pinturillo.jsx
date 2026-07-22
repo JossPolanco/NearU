@@ -51,8 +51,8 @@ export default function Pinturillo() {
                             <button key={draw.id} className='btn btn-soft btn-primary' onClick={() => navigate(`/pinturillo/play/${draw.id}`)}>
                                 <div className='flex flex-row items-center gap-4'>
                                     {parseDateTime(draw.created_at)}
-                                    {userProfile.display_name}
-                                    <img className='h-12 w-12' src={userProfile.avatar_url} alt="" />
+                                    {userProfile?.display_name}
+                                    <img className='h-12 w-12' src={userProfile?.avatar_url} alt="" />
                                 </div>
                             </button>
                         ))}

@@ -69,3 +69,47 @@ export async function getNoResolvedDraws() {
 
     return draws;
 }
+
+export async function getPinturilloGame(id) {
+    const { data, error } = await supabaseClient
+        .from("tbl_drawing_games")
+        .select(`
+            id,            
+            secret_word,
+            hint_1,
+            hint_2,
+            hint_3,
+            image_metadata (                
+                storage_path,
+                bucket
+            )
+        `)
+        .eq("id", id)
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}   
+
+export async function updateGameStatus(id, status) {
+    const updatePayload = { status };
+    if (status === 'solved') {
+        updatePayload.solved_at = new Date().toISOString();
+    }
+
+    const { data, error } = await supabaseClient
+        .from("tbl_drawing_games")
+        .update(updatePayload)
+        .eq("id", id)
+        .select()
+        .maybeSingle();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}

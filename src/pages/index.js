@@ -41,6 +41,7 @@ export { default as Anniversaries } from "./anniversaries/Anniversaries";
 export { default as Geolocation } from "./geolocation/Geolocation";
 
 // GAMES PAGES
-export { default as Games } from "./games/Games";
-export { default as Pinturillo } from "./games/pinturillo/Pinturillo";
+export { default as PinturilloGuess } from "./games/pinturillo/PinturilloGuess";
 export { default as PintNewGame } from "./games/pinturillo/PintNewGame";
+export { default as Pinturillo } from "./games/pinturillo/Pinturillo";
+export { default as Games } from "./games/Games";

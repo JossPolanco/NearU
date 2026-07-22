@@ -1,7 +1,7 @@
 import {
     Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Diary, DiaryDetail,
     Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail, Notes, NotesGallery,
-    Anniversaries, AnniversaryDetail, Geolocation, Games, Pinturillo, PintNewGame
+    Anniversaries, AnniversaryDetail, Geolocation, Games, Pinturillo, PintNewGame, PinturilloGuess
 } from "@/pages";
 import { createBrowserRouter } from "react-router";
 import AuthProvider from "./utils/AuthContext";
@@ -176,6 +176,14 @@ export const router = createBrowserRouter([
                 element: (
                     <Layout>
                         <PintNewGame />
+                    </Layout>
+                )
+            },
+            {
+                path: "pinturillo/play/:id",
+                element: (
+                    <Layout>
+                        <PinturilloGuess />
                     </Layout>
                 )
             }
