@@ -1,20 +1,56 @@
-import {
-    Register, DrawingPage, Home, TestingPage, NotFound, PasswordRegistration, Configuration, Diary, DiaryDetail,
-    Login, Chat, StarredMessages, Anniversary, Tasks, TaskDetail, Dates, DateDetail, Notes, NotesGallery,
-    Anniversaries, AnniversaryDetail, Geolocation, Games, Pinturillo, PintNewGame, PinturilloGuess
-} from "@/pages";
 import { createBrowserRouter } from "react-router";
+import { lazy, Suspense } from "react";
 import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
+
+// Lazy loaded page components
+const Login = lazy(() => import("./pages/user/Login"));
+const Register = lazy(() => import("./pages/user/Register"));
+const PasswordRegistration = lazy(() => import("./pages/user/PasswordRegistration"));
+const Configuration = lazy(() => import("./pages/user/Configuration"));
+const Home = lazy(() => import("./pages/Home"));
+const DrawingPage = lazy(() => import("./pages/drawer/DrawingPage"));
+const TestingPage = lazy(() => import("./pages/TestingPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Chat = lazy(() => import("./pages/chat/Chat"));
+const StarredMessages = lazy(() => import("./pages/chat/StarredMessages"));
+const Tasks = lazy(() => import("./pages/tasks/Tasks"));
+const TaskDetail = lazy(() => import("./pages/tasks/TaskDetail"));
+const Dates = lazy(() => import("./pages/dates/Dates"));
+const DateDetail = lazy(() => import("./pages/dates/DateDetail"));
+const Notes = lazy(() => import("./pages/notes/Notes"));
+const NotesGallery = lazy(() => import("./pages/notes/NotesGallery"));
+const Diary = lazy(() => import("./pages/diary/Diary"));
+const DiaryDetail = lazy(() => import("./pages/diary/DiaryDetail"));
+const Anniversaries = lazy(() => import("./pages/anniversaries/Anniversaries"));
+const AnniversaryDetail = lazy(() => import("./pages/anniversaries/AnniversaryDetail"));
+const Anniversary = lazy(() => import("./pages/Anniversary"));
+const Geolocation = lazy(() => import("./pages/geolocation/Geolocation"));
+const Games = lazy(() => import("./pages/games/Games"));
+const Pinturillo = lazy(() => import("./pages/games/pinturillo/Pinturillo"));
+const PintNewGame = lazy(() => import("./pages/games/pinturillo/PintNewGame"));
+const PinturilloGuess = lazy(() => import("./pages/games/pinturillo/PinturilloGuess"));
+
+const PageLoader = () => (
+    <div className="flex items-center justify-center min-h-[60vh]">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+);
+
+const LazyPage = ({ children }) => (
+    <Suspense fallback={<PageLoader />}>
+        {children}
+    </Suspense>
+);
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Login />
+        element: <LazyPage><Login /></LazyPage>
     },
     {
         path: "/register", element: (
-            <Register />
+            <LazyPage><Register /></LazyPage>
         ),
     },
     {
@@ -23,19 +59,19 @@ export const router = createBrowserRouter([
             {
                 path: "/home", element: (
                     <Layout>
-                        <Home />
+                        <LazyPage><Home /></LazyPage>
                     </Layout>
                 ),
             },
             {
                 path: "/create-password",
-                element: <PasswordRegistration />
+                element: <LazyPage><PasswordRegistration /></LazyPage>
             },
             {
                 path: "/drawing",
                 element: (
                     <Layout>
-                        <DrawingPage />
+                        <LazyPage><DrawingPage /></LazyPage>
                     </Layout>
                 ),
             },
@@ -43,7 +79,7 @@ export const router = createBrowserRouter([
                 path: "/testing",
                 element: (
                     <Layout>
-                        <TestingPage />
+                        <LazyPage><TestingPage /></LazyPage>
                     </Layout>
                 ),
             },
@@ -51,27 +87,27 @@ export const router = createBrowserRouter([
                 path: "/config",
                 element: (
                     <Layout>
-                        <Configuration />
+                        <LazyPage><Configuration /></LazyPage>
                     </Layout>
                 ),
             },
             {
                 path: "/chat",
                 element: (
-                    <Chat />
+                    <LazyPage><Chat /></LazyPage>
                 )
             },
             {
                 path: "/starred-messages",
                 element: (
-                    <StarredMessages />
+                    <LazyPage><StarredMessages /></LazyPage>
                 )
             },
             {
                 path: "/tasks",
                 element: (
                     <Layout>
-                        <Tasks />
+                        <LazyPage><Tasks /></LazyPage>
                     </Layout>
                 )
             },
@@ -79,7 +115,7 @@ export const router = createBrowserRouter([
                 path: "/task/:id",
                 element: (
                     <Layout>
-                        <TaskDetail />
+                        <LazyPage><TaskDetail /></LazyPage>
                     </Layout>
                 )
             },
@@ -87,7 +123,7 @@ export const router = createBrowserRouter([
                 path: "/dates",
                 element: (
                     <Layout>
-                        <Dates />
+                        <LazyPage><Dates /></LazyPage>
                     </Layout>
                 )
             },
@@ -95,7 +131,7 @@ export const router = createBrowserRouter([
                 path: "/date/:id",
                 element: (
                     <Layout>
-                        <DateDetail />
+                        <LazyPage><DateDetail /></LazyPage>
                     </Layout>
                 )
             },
@@ -103,7 +139,7 @@ export const router = createBrowserRouter([
                 path: "/notes",
                 element: (
                     <Layout>
-                        <Notes />
+                        <LazyPage><Notes /></LazyPage>
                     </Layout>
                 )
             },
@@ -111,7 +147,7 @@ export const router = createBrowserRouter([
                 path: "/notes-gallery",
                 element: (
                     <Layout>
-                        <NotesGallery />
+                        <LazyPage><NotesGallery /></LazyPage>
                     </Layout>
                 )
             },
@@ -119,7 +155,7 @@ export const router = createBrowserRouter([
                 path: "/diary",
                 element: (
                     <Layout>
-                        <Diary />
+                        <LazyPage><Diary /></LazyPage>
                     </Layout>
                 )
             },
@@ -127,7 +163,7 @@ export const router = createBrowserRouter([
                 path: "/diary-detail/:currentDate",
                 element: (
                     <Layout>
-                        <DiaryDetail />
+                        <LazyPage><DiaryDetail /></LazyPage>
                     </Layout>
                 )
             },
@@ -135,7 +171,7 @@ export const router = createBrowserRouter([
                 path: "/anniversaries",
                 element: (
                     <Layout>
-                        <Anniversaries />
+                        <LazyPage><Anniversaries /></LazyPage>
                     </Layout>
                 )
             },
@@ -143,7 +179,7 @@ export const router = createBrowserRouter([
                 path: "/anniversary-detail/:id",
                 element: (
                     <Layout>
-                        <AnniversaryDetail />
+                        <LazyPage><AnniversaryDetail /></LazyPage>
                     </Layout>
                 )
             },
@@ -151,7 +187,7 @@ export const router = createBrowserRouter([
                 path: "/geolocation",
                 element: (
                     <Layout>
-                        <Geolocation />
+                        <LazyPage><Geolocation /></LazyPage>
                     </Layout>
                 )
             },
@@ -159,7 +195,7 @@ export const router = createBrowserRouter([
                 path: "/games",
                 element: (
                     <Layout>
-                        <Games />
+                        <LazyPage><Games /></LazyPage>
                     </Layout>
                 )
             },
@@ -167,7 +203,7 @@ export const router = createBrowserRouter([
                 path: "/pinturillo",
                 element: (
                     <Layout>
-                        <Pinturillo />
+                        <LazyPage><Pinturillo /></LazyPage>
                     </Layout>
                 )
             },
@@ -175,7 +211,7 @@ export const router = createBrowserRouter([
                 path: "/pinturillo/newgame",
                 element: (
                     <Layout>
-                        <PintNewGame />
+                        <LazyPage><PintNewGame /></LazyPage>
                     </Layout>
                 )
             },
@@ -183,7 +219,7 @@ export const router = createBrowserRouter([
                 path: "pinturillo/play/:id",
                 element: (
                     <Layout>
-                        <PinturilloGuess />
+                        <LazyPage><PinturilloGuess /></LazyPage>
                     </Layout>
                 )
             }
@@ -191,10 +227,10 @@ export const router = createBrowserRouter([
     },
     {
         path: "*",
-        element: <NotFound />
+        element: <LazyPage><NotFound /></LazyPage>
     },
     {
         path: "/anniversary",
-        element: <Anniversary />
+        element: <LazyPage><Anniversary /></LazyPage>
     }
 ], { basename: '/NearU' });

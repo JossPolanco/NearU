@@ -3225,6 +3225,9 @@
   .min-h-55 {
     min-height: calc(var(--spacing) * 55);
   }
+  .min-h-\[60vh\] {
+    min-height: 60vh;
+  }
   .min-h-\[90vh\] {
     min-height: 90vh;
   }
@@ -3428,7 +3431,7 @@
   .shrink-0 {
     flex-shrink: 0;
   }
-  .flex-grow {
+  .grow {
     flex-grow: 1;
   }
   .-translate-x-1\/2 {
