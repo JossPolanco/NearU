@@ -113,3 +113,60 @@ export async function updateGameStatus(id, status) {
 
     return data;
 }
+
+export async function getPinturilloScores() {
+    const { data, error } = await supabaseClient
+        .from("tbl_drawing_guesses")
+        .select("guesser_id")
+        .eq("is_correct", true);
+
+    if (error) {
+        throw error;
+    }
+
+    const scores = {};
+    if (data) {
+        data.forEach(item => {
+            if (item.guesser_id) {
+                scores[item.guesser_id] = (scores[item.guesser_id] || 0) + 1;
+            }
+        });
+    }
+
+    return scores;
+}
+
+export async function getPinturilloHistory({ page = 1, limit = 5 } = {}) {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, count, error } = await supabaseClient
+        .from("tbl_drawing_games")
+        .select(`
+            id,
+            secret_word,
+            created_at,
+            solved_at,
+            creator_id,
+            status,
+            image_metadata (
+                storage_path,
+                bucket
+            )
+        `, { count: "exact" })
+        .eq("status", "solved")
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
+    if (error) {
+        throw error;
+    }
+
+    return {
+        draws: data || [],
+        totalCount: count || 0,
+        totalPages: Math.ceil((count || 0) / limit) || 1,
+        currentPage: page
+    };
+}
+

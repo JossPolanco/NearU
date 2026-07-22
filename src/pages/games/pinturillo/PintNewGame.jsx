@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, React } from 'react'
-import { ArrowLeft, Sparkles, RefreshCw, Smile, Zap, Flame, ChevronRight, Check, Palette, Lightbulb, Loader2 } from 'lucide-react'
+import { ArrowLeft, Sparkles, RefreshCw, Smile, Zap, Flame, ChevronRight, Check, Palette, Lightbulb, Loader2, Edit3 } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { default as words } from '../../../utils/words.json'
 import Drawer from '../../../components/drawer/Drawer'
@@ -25,6 +25,7 @@ export default function PintNewGame() {
     const [difficulty, setDifficulty] = useState("")
     const [wordsList, setWordsList] = useState([])
     const [selectedWord, setSelectedWord] = useState("")
+    const [customWord, setCustomWord] = useState("")
     const drawerRef = useRef(null)
 
     const { data: userId } = useQuery({
@@ -49,9 +50,11 @@ export default function PintNewGame() {
     const handleBack = () => {
         if (selectedWord) {
             setSelectedWord("")
+            setCustomWord("")
         } else if (wordsList.length > 0) {
             setWordsList([])
             setDifficulty("")
+            setCustomWord("")
         } else {
             navigate(-1)
         }
@@ -59,7 +62,7 @@ export default function PintNewGame() {
 
     const createGameMutation = useMutation({
         mutationFn: createGame,
-        onSuccess: () => {            
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["pinturillo-draws"] });
             drawerRef.current?.resetCanvas();
             reset();
@@ -88,9 +91,7 @@ export default function PintNewGame() {
         profile: "drawing",
         gallery: "pinturillo",
         invalidateQueries: [imageKeys.list("drawings", "pinturillo")],
-        onSuccess: (image) => {
-            console.log("se logro", image)
-            
+        onSuccess: (image) => {            
             createGameMutation.mutate({
                 secretWord: selectedWord,
                 hint1: watch("hint1"),
@@ -106,8 +107,7 @@ export default function PintNewGame() {
         createGameMutation.isPending;
 
     const handleSubmitGame = async () => {
-        try {
-            console.log("Alo?")
+        try {            
             if (!drawerRef.current) return;
             const data = await drawerRef.current.getDrawingData();
             if (!data || data.isEmpty) {
@@ -155,14 +155,14 @@ export default function PintNewGame() {
             </div>
 
             {/* SELECTOR DE DIFICULTAD */}
-            {wordsList.length === 0 && (
+            {wordsList.length === 0 && !selectedWord && (
                 <div className="space-y-6">
                     <div className="text-center space-y-1">
                         <h1 className="text-xl font-bold text-base-content">
                             ¿Qué tan difícil quieres jugar?
                         </h1>
                         <p className="text-xs text-base-content/60">
-                            Selecciona el nivel para generar las palabras
+                            Selecciona el nivel para generar las palabras o escribe la tuya
                         </p>
                     </div>
 
@@ -215,6 +215,35 @@ export default function PintNewGame() {
                             <ChevronRight className="w-5 h-5 text-base-content/40 group-active:text-primary transition-colors shrink-0" />
                         </button>
                     </div>
+
+                    {/* PALABRA PERSONALIZADA EN PANTALLA INICIAL */}
+                    <div className="relative flex py-1 items-center">
+                        <div className="grow border-t border-base-200/80"></div>
+                        <span className="shrink-0 mx-3 text-xs text-base-content/50 font-medium">O escribe la tuya</span>
+                        <div className="grow border-t border-base-200/80"></div>
+                    </div>
+
+                    <div className="bg-base-100 border border-base-200/80 rounded-2xl p-4 shadow-xs space-y-3">
+                        <div className="flex items-center gap-2">
+                            <Edit3 className="w-4 h-4 text-primary shrink-0" />
+                            <span className="text-xs font-bold text-base-content">
+                                Palabra personalizada:
+                            </span>
+                        </div>
+                        <form className="flex gap-2"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                if (customWord.trim()) {
+                                    setSelectedWord(customWord.trim());
+                                }
+                            }}
+                        >
+                            <input onChange={(e) => setCustomWord(e.target.value)} type="text" value={customWord} placeholder="Ej. Empanadas polvorientas de estas del bimbo mmmmmm ya no las hacen como antes vdd..." className="input input-bordered rounded-2xl w-full text-sm font-bold capitalize focus:outline-none focus:border-primary transition-all shadow-2xs" />
+                            <button type="submit" disabled={!customWord.trim()} className="btn btn-primary rounded-2xl font-bold min-h-12 text-xs px-4 shrink-0 active:scale-95 transition-all disabled:opacity-50" >
+                                Elegir
+                            </button>
+                        </form>
+                    </div>
                 </div>
             )}
 
@@ -259,6 +288,40 @@ export default function PintNewGame() {
                                 </span>
                             </button>
                         ))}
+                    </div>
+
+                    {/* PALABRA PERSONALIZADA SI NINGUNA DE LAS GENERADAS LE GUSTA */}
+                    <div className="bg-base-100 border border-base-200/80 rounded-2xl p-4 shadow-xs space-y-3">
+                        <div className="flex items-center gap-2">
+                            <Edit3 className="w-4 h-4 text-primary shrink-0" />
+                            <span className="text-xs font-bold text-base-content">
+                                ¿No te gusta ninguna? Escribe la tuya:
+                            </span>
+                        </div>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                if (customWord.trim()) {
+                                    setSelectedWord(customWord.trim());
+                                }
+                            }}
+                            className="flex gap-2"
+                        >
+                            <input
+                                type="text"
+                                value={customWord}
+                                onChange={(e) => setCustomWord(e.target.value)}
+                                placeholder="Escribe tu palabra personalizada..."
+                                className="input input-bordered rounded-2xl w-full text-sm font-bold capitalize focus:outline-none focus:border-primary transition-all shadow-2xs"
+                            />
+                            <button
+                                type="submit"
+                                disabled={!customWord.trim()}
+                                className="btn btn-primary rounded-2xl font-bold min-h-12 text-xs px-4 shrink-0 active:scale-95 transition-all disabled:opacity-50"
+                            >
+                                Elegir
+                            </button>
+                        </form>
                     </div>
                 </div>
             )}
@@ -363,8 +426,8 @@ export default function PintNewGame() {
                         </div>
 
                         {/* BOTON PARA GUARDAR */}
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             disabled={isSaving}
                             className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-all min-h-12.5 text-base gap-2 flex items-center justify-center mt-3 disabled:opacity-50"
                         >
