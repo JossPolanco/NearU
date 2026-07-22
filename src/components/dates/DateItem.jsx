@@ -66,9 +66,9 @@ export default function DateItem({ date, onEdit, onDelete, isDeleting }) {
 
             {/* Options Dropdown */}
             <div className="dropdown dropdown-end shrink-0" onClick={(e) => e.stopPropagation()}>
-                <div 
+                <button 
+                    type="button"
                     tabIndex={0} 
-                    role="button" 
                     className="btn btn-ghost btn-circle btn-xs text-base-content/40 active:text-primary active:bg-base-250/20 md:hover:text-primary md:hover:bg-base-250/20 transition-colors opacity-80"
                     aria-label="Opciones de cita"
                 >
@@ -77,10 +77,9 @@ export default function DateItem({ date, onEdit, onDelete, isDeleting }) {
                     ) : (
                         <MoreVertical className="w-3.5 h-3.5" />
                     )}
-                </div>
+                </button>
                 {!isDeleting && (
                     <ul 
-                        tabIndex={0} 
                         className="dropdown-content menu p-1.5 shadow-xl bg-base-100/95 dark:bg-base-950/95 border border-base-200 dark:border-base-800 rounded-2xl w-36 z-1 backdrop-blur"
                     >
                         <li>

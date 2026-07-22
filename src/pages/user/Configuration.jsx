@@ -247,7 +247,7 @@ export default function Configuration() {
                     </div>
 
                     <div className="dropdown dropdown-end shrink-0">
-                        <div tabIndex={0} role="button" className="btn btn-sm px-4 font-semibold text-xs capitalize flex items-center gap-1.5">
+                        <button type="button" tabIndex={0} className="btn btn-sm px-4 font-semibold text-xs capitalize flex items-center gap-1.5">
                             {currentTheme}
                             <svg
                                 width="10px"
@@ -257,8 +257,8 @@ export default function Configuration() {
                                 viewBox="0 0 2048 2048">
                                 <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
                             </svg>
-                        </div>
-                        <ul tabIndex={0} className="dropdown-content bg-base-300 rounded-box z-1 w-40 p-2 shadow-2xl mt-1">
+                        </button>
+                        <ul className="dropdown-content bg-base-300 rounded-box z-1 w-40 p-2 shadow-2xl mt-1">
                             {themes.map((theme) => (
                                 <li key={theme}>
                                     <button

@@ -103,16 +103,15 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
 
                 {/* Dropdown Options Menu */}
                 <div className="dropdown dropdown-end shrink-0" onClick={(e) => e.stopPropagation()}>
-                    <div
+                    <button
+                        type="button"
                         tabIndex={0}
-                        role="button"
                         className="btn btn-ghost btn-circle btn-sm text-base-content/40 active:text-primary active:bg-base-250/20 md:hover:text-primary md:hover:bg-base-250/20 transition-colors"
                         aria-label="Opciones de aniversario"
                     >
                         <MoreVertical className="w-4 h-4" />
-                    </div>
+                    </button>
                     <ul
-                        tabIndex={0}
                         className="dropdown-content menu p-1.5 shadow-xl bg-base-100/95 dark:bg-base-950/95 border border-base-200 dark:border-base-800 rounded-2xl w-36 z-10 backdrop-blur"
                     >
                         <li>
