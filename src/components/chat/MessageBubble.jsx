@@ -6,6 +6,16 @@ import ReadIndicator from "./ReadIndicator";
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 
+const parseTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
+const parseDateTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 export default function MessageBubble({ message, isOwn, onReply, messageRef, onScrollToParent, user }) {
     const [messageEdited, setMessageEdited] = useState(message.content);
     const [showMenu, setShowMenu] = useState(false);
@@ -26,16 +36,6 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
     const handlePressEnd = () => {
         clearTimeout(longPressTimer.current);
     };
-
-    const parseTime = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-
-    const parseDateTime = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
 
     const handleSetStarredMessage = async (messageId) => {
         await setStarredMessage(message.id);
@@ -96,7 +96,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
     }
 
     return (
-        <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'} relative ${showMenu ? 'z-50' : 'z-0'} transition-all duration-200 my-1.5`} data-message-id={message.id} >
+        <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'} relative ${showMenu ? 'z-50' : 'z-0'} transition-transform duration-200 my-1.5`} data-message-id={message.id} >
 
             <div className={`chat-bubble max-w-[75%] cursor-pointer select-none rounded-[18px] px-3.5 py-2.5 text-sm shadow-xs before:hidden ${isOwn ? 'chat-bubble-primary rounded-br-none text-primary-content' : 'chat-bubble-secondary rounded-bl-none text-secondary-content'}`}
                 style={{ overflowWrap: 'anywhere' }}
@@ -166,29 +166,29 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                     <>
                         <div className="fixed inset-0 z-9998 bg-base-300/30 backdrop-blur-xs transition-opacity duration-300 animate-fade-in" onClick={() => setShowMenu(false)} />
                         <div className="fixed z-9999 bg-base-100 backdrop-blur-md shadow-xl rounded-2xl flex flex-col gap-0.5 p-1.5 border border-base-200 animate-scale-in" style={{ left: `${left}px`, top: `${top}px`, width: `${menuWidth}px` }}  >
-                            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-all text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
+                            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
                                 <Reply size={16} className="text-base-content/40" />
                                 <span>Responder</span>
                             </button>
                             {isOwn && (
-                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-all text-left" onClick={() => { setShowMenu(false); setEditMode(true); }} >
+                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left" onClick={() => { setShowMenu(false); setEditMode(true); }} >
                                     <Pencil size={16} className="text-base-content/40" />
                                     <span>Editar</span>
                                 </button>
                             )}
                             {message.starred && message.starred_by == user ? (
-                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-all text-left" onClick={() => { handleUnStarredMessage(message.id); setShowMenu(false); }} >
+                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left" onClick={() => { handleUnStarredMessage(message.id); setShowMenu(false); }} >
                                     <Star size={16} className="text-yellow-500 fill-yellow-500 shrink-0" />
                                     <span>Quitar destacado</span>
                                 </button>
                             ) : (
-                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-all text-left" onClick={() => { handleSetStarredMessage(message.id); setShowMenu(false); }} >
+                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left" onClick={() => { handleSetStarredMessage(message.id); setShowMenu(false); }} >
                                     <Star size={16} className="text-base-content/40 shrink-0" />
                                     <span>Destacar</span>
                                 </button>
                             )}
                             {isOwn && (
-                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-error hover:bg-error/10 active:scale-98 transition-all text-left" onClick={() => { handleDeleteMessage(message.id); setShowMenu(false); }} >
+                                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-error hover:bg-error/10 active:scale-98 transition-transform text-left" onClick={() => { handleDeleteMessage(message.id); setShowMenu(false); }} >
                                     <Trash2 size={16} className="shrink-0" />
                                     <span>Eliminar</span>
                                 </button>
@@ -218,7 +218,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                                 onChange={(e) => setMessageEdited(e.target.value)}
                             />
                             <button
-                                className="btn btn-circle btn-primary shrink-0 shadow-md shadow-primary/15 active:scale-90 transition-all duration-150"
+                                className="btn btn-circle btn-primary shrink-0 shadow-md shadow-primary/15 active:scale-90 transition-transform duration-150"
                                 onClick={() => handleEditMessage(message.id, messageEdited)}
                                 disabled={editMessageMutation.isPending || !messageEdited.trim()}
                                 aria-label="Guardar cambios"

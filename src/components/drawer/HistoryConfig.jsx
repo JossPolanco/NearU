@@ -76,7 +76,7 @@ export default function HistoryConfig({ paths, history = [], canvasRef, canvasCo
                                     key={index}
                                     type="button"
                                     onClick={() => handleJumpToHistory(index)}
-                                    className={`shrink-0 w-16 h-16 rounded-lg border overflow-hidden relative active:scale-95 bg-base-100 flex items-center justify-center transition-all ${isActive
+                                    className={`shrink-0 w-16 h-16 rounded-lg border overflow-hidden relative active:scale-95 bg-base-100 flex items-center justify-center transition-transform ${isActive
                                             ? 'border-primary ring-2 ring-primary/40 font-semibold'
                                             : 'border-base-200'
                                         }`}

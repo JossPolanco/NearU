@@ -48,7 +48,7 @@ export default function DrawerConf({
                             setEraseMode(false);
                             canvasRef.current?.eraseMode(false);
                         }}
-                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-all duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'draw'
+                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-transform duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'draw'
                             ? 'bg-primary/10 text-primary font-semibold'
                             : 'text-base-content/60 active:bg-base-200'
                             }`}
@@ -65,7 +65,7 @@ export default function DrawerConf({
                             setEraseMode(true);
                             canvasRef.current?.eraseMode(true);
                         }}
-                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-all duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'erase'
+                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-transform duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'erase'
                             ? 'bg-primary/10 text-primary font-semibold'
                             : 'text-base-content/60 active:bg-base-200'
                             }`}
@@ -78,7 +78,7 @@ export default function DrawerConf({
                     <button
                         type="button"
                         onClick={() => setActiveTab('color')}
-                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-all duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'color'
+                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-transform duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'color'
                             ? 'bg-primary/10 text-primary font-semibold'
                             : 'text-base-content/60 active:bg-base-200'
                             }`}
@@ -91,7 +91,7 @@ export default function DrawerConf({
                     <button
                         type="button"
                         onClick={() => setActiveTab('background')}
-                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-all duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'background'
+                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-transform duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'background'
                             ? 'bg-primary/10 text-primary font-semibold'
                             : 'text-base-content/60 active:bg-base-200'
                             }`}
@@ -104,7 +104,7 @@ export default function DrawerConf({
                     <button
                         type="button"
                         onClick={() => setActiveTab('history')}
-                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-all duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'history'
+                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-transform duration-200 min-h-12.5 transform active:scale-110 ease-in-out ${activeTab === 'history'
                             ? 'bg-primary/10 text-primary font-semibold'
                             : 'text-base-content/60 active:bg-base-200'
                             }`}
@@ -117,7 +117,7 @@ export default function DrawerConf({
                     <button
                         type="button"
                         onClick={() => setActiveTab('save')}
-                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-all duration-200 min-h-12.5 transform active:scale-110 ease-in-out  ${activeTab === 'save'
+                        className={`flex flex-col items-center justify-center py-2.5 rounded-xl transition-transform duration-200 min-h-12.5 transform active:scale-110 ease-in-out  ${activeTab === 'save'
                             ? 'bg-primary/10 text-primary font-semibold'
                             : 'text-base-content/60 active:bg-base-200'
                             }`}

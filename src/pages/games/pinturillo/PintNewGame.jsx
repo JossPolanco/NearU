@@ -19,6 +19,10 @@ const pinturilloSchema = z.object({
     hint3: z.string().optional(),
 })
 
+const handleValidationError = (errors) => {
+    console.log("Errores de validación en el formulario:", errors)
+}
+
 export default function PintNewGame() {
     const navigate = useNavigate()
     const queryClient = useQueryClient()
@@ -142,7 +146,7 @@ export default function PintNewGame() {
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center py-2 mb-2">
                 <button
-                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={handleBack}
                     aria-label="Volver"
                 >
@@ -168,7 +172,7 @@ export default function PintNewGame() {
 
                     <div className="grid grid-cols-1 gap-3">
                         <button
-                            className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-all text-left"
+                            className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-transform text-left"
                             onClick={() => getFiveWords("facil")}
                         >
                             <div className="flex items-center gap-3">
@@ -184,7 +188,7 @@ export default function PintNewGame() {
                         </button>
 
                         <button
-                            className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-all text-left"
+                            className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-transform text-left"
                             onClick={() => getFiveWords("medio")}
                         >
                             <div className="flex items-center gap-3">
@@ -200,7 +204,7 @@ export default function PintNewGame() {
                         </button>
 
                         <button
-                            className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-all text-left"
+                            className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-transform text-left"
                             onClick={() => getFiveWords("dificil")}
                         >
                             <div className="flex items-center gap-3">
@@ -238,8 +242,8 @@ export default function PintNewGame() {
                                 }
                             }}
                         >
-                            <input onChange={(e) => setCustomWord(e.target.value)} type="text" value={customWord} placeholder="Ej. Empanadas polvorientas de estas del bimbo mmmmmm ya no las hacen como antes vdd..." className="input input-bordered rounded-2xl w-full text-sm font-bold capitalize focus:outline-none focus:border-primary transition-all shadow-2xs" />
-                            <button type="submit" disabled={!customWord.trim()} className="btn btn-primary rounded-2xl font-bold min-h-12 text-xs px-4 shrink-0 active:scale-95 transition-all disabled:opacity-50" >
+                            <input onChange={(e) => setCustomWord(e.target.value)} type="text" value={customWord} placeholder="Ej. Empanadas polvorientas de estas del bimbo mmmmmm ya no las hacen como antes vdd..." className="input input-bordered rounded-2xl w-full text-sm font-bold capitalize focus:outline-none focus:border-primary transition-transform shadow-2xs" />
+                            <button type="submit" disabled={!customWord.trim()} className="btn btn-primary rounded-2xl font-bold min-h-12 text-xs px-4 shrink-0 active:scale-95 transition-transform disabled:opacity-50" >
                                 Elegir
                             </button>
                         </form>
@@ -259,7 +263,7 @@ export default function PintNewGame() {
                         </div>
                         <button
                             onClick={() => getFiveWords(difficulty)}
-                            className="btn btn-ghost btn-xs gap-1.5 text-xs text-primary active:scale-95 transition-all"
+                            className="btn btn-ghost btn-xs gap-1.5 text-xs text-primary active:scale-95 transition-transform"
                             title="Regenerar palabras"
                         >
                             <RefreshCw className="w-3.5 h-3.5" />
@@ -272,7 +276,7 @@ export default function PintNewGame() {
                             <button
                                 key={index}
                                 onClick={() => setSelectedWord(word)}
-                                className="group flex items-center justify-between p-4 bg-base-100 border border-base-200/80 active:border-primary active:bg-primary/5 md:hover:border-primary/60 rounded-2xl shadow-xs transition-all duration-150 text-left min-h-14"
+                                className="group flex items-center justify-between p-4 bg-base-100 border border-base-200/80 active:border-primary active:bg-primary/5 md:hover:border-primary/60 rounded-2xl shadow-xs transition-transform duration-150 text-left min-h-14"
                             >
                                 <div className="flex items-center gap-3">
                                     <span className="w-6 h-6 rounded-full bg-base-200/70 text-base-content/70 flex items-center justify-center text-xs font-semibold shrink-0">
@@ -312,12 +316,12 @@ export default function PintNewGame() {
                                 value={customWord}
                                 onChange={(e) => setCustomWord(e.target.value)}
                                 placeholder="Escribe tu palabra personalizada..."
-                                className="input input-bordered rounded-2xl w-full text-sm font-bold capitalize focus:outline-none focus:border-primary transition-all shadow-2xs"
+                                className="input input-bordered rounded-2xl w-full text-sm font-bold capitalize focus:outline-none focus:border-primary transition-transform shadow-2xs"
                             />
                             <button
                                 type="submit"
                                 disabled={!customWord.trim()}
-                                className="btn btn-primary rounded-2xl font-bold min-h-12 text-xs px-4 shrink-0 active:scale-95 transition-all disabled:opacity-50"
+                                className="btn btn-primary rounded-2xl font-bold min-h-12 text-xs px-4 shrink-0 active:scale-95 transition-transform disabled:opacity-50"
                             >
                                 Elegir
                             </button>
@@ -362,7 +366,7 @@ export default function PintNewGame() {
                             </label>
                             <input
                                 type="text"
-                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.hint1 ? "input-error" : ""}`}
+                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.hint1 ? "input-error" : ""}`}
                                 placeholder="Ej. Es un animal doméstico"
                                 {...register("hint1")}
                             />
@@ -387,7 +391,7 @@ export default function PintNewGame() {
                             </label>
                             <input
                                 type="text"
-                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.hint2 ? "input-error" : ""}`}
+                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.hint2 ? "input-error" : ""}`}
                                 placeholder="Ej. Le gusta cazar ratones"
                                 {...register("hint2")}
                             />
@@ -412,7 +416,7 @@ export default function PintNewGame() {
                             </label>
                             <input
                                 type="text"
-                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.hint3 ? "input-error" : ""}`}
+                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.hint3 ? "input-error" : ""}`}
                                 placeholder="Ej. Hace miau"
                                 {...register("hint3")}
                             />
@@ -429,7 +433,7 @@ export default function PintNewGame() {
                         <button
                             type="submit"
                             disabled={isSaving}
-                            className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-all min-h-12.5 text-base gap-2 flex items-center justify-center mt-3 disabled:opacity-50"
+                            className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-transform min-h-12.5 text-base gap-2 flex items-center justify-center mt-3 disabled:opacity-50"
                         >
                             {isSaving ? (
                                 <>

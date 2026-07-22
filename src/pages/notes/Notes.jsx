@@ -88,7 +88,7 @@ export default function Notes() {
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -108,7 +108,7 @@ export default function Notes() {
             <FabAdd onClick={() => refModal.current.open()} />
 
             {/* View Previous Notes Button */}
-            <button className="btn btn-primary rounded-2xl w-full min-h-12.5 flex items-center justify-center gap-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98] shadow-md border-0"
+            <button className="btn btn-primary rounded-2xl w-full min-h-12.5 flex items-center justify-center gap-2 text-sm font-semibold transition-transform duration-200 active:scale-[0.98] shadow-md border-0"
                 onClick={() => navigate("/notes-gallery")}>
                 <StickyNote className="w-5 h-5" />
                 Ver todas las notitas 🐜eriores

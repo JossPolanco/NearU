@@ -62,7 +62,7 @@ export default function PinturilloScore() {
             {/* CARDS DE SCORE*/}
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {/* USUARIO ACTUAL CARD*/}
-                <div className={`relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl border transition-all duration-200 ${isUserLeader
+                <div className={`relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl border transition-transform duration-200 ${isUserLeader
                     ? "bg-amber-500/5 border-amber-500/40 shadow-xs"
                     : "bg-base-200/30 dark:bg-base-900/20 border-base-200/80 dark:border-base-800/70"
                     }`}
@@ -101,7 +101,7 @@ export default function PinturilloScore() {
                 </div>
 
                 {/* CARD DE LA PAREJA*/}
-                <div className={`relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl border transition-all duration-200 ${isPartnerLeader
+                <div className={`relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl border transition-transform duration-200 ${isPartnerLeader
                     ? "bg-amber-500/5 border-amber-500/40 shadow-xs"
                     : "bg-base-200/30 dark:bg-base-900/20 border-base-200/80 dark:border-base-800/70"
                     }`}>

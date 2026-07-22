@@ -66,7 +66,7 @@ export default function BackgroundConfig({ canvasColor, setCanvasColor, bgType, 
                                     setCanvasColor(preset.color);
                                     setBgType(preset.type);
                                 }}
-                                className={`relative h-12 rounded-xl border flex items-center justify-center transition-all overflow-hidden ${isSelected
+                                className={`relative h-12 rounded-xl border flex items-center justify-center transition-transform overflow-hidden ${isSelected
                                     ? 'border-primary ring-2 ring-primary/40 font-semibold'
                                     : 'border-base-200 active:bg-base-200'
                                     }`}
@@ -96,7 +96,7 @@ export default function BackgroundConfig({ canvasColor, setCanvasColor, bgType, 
                     <button
                         type="button"
                         onClick={() => customColorModalRef.current?.open()}
-                        className={`relative h-12 rounded-xl border flex items-center justify-center transition-all overflow-hidden col-span-4 ${isCustomSelected
+                        className={`relative h-12 rounded-xl border flex items-center justify-center transition-transform overflow-hidden col-span-4 ${isCustomSelected
                             ? 'border-primary ring-2 ring-primary/40 font-semibold'
                             : 'border-base-200 active:bg-base-200'
                             }`}

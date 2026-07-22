@@ -107,7 +107,7 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
                         {images.map((photo) => (
                             <div
                                 key={photo.id}
-                                className="group relative rounded-2xl overflow-hidden bg-base-200 dark:bg-base-950 aspect-square border border-base-200/55 dark:border-base-800/40 cursor-pointer shadow-3xs hover:shadow-xs transition-all duration-300 active:scale-98"
+                                className="group relative rounded-2xl overflow-hidden bg-base-200 dark:bg-base-950 aspect-square border border-base-200/55 dark:border-base-800/40 cursor-pointer shadow-3xs hover:shadow-xs transition-transform duration-300 active:scale-98"
                                 onClick={() => setSelectedImage(photo)}
                             >
                                 {photo.signedUrl ? (
@@ -144,7 +144,7 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
                                 )}
 
                                 {/* Overlay con info al hacer hover */}
-                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 pointer-events-none">
+                                <div className="absolute inset-x-0 bottom-0 bg-base-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 pointer-events-none">
                                     <p className="text-white text-xs font-semibold truncate">{photo.original_name ?? '—'}</p>
                                     <p className="text-white/70 text-[10px]">{formatBytes(photo.file_size)}</p>
                                 </div>

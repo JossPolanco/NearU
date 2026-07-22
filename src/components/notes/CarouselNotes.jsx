@@ -1,13 +1,13 @@
 import { X, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { useState } from 'react';
 
+const parseDateTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 export default function CarouselNotes({ notes, isLoading }) {
     const [selectedNote, setSelectedNote] = useState(null);
-
-    const parseDateTime = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
 
     const getJustifyClass = () => {
         if (isLoading) return "justify-center";
@@ -61,7 +61,7 @@ export default function CarouselNotes({ notes, isLoading }) {
                     <div className={`carousel carousel-center backdrop-blur-md rounded-3xl w-full gap-6 p-6 ${getJustifyClass()}`}>
                         {/* ITEMS */}
                         {notes?.map((note, index) => (
-                            <div className="carousel-item flex-col bg-base-100 dark:bg-base-900/50 p-3.5 pb-6 rounded-3xl shadow-md border border-base-200/60 dark:border-base-800/40 w-72 min-w-72 rotate-[-1.5deg] transition-all duration-300 md:hover:rotate-0 md:hover:scale-[1.02] cursor-pointer active:scale-98"
+                            <div className="carousel-item flex-col bg-base-100 dark:bg-base-900/50 p-3.5 pb-6 rounded-3xl shadow-md border border-base-200/60 dark:border-base-800/40 w-72 min-w-72 rotate-[-1.5deg]  transition-transform duration-300 md:hover:rotate-0 md:hover:scale-[1.02] cursor-pointer active:scale-98"
                                 key={note.id}
                                 id={`item${index + 1}`}
                                 onClick={() => setSelectedNote(note)}

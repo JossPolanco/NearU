@@ -30,6 +30,18 @@ const parseDateStringToLocalDate = (dateVal) => {
     return isNaN(parsed.getTime()) ? undefined : parsed
 }
 
+const formatDateForDB = (dateVal) => {
+    if (!dateVal) return ""
+    if (dateVal instanceof Date) {
+        if (isNaN(dateVal.getTime())) return ""
+        const year = dateVal.getFullYear()
+        const month = String(dateVal.getMonth() + 1).padStart(2, '0')
+        const day = String(dateVal.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+    }
+    return String(dateVal)
+}
+
 export default function Anniversaries() {
     const navigate = useNavigate();
     const refModal = useRef(null);
@@ -87,18 +99,6 @@ export default function Anniversaries() {
             console.error("Error deleting anniversary:", error)
         }
     })
-
-    const formatDateForDB = (dateVal) => {
-        if (!dateVal) return ""
-        if (dateVal instanceof Date) {
-            if (isNaN(dateVal.getTime())) return ""
-            const year = dateVal.getFullYear()
-            const month = String(dateVal.getMonth() + 1).padStart(2, '0')
-            const day = String(dateVal.getDate()).padStart(2, '0')
-            return `${year}-${month}-${day}`
-        }
-        return String(dateVal)
-    }
 
     const handleSubmitAnni = (formData) => {
         const formattedDate = formatDateForDB(formData.eventDate)
@@ -158,7 +158,7 @@ export default function Anniversaries() {
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -197,7 +197,7 @@ export default function Anniversaries() {
                     <p className="text-xs text-base-content/50 max-w-sm mt-2 leading-relaxed">
                         Aún no hay aniversarios registrados. Añade uno para recordar cada momento especial de nuestro camino.
                     </p>
-                    <button className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-all font-semibold" onClick={handleOpenCreateModal}>
+                    <button className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-transform font-semibold" onClick={handleOpenCreateModal}>
                         <Plus className="w-4 h-4" /> Registrar primer aniversario
                     </button>
                 </div>
@@ -216,7 +216,7 @@ export default function Anniversaries() {
             )}
 
             <div className="flex items-center justify-center">
-                <button className="btn btn-primary mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-all font-semibold" onClick={() => navigate('/anniversary')}>
+                <button className="btn btn-primary mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-transform font-semibold" onClick={() => navigate('/anniversary')}>
                     Un mensajito para ti mi amor 😚
                 </button>
             </div>
@@ -236,7 +236,7 @@ export default function Anniversaries() {
                                     Título de tu aniversario
                                 </span>
                             </label>
-                            <input className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.title ? "input-error" : ""}`}
+                            <input className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.title ? "input-error" : ""}`}
                                 type="text"
                                 placeholder="Ej. Nuestro primer mes"
                                 {...register("title")}
@@ -257,7 +257,7 @@ export default function Anniversaries() {
                                     Descripción o detalles
                                 </span>
                             </label>
-                            <input className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.description ? "input-error" : ""}`}
+                            <input className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.description ? "input-error" : ""}`}
                                 type="text"
                                 placeholder="Ej. El día que decidimos ser noviecitos"
                                 {...register("description")}
@@ -278,7 +278,7 @@ export default function Anniversaries() {
                                     Tipo de recurrencia
                                 </span>
                             </label>
-                            <select className={`select select-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.recurrence_type ? "input-error" : ""}`}
+                            <select className={`select select-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.recurrence_type ? "input-error" : ""}`}
                                 {...register("recurrence_type")}>
                                 <option value="nop">No recurrente</option>
                                 <option value="anual">Anualito</option>
@@ -300,7 +300,7 @@ export default function Anniversaries() {
                                     ¿Cuántos días antes quieres que te lo recordemos, mi amor?
                                 </span>
                             </label>
-                            <input className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.reminder_days_before ? "input-error" : ""}`}
+                            <input className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.reminder_days_before ? "input-error" : ""}`}
                                 type="number"
                                 placeholder="Ej. 7"
                                 {...register("reminder_days_before")}
@@ -329,7 +329,7 @@ export default function Anniversaries() {
                                     ? selectedDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : "Escoger fecha";
 
                                 return (
-                                    <button className="btn btn-outline w-full rounded-2xl flex items-center justify-between px-4 font-semibold border-base-200 dark:border-base-800 text-sm active:scale-[0.99] transition-all bg-base-100 dark:bg-base-950/20 text-base-content/80 hover:bg-base-200/40 dark:hover:bg-base-900/40"
+                                    <button className="btn btn-outline w-full rounded-2xl flex items-center justify-between px-4 font-semibold border-base-200 dark:border-base-800 text-sm active:scale-[0.99] transition-transform bg-base-100 dark:bg-base-950/20 text-base-content/80 hover:bg-base-200/40 dark:hover:bg-base-900/40"
                                         type="button"
                                         onClick={() => refCalendarModal.current?.open()} >
                                         <span>{displayLabel}</span>

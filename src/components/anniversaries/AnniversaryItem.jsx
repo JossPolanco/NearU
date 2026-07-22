@@ -1,87 +1,87 @@
 import React from 'react';
 import { Calendar, MoreVertical, Edit2, Trash2, Heart, Hourglass, CalendarDays } from "lucide-react";
 
+// Pure helper functions moved to module scope to avoid re-creation on every render
+const getAnniversaryStats = (eventDateStr, recurrenceType) => {
+    if (!eventDateStr) return null;
+
+    // Parse target date (eventDateStr is in "YYYY-MM-DD" format)
+    const datePart = eventDateStr.split(/[T ]/)[0];
+    const [year, month, day] = datePart.split('-').map(Number);
+    const eventDate = new Date(year, month - 1, day);
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    // 1. Days passed since the event
+    const timeDiffPassed = today.getTime() - eventDate.getTime();
+    const daysPassed = Math.max(0, Math.floor(timeDiffPassed / (1000 * 60 * 60 * 24)));
+
+    // 2. Days remaining until next anniversary occurrence
+    let nextOccurrence = new Date(today.getFullYear(), month - 1, day);
+
+    if (recurrenceType === "mensual") {
+        nextOccurrence = new Date(today.getFullYear(), today.getMonth(), day);
+        if (nextOccurrence < today) {
+            nextOccurrence.setMonth(today.getMonth() + 1);
+        }
+    } else {
+        // "anual" or "nop" default to annual calculation
+        if (nextOccurrence < today) {
+            nextOccurrence.setFullYear(today.getFullYear() + 1);
+        }
+    }
+
+    const timeDiffRemaining = nextOccurrence.getTime() - today.getTime();
+    const daysRemaining = Math.max(0, Math.ceil(timeDiffRemaining / (1000 * 60 * 60 * 24)));
+
+    // 3. Units passed (years or months)
+    let unitsPassed = 0;
+    let labelUnits = "";
+
+    if (recurrenceType === "mensual") {
+        const yearsDiff = today.getFullYear() - eventDate.getFullYear();
+        const monthsDiff = today.getMonth() - eventDate.getMonth();
+        unitsPassed = yearsDiff * 12 + monthsDiff;
+        if (today.getDate() < day) {
+            unitsPassed--;
+        }
+        unitsPassed = Math.max(0, unitsPassed);
+        labelUnits = unitsPassed === 1 ? "mes" : "meses";
+    } else {
+        unitsPassed = today.getFullYear() - eventDate.getFullYear();
+        const currentYearOccurrence = new Date(today.getFullYear(), month - 1, day);
+        if (today < currentYearOccurrence) {
+            unitsPassed--;
+        }
+        unitsPassed = Math.max(0, unitsPassed);
+        labelUnits = unitsPassed === 1 ? "año" : "años";
+    }
+
+    return { daysPassed, daysRemaining, unitsPassed, labelUnits };
+};
+
+const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const datePart = dateStr.split(/[T ]/)[0];
+    const [year, month, day] = datePart.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+};
+
+const displayRecurrence = (type) => {
+    if (type === "mensual") return "Mensualito";
+    if (type === "anual") return "Anualito";
+    return "No recurrente";
+};
+
 export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDeleting }) {
     const { id, title, description, event_date, recurrence_type, reminder_days_before } = anniversary;
 
-    // Helper to calculate days and time passed or remaining
-    const getAnniversaryStats = (eventDateStr, recurrenceType) => {
-        if (!eventDateStr) return null;
-
-        // Parse target date (eventDateStr is in "YYYY-MM-DD" format)
-        const datePart = eventDateStr.split(/[T ]/)[0];
-        const [year, month, day] = datePart.split('-').map(Number);
-        const eventDate = new Date(year, month - 1, day);
-
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-        // 1. Days passed since the event
-        const timeDiffPassed = today.getTime() - eventDate.getTime();
-        const daysPassed = Math.max(0, Math.floor(timeDiffPassed / (1000 * 60 * 60 * 24)));
-
-        // 2. Days remaining until next anniversary occurrence
-        let nextOccurrence = new Date(today.getFullYear(), month - 1, day);
-
-        if (recurrenceType === "mensual") {
-            nextOccurrence = new Date(today.getFullYear(), today.getMonth(), day);
-            if (nextOccurrence < today) {
-                nextOccurrence.setMonth(today.getMonth() + 1);
-            }
-        } else {
-            // "anual" or "nop" default to annual calculation
-            if (nextOccurrence < today) {
-                nextOccurrence.setFullYear(today.getFullYear() + 1);
-            }
-        }
-
-        const timeDiffRemaining = nextOccurrence.getTime() - today.getTime();
-        const daysRemaining = Math.max(0, Math.ceil(timeDiffRemaining / (1000 * 60 * 60 * 24)));
-
-        // 3. Units passed (years or months)
-        let unitsPassed = 0;
-        let labelUnits = "";
-
-        if (recurrenceType === "mensual") {
-            const yearsDiff = today.getFullYear() - eventDate.getFullYear();
-            const monthsDiff = today.getMonth() - eventDate.getMonth();
-            unitsPassed = yearsDiff * 12 + monthsDiff;
-            if (today.getDate() < day) {
-                unitsPassed--;
-            }
-            unitsPassed = Math.max(0, unitsPassed);
-            labelUnits = unitsPassed === 1 ? "mes" : "meses";
-        } else {
-            unitsPassed = today.getFullYear() - eventDate.getFullYear();
-            const currentYearOccurrence = new Date(today.getFullYear(), month - 1, day);
-            if (today < currentYearOccurrence) {
-                unitsPassed--;
-            }
-            unitsPassed = Math.max(0, unitsPassed);
-            labelUnits = unitsPassed === 1 ? "año" : "años";
-        }
-
-        return { daysPassed, daysRemaining, unitsPassed, labelUnits };
-    };
-
     const stats = getAnniversaryStats(event_date, recurrence_type);
 
-    const formatDate = (dateStr) => {
-        if (!dateStr) return "";
-        const datePart = dateStr.split(/[T ]/)[0];
-        const [year, month, day] = datePart.split('-').map(Number);
-        const date = new Date(year, month - 1, day);
-        return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-    };
-
-    const displayRecurrence = (type) => {
-        if (type === "mensual") return "Mensualito";
-        if (type === "anual") return "Anualito";
-        return "No recurrente";
-    };
-
     return (
-        <div className="group flex flex-col gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 transition-all duration-300 shadow-2xs select-none active:scale-[0.99] md:hover:shadow-xs active:border-primary/20 md:hover:border-primary/20">
+        <div className="group flex flex-col gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 transition-transform duration-300 shadow-2xs select-none active:scale-[0.99] md:hover:shadow-xs active:border-primary/20 md:hover:border-primary/20">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3.5 min-w-0 flex-1">
                     {/* Pink Heart Icon Box */}

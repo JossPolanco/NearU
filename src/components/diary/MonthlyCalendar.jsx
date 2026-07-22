@@ -163,7 +163,7 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-primary md:hover:text-primary transition-all duration-200"
+                    <button className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-primary md:hover:text-primary transition-transform duration-200"
                         onClick={handleGoToday}
                     >
                         Hoy
@@ -216,7 +216,7 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
                             onClick={(e) => handleCellClick(e, cell.date)}
                             onContextMenu={(e) => e.preventDefault()}
                             className={`
-                                aspect-square w-full rounded-2xl flex flex-col items-center justify-center relative transition-all duration-300 select-none text-sm font-semibold
+                                aspect-square w-full rounded-2xl flex flex-col items-center justify-center relative transition-transform duration-300 select-none text-sm font-semibold
                                 ${cell.isCurrentMonth
                                     ? "text-base-content active:bg-base-200/65 md:hover:bg-base-200/65 cursor-pointer"
                                     : "text-base-content/25 font-normal active:bg-base-250/20 md:hover:bg-base-250/20 cursor-pointer"

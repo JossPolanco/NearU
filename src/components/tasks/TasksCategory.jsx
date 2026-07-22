@@ -15,7 +15,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
     const isImageUrl = typeof icon === 'string' && (icon.startsWith('http') || icon.startsWith('/') || icon.startsWith('.') || icon.startsWith('data:'));
 
     return (
-        <div className={`w-full bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 rounded-3xl p-5 mb-4 shadow-2xs active:shadow-xs active:border-primary/20 dark:active:border-primary/30 md:hover:shadow-xs md:hover:border-primary/20 dark:md:hover:border-primary/30 transition-all duration-300 active:scale-[0.985] cursor-pointer group `}
+        <div className={`w-full bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 rounded-3xl p-5 mb-4 shadow-2xs active:shadow-xs active:border-primary/20 dark:active:border-primary/30 md:hover:shadow-xs md:hover:border-primary/20 dark:md:hover:border-primary/30 transition-transform duration-300 active:scale-[0.985] cursor-pointer group `}
             onClick={handleNavigate}
         >
             <div className="flex gap-4 items-start pb-4 border-b border-base-100 dark:border-base-850/30">
@@ -104,7 +104,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
                             </span>
                         </div>
                         <progress
-                            className={`progress w-full h-2 rounded-full bg-base-200/50 transition-all duration-500 ${isCompleted ? "progress-success" : "progress-primary"}`}
+                            className={`progress w-full h-2 rounded-full bg-base-200/50 transition-transform duration-500 ${isCompleted ? "progress-success" : "progress-primary"}`}
                             value={percentage}
                             max="100"
                         />

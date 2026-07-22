@@ -12,7 +12,7 @@ export default function EraserConfig({ eraserWidth, setEraserWidth, eraserMode, 
                             key={sz}
                             type="button"
                             onClick={() => setEraserWidth(sz)}
-                            className={`w-11 h-11 flex items-center justify-center rounded-xl border transition-all transform active:scale-110 ease-in-out ${eraserWidth === sz
+                            className={`w-11 h-11 flex items-center justify-center rounded-xl border transition-transform transform active:scale-110 ease-in-out ${eraserWidth === sz
                                 ? 'border-primary bg-primary/5 text-primary'
                                 : 'border-base-200 text-base-content/70 active:bg-base-200'
                                 }`}
@@ -48,7 +48,7 @@ export default function EraserConfig({ eraserWidth, setEraserWidth, eraserMode, 
                         onClick={() => {
                             setEraserMode('mask');
                         }}
-                        className={`flex-1 py-2 px-3 rounded-xl border text-xs font-medium transition-all min-h-11 transform active:scale-90 ease-in-out ${eraserMode === 'mask'
+                        className={`flex-1 py-2 px-3 rounded-xl border text-xs font-medium transition-transform min-h-11 transform active:scale-90 ease-in-out ${eraserMode === 'mask'
                             ? 'border-primary bg-primary/5 text-primary font-semibold'
                             : 'border-base-200 text-base-content/70 active:bg-base-200'
                             }`}
@@ -60,7 +60,7 @@ export default function EraserConfig({ eraserWidth, setEraserWidth, eraserMode, 
                         onClick={() => {
                             setEraserMode('stroke');
                         }}
-                        className={`flex-1 py-2 px-3 rounded-xl border text-xs font-medium transition-all min-h-11 transform active:scale-90 ease-in-out ${eraserMode === 'stroke'
+                        className={`flex-1 py-2 px-3 rounded-xl border text-xs font-medium transition-transform min-h-11 transform active:scale-90 ease-in-out ${eraserMode === 'stroke'
                             ? 'border-primary bg-primary/5 text-primary font-semibold'
                             : 'border-base-200 text-base-content/70 active:bg-base-200'
                             }`}

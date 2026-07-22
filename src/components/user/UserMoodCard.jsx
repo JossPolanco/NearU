@@ -85,7 +85,7 @@ export default function UserMoodCard() {
             {/* CARD PRINCIPAL*/}
             <div
                 onClick={handleCardClick}
-                className="group relative overflow-hidden rounded-3xl bg-linear-to-br from-base-100 via-base-100 to-primary/5 dark:from-base-900/70 dark:via-base-900/50 dark:to-primary/10 border border-base-200/90 dark:border-base-800/60 p-4 sm:p-5 shadow-xs hover:shadow-md active:scale-[0.99] transition-all duration-200 cursor-pointer"
+                className="group relative overflow-hidden rounded-3xl bg-base-100/50 dark:from-base-900/70 dark:via-base-900/50 dark:to-primary/10 border border-base-200/90 dark:border-base-800/60 p-4 sm:p-5 shadow-xs hover:shadow-md active:scale-[0.99] transition-transform duration-200 cursor-pointer"
             >
                 {/* HEADER*/}
                 <div className="flex items-center justify-between mb-3">
@@ -111,7 +111,7 @@ export default function UserMoodCard() {
                 {/* MOODS CONTENEDOR */}
                 <div className="grid grid-cols-2 gap-3">
                     {/* MOOD DEL USUARIO*/}
-                    <div className={`p-3 rounded-2xl border transition-all duration-200 flex flex-col items-center justify-center text-center ${userMoodData.className || "bg-base-200/50 border-base-300/80"}`}>
+                    <div className={`p-3 rounded-2xl border transition-transform duration-200 flex flex-col items-center justify-center text-center ${userMoodData.className || "bg-base-200/50 border-base-300/80"}`}>
                         <span className="text-[10px] font-bold uppercase tracking-wider text-base-content/60 mb-1">
                             Tú
                         </span>
@@ -134,7 +134,7 @@ export default function UserMoodCard() {
                     </div>
 
                     {/* MOOD DE LA PAREJA*/}
-                    <div className={`p-3 rounded-2xl border transition-all duration-200 flex flex-col items-center justify-center text-center ${partnerMoodData.className || "bg-base-200/50 border-base-300/80"}`}>
+                    <div className={`p-3 rounded-2xl border transition-transform duration-200 flex flex-col items-center justify-center text-center ${partnerMoodData.className || "bg-base-200/50 border-base-300/80"}`}>
                         <span className="text-[10px] font-bold uppercase tracking-wider text-base-content/60 mb-1 flex items-center gap-1">
                             <Heart className="w-2.5 h-2.5 fill-secondary text-secondary" />
                             Parejita
@@ -176,7 +176,7 @@ export default function UserMoodCard() {
                                             setActiveMood(mood.title);
                                             setValue("mood", mood.title);
                                         }}
-                                        className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-200 active:scale-95 ${isSelected
+                                        className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-transform duration-200 active:scale-95 ${isSelected
                                             ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs ring-1 ring-primary/30"
                                             : "border-base-200 active:border-primary/20 md:hover:border-base-300 dark:border-base-800 dark:md:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
                                             }`}
@@ -203,7 +203,7 @@ export default function UserMoodCard() {
                         </div>
 
                         {selectedMoodData && (
-                            <div className={`p-3.5 rounded-2xl border transition-all duration-300 animate-fade-in ${selectedMoodData.className}`}>
+                            <div className={`p-3.5 rounded-2xl border transition-transform duration-300 animate-fade-in ${selectedMoodData.className}`}>
                                 <p className="text-[10px] font-bold uppercase tracking-wider">Tu estado de ánimo</p>
                                 <p className="text-xs font-medium mt-1 leading-relaxed">
                                     {selectedMoodData.description}

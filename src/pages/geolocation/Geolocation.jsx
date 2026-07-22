@@ -225,7 +225,7 @@ export default function Geolocation() {
         <div className="max-w-2xl mx-auto p-4 flex flex-col gap-5 min-h-[90vh]">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -304,7 +304,7 @@ export default function Geolocation() {
                             </div>
 
                             {/* CARD DE DISTANCIA Y CONEXIÓN */}
-                            <div className="flex flex-col gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 transition-all duration-300 shadow-2xs select-none active:border-primary/20">
+                            <div className="flex flex-col gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 transition-transform duration-300 shadow-2xs select-none active:border-primary/20">
                                 <div className="flex items-center justify-between gap-4">
                                     <div className="flex items-center gap-3.5 min-w-0 flex-1">
                                         <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-3xs bg-error/10 dark:bg-error/15 text-pink-500">
@@ -326,7 +326,7 @@ export default function Geolocation() {
                                                 )}
                                             </p>
                                         </div>
-                                        <button className='btn btn-primary btn-sm btn-circle shadow-md shadow-primary/20 hover:shadow-lg active:shadow-sm transition-all duration-300' onClick={() => resetOptions()}>
+                                        <button className='btn btn-primary btn-sm btn-circle shadow-md shadow-primary/20 hover:shadow-lg active:shadow-sm transition-transform duration-300' onClick={() => resetOptions()}>
                                             <LocateFixed className='w-4 h-4' />
                                         </button>
                                     </div>

@@ -86,19 +86,19 @@ export default function YearlyCalendar({ currentDate, setCurrentDate, onViewMont
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-secondary md:hover:text-secondary transition-all duration-200"
+                    <button className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-secondary md:hover:text-secondary  transition-transform duration-200"
                         onClick={handleGoToday}
                     >
                         Hoy
                     </button>
                     <div className="join border border-base-200 dark:border-base-800/60 rounded-xl overflow-hidden">
-                        <button className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-secondary md:hover:text-secondary transition-colors"
+                        <button className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-secondary md:hover:text-secondary "
                             onClick={handlePrevYear}
                             aria-label="Año anterior"
                         >
                             <ChevronLeft className="w-4 h-4" />
                         </button>
-                        <button className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-secondary md:hover:text-secondary transition-colors"
+                        <button className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-secondary md:hover:text-secondary "
                             onClick={handleNextYear}
                             aria-label="Año siguiente"
                         >
@@ -115,12 +115,12 @@ export default function YearlyCalendar({ currentDate, setCurrentDate, onViewMont
                     const isCurrentMonthOfToday = today.getFullYear() === year && today.getMonth() === monthIndex;
 
                     return (
-                        <div className="group p-4 bg-base-100/50 dark:bg-base-900/10 rounded-2xl border border-base-200/60 dark:border-base-800/30 hover:border-secondary/40 dark:hover:border-secondary/30 transition-all duration-300 hover:shadow-md cursor-pointer select-none active:scale-[0.98]"
+                        <div className="group p-4 bg-base-100/50 dark:bg-base-900/10 rounded-2xl border border-base-200/60 dark:border-base-800/30 hover:border-secondary/40 dark:hover:border-secondary/30  transition-transform duration-300 hover:shadow-md cursor-pointer select-none active:scale-[0.98]"
                             key={monthName}
                             onClick={() => onViewMonth(new Date(year, monthIndex, 1))}
                         >
                             {/* Month title */}
-                            <h4 className={`text-sm font-extrabold mb-3 transition-colors ${isCurrentMonthOfToday
+                            <h4 className={`text-sm font-extrabold mb-3  ${isCurrentMonthOfToday
                                 ? "text-secondary font-black"
                                 : "text-base-content group-hover:text-secondary"
                                 }`}>

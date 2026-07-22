@@ -116,7 +116,7 @@ export default function Tasks() {
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -160,7 +160,7 @@ export default function Tasks() {
                     </p>
                     <button
                         onClick={handleOpenCreateModal}
-                        className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-all font-semibold"
+                        className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-transform font-semibold"
                     >
                         <Plus className="w-4 h-4" /> Crear primera listita
                     </button>
@@ -202,7 +202,7 @@ export default function Tasks() {
                                         setValue("title", sug.title);
                                         setValue("description", sug.description);
                                     }}
-                                    className="btn btn-xs rounded-full bg-base-200/60 dark:bg-base-800/40 active:bg-primary/10 md:hover:bg-primary/10 border-none text-base-content/85 transition-all duration-200 font-medium py-1 px-3"
+                                    className="btn btn-xs rounded-full bg-base-200/60 dark:bg-base-800/40 active:bg-primary/10 md:hover:bg-primary/10 border-none text-base-content/85 transition-transform duration-200 font-medium py-1 px-3"
                                 >
                                     <span>{sug.emoji}</span>
                                     <span>{sug.title.split(" ")[0]}</span>
@@ -222,7 +222,7 @@ export default function Tasks() {
                             <input
                                 type="text"
                                 placeholder="Ej. Películas por ver, Compras..."
-                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.title ? "input-error" : ""
+                                className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.title ? "input-error" : ""
                                     }`}
                                 {...register("title")}
                             />
@@ -244,7 +244,7 @@ export default function Tasks() {
                             </label>
                             <textarea
                                 placeholder="Escribe aquí de qué trata esta lista..."
-                                className={`textarea textarea-bordered rounded-2xl w-full h-24 resize-none focus:outline-none focus:border-primary transition-all duration-200 ${errors.description ? "input-error" : ""
+                                className={`textarea textarea-bordered rounded-2xl w-full h-24 resize-none focus:outline-none focus:border-primary transition-transform duration-200 ${errors.description ? "input-error" : ""
                                     }`}
                                 {...register("description")}
                             />
@@ -274,7 +274,7 @@ export default function Tasks() {
                                             key={preset.id}
                                             type="button"
                                             onClick={() => setValue("icon", preset.id)}
-                                            className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all duration-200 md:hover:scale-102 active:scale-98 ${isSelected
+                                            className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-transform duration-200 md:hover:scale-102 active:scale-98 ${isSelected
                                                 ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-xs ring-1 ring-primary/30"
                                                 : "border-base-200 active:border-primary/20 md:hover:border-base-300 dark:border-base-800 dark:md:hover:border-base-750 bg-base-100 dark:bg-base-950/20"
                                                 }`}

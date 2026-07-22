@@ -18,37 +18,37 @@ const QUICK_COLORS = [
 
 const colorSchema = " bg-[conic-gradient(from_0deg,_#ff0000,_#ff8000,_#ffff00,_#80ff00,_#00ff00,_#00ff80,_#00ffff,_#0080ff,_#0000ff,_#8000ff,_#ff00ff,_#ff0080,_#ff0000)]";
 
+// FUNCION PARA DETECTAR SI EL COLOR ES CLARO O OSCURO PARA CAMBIAR EL COLOR DEL CHECK DEL COLOR EN EL MENU
+const isLightColor = (color) => {
+    if (!color) return false;
+    const lower = color.toLowerCase();
+    if (lower.startsWith('#')) {
+        let c = lower.substring(1);
+        if (c.length === 3) {
+            c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+        }
+        const r = parseInt(c.substring(0, 2), 16);
+        const g = parseInt(c.substring(2, 4), 16);
+        const b = parseInt(c.substring(4, 6), 16);
+        return (r * 299 + g * 587 + b * 114) / 1000 > 125;
+    }
+    if (lower.startsWith('rgba') || lower.startsWith('rgb')) {
+        const match = lower.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (match) {
+            const r = parseInt(match[1]);
+            const g = parseInt(match[2]);
+            const b = parseInt(match[3]);
+            return (r * 299 + g * 587 + b * 114) / 1000 > 125;
+        }
+    }
+    return false;
+};
+
 export default function ColorConfig({ strokeColor, setStrokeColor }) {
     const customColorModalRef = useRef(null);
 
     const handleCustomColorClick = () => {
         customColorModalRef.current?.open();
-    };
-
-    // FUNCION PARA DETECTAR SI EL COLOR ES CLARO O OSCURO PARA CAMBIAR EL COLOR DEL CHECK DEL COLOR EN EL MENU
-    const isLightColor = (color) => {
-        if (!color) return false;
-        const lower = color.toLowerCase();
-        if (lower.startsWith('#')) {
-            let c = lower.substring(1);
-            if (c.length === 3) {
-                c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
-            }
-            const r = parseInt(c.substring(0, 2), 16);
-            const g = parseInt(c.substring(2, 4), 16);
-            const b = parseInt(c.substring(4, 6), 16);
-            return (r * 299 + g * 587 + b * 114) / 1000 > 125;
-        }
-        if (lower.startsWith('rgba') || lower.startsWith('rgb')) {
-            const match = lower.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-            if (match) {
-                const r = parseInt(match[1]);
-                const g = parseInt(match[2]);
-                const b = parseInt(match[3]);
-                return (r * 299 + g * 587 + b * 114) / 1000 > 125;
-            }
-        }
-        return false;
     };
 
     return (

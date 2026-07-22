@@ -9,7 +9,7 @@ export default function Games() {
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -25,7 +25,7 @@ export default function Games() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
 
                 {/* DIARIO (2C COLUMNAS DE ANCHO) */}
-                <button onClick={() => navigate('/pinturillo')} className="btn btn-soft btn-primary col-span-2 min-h-35 sm:min-h-40 h-full w-full rounded-3xl p-5 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md active:scale-[0.98] transition-all duration-200 border-none">
+                <button onClick={() => navigate('/pinturillo')} className="btn btn-soft btn-primary col-span-2 min-h-35 sm:min-h-40 h-full w-full rounded-3xl p-5 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none">
                     <div className="w-full flex items-center justify-between">
                         <span className="badge badge-primary badge-sm font-medium tracking-wide">
                             PINTURILLO

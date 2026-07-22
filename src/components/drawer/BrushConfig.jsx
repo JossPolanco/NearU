@@ -66,7 +66,7 @@ export default function BrushConfig({ strokeWidth, setStrokeWidth, strokeStyle, 
                             key={sz}
                             type="button"
                             onClick={() => setStrokeWidth(sz)}
-                            className={`w-11 h-11 flex items-center justify-center rounded-xl border transition-all transform active:scale-110 ease-in-out ${strokeWidth === sz
+                            className={`w-11 h-11 flex items-center justify-center rounded-xl border transition-transform transform active:scale-110 ease-in-out ${strokeWidth === sz
                                 ? 'border-primary bg-primary/5 text-primary'
                                 : 'border-base-200 text-base-content/70 active:bg-base-200'
                                 }`}
@@ -102,7 +102,7 @@ export default function BrushConfig({ strokeWidth, setStrokeWidth, strokeStyle, 
                             key={style.id}
                             type="button"
                             onClick={() => setStrokeStyle(style.id)}
-                            className={`flex-1 py-2 px-3 flex flex-col items-center justify-center rounded-xl border transition-all min-h-11 transform active:scale-110 ease-in-out ${strokeStyle === style.id
+                            className={`flex-1 py-2 px-3 flex flex-col items-center justify-center rounded-xl border transition-transform min-h-11 transform active:scale-110 ease-in-out ${strokeStyle === style.id
                                 ? 'border-primary bg-primary/5 text-primary font-semibold'
                                 : 'border-base-200 text-base-content/70 active:bg-base-200'
                                 }`}

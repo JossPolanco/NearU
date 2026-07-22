@@ -16,6 +16,9 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks(id) {
+                    if (id.includes('src/utils/supabase') || id.includes('src\\utils\\supabase')) {
+                        return 'supabase-config';
+                    }
                     if (id.includes('node_modules')) {
                         if (id.includes('leaflet') || id.includes('react-leaflet')) {
                             return 'vendor-leaflet'

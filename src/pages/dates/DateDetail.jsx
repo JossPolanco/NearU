@@ -8,6 +8,13 @@ import { useRef, useState } from 'react';
 import { addImageToDate } from "@/services/images/imageMetadata";
 import { imageKeys } from "@/hooks/images/useImages";
 
+const parseDate = (dateString) => {
+    if (!dateString) return ""
+    const datePart = dateString.split(/[T ]/)[0]
+    const date = new Date(datePart + 'T00:00:00')
+    return date.toLocaleDateString()
+}
+
 export default function DateDetail() {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -18,13 +25,6 @@ export default function DateDetail() {
     const [taskTitle, setTaskTitle] = useState("")
     const [editingTaskId, setEditingTaskId] = useState(null)
     const [descriptionText, setDescriptionText] = useState("")
-
-    const parseDate = (dateString) => {
-        if (!dateString) return ""
-        const datePart = dateString.split(/[T ]/)[0]
-        const date = new Date(datePart + 'T00:00:00')
-        return date.toLocaleDateString()
-    }
 
     // Fetch Date details and resolve cover image URL
     const { data: date, isLoading: isLoadingDate } = useResolveSignedUrls(
@@ -147,7 +147,7 @@ export default function DateDetail() {
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -238,7 +238,7 @@ export default function DateDetail() {
                                 </p>
                                 <button
                                     onClick={handleOpenDescriptionModal}
-                                    className="btn btn-outline border-primary/20 hover:border-primary/45 active:border-primary/45 text-primary btn-sm rounded-xl mt-3 gap-1.5 font-bold shadow-3xs text-xs active:scale-95 transition-all"
+                                    className="btn btn-outline border-primary/20 hover:border-primary/45 active:border-primary/45 text-primary btn-sm rounded-xl mt-3 gap-1.5 font-bold shadow-3xs text-xs active:scale-95 transition-transform"
                                 >
                                     <Plus className="w-3.5 h-3.5" /> Escribir recuerdos
                                 </button>
@@ -271,7 +271,7 @@ export default function DateDetail() {
                                 <p className="text-xs text-base-content/40 mt-1 max-w-60">Añade actividades o cositas pendientes para hacer juntos durante esta cita.</p>
                                 <button
                                     onClick={handleOpenCreateModal}
-                                    className="btn btn-primary btn-sm rounded-xl mt-4 gap-1.5 font-bold shadow-xs active:scale-95 transition-all text-xs"
+                                    className="btn btn-primary btn-sm rounded-xl mt-4 gap-1.5 font-bold shadow-xs active:scale-95 transition-transform text-xs"
                                 >
                                     <Plus className="w-3.5 h-3.5" /> Agregar primer plan
                                 </button>
@@ -328,7 +328,7 @@ export default function DateDetail() {
                             </span>
                         </label>
                         <input
-                            className="input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 text-sm"
+                            className="input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 text-sm"
                             type="text"
                             placeholder="Ej. Comprar helados de fresa"
                             value={taskTitle}
@@ -365,7 +365,7 @@ export default function DateDetail() {
                                 ¿Cómo fue este momento?
                             </span>
                         </label>
-                        <textarea className="textarea textarea-bordered rounded-2xl w-full h-32 resize-none focus:outline-none focus:border-primary transition-all duration-200 text-sm leading-relaxed"
+                        <textarea className="textarea textarea-bordered rounded-2xl w-full h-32 resize-none focus:outline-none focus:border-primary transition-transform duration-200 text-sm leading-relaxed"
                             placeholder="Escribe aquí los mejores recuerdos, anécdotas o sentimientos de este día..."
                             value={descriptionText}
                             onChange={(e) => setDescriptionText(e.target.value)}

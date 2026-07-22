@@ -6,6 +6,30 @@ import { useParams, useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 
+// Ráfaga principal de confeti
+const triggerConfetti = () => {
+    confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+    })
+    // Ráfagas laterales de confeti
+    setTimeout(() => {
+        confetti({
+            particleCount: 40,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0.1, y: 0.6 }
+        })
+        confetti({
+            particleCount: 40,
+            angle: 120,
+            spread: 55,
+            origin: { x: 0.9, y: 0.6 }
+        })
+    }, 250)
+}
+
 export default function PinturilloGuess() {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -48,30 +72,6 @@ export default function PinturilloGuess() {
             }
         }
     }, [pastGuesses])
-
-    // Ráfaga principal de confeti
-    const triggerConfetti = () => {
-        confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 }
-        })
-        // Ráfagas laterales de confeti
-        setTimeout(() => {
-            confetti({
-                particleCount: 40,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0.1, y: 0.6 }
-            })
-            confetti({
-                particleCount: 40,
-                angle: 120,
-                spread: 55,
-                origin: { x: 0.9, y: 0.6 }
-            })
-        }, 250)
-    }
 
     // MUTACIÓN PARA ENVIAR EL INTENTO
     const createGuessMutation = useMutation({
@@ -130,7 +130,7 @@ export default function PinturilloGuess() {
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 pb-3 mb-2">
                 <button
-                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate('/pinturillo')}
                     aria-label="Volver"
                 >
@@ -166,7 +166,7 @@ export default function PinturilloGuess() {
                     </div>
                 ) : (
                     <div className="flex justify-center w-full">
-                        <div className="relative group inline-flex items-center justify-center rounded-2xl overflow-hidden bg-base-200/30 dark:bg-base-900/30 p-1.5 border border-base-200/80 dark:border-base-800/80 shadow-xs transition-all duration-300 hover:shadow-md">
+                        <div className="relative group inline-flex items-center justify-center rounded-2xl overflow-hidden bg-base-200/30 dark:bg-base-900/30 p-1.5 border border-base-200/80 dark:border-base-800/80 shadow-xs transition-transform duration-300 hover:shadow-md">
                             <img
                                 src={game?.coverUrl}
                                 alt="Dibujo de Pinturillo"
@@ -175,7 +175,7 @@ export default function PinturilloGuess() {
                             />
                             <button
                                 onClick={() => setIsZoomOpen(true)}
-                                className="absolute bottom-3 right-3 btn btn-circle btn-sm bg-base-100/90 dark:bg-base-800/90 text-base-content hover:bg-base-100 dark:hover:bg-base-800 shadow-md border border-base-200/60 dark:border-base-700/60 active:scale-95 transition-all opacity-85 group-hover:opacity-100"
+                                className="absolute bottom-3 right-3 btn btn-circle btn-sm bg-base-100/90 dark:bg-base-800/90 text-base-content hover:bg-base-100 dark:hover:bg-base-800 shadow-md border border-base-200/60 dark:border-base-700/60 active:scale-95 transition-transform opacity-85 group-hover:opacity-100"
                                 title="Ampliar imagen"
                             >
                                 <ZoomIn className="w-4 h-4" />
@@ -220,7 +220,7 @@ export default function PinturilloGuess() {
                         <button
                             type="button"
                             onClick={() => setHint1Shown(!hint1Shown)}
-                            className={`w-full flex flex-col p-3 rounded-2xl border transition-all duration-200 text-left ${
+                            className={`w-full flex flex-col p-3 rounded-2xl border transition-transform duration-200 text-left ${
                                 hint1Shown
                                     ? "bg-amber-500/10 border-amber-500/30 text-base-content"
                                     : "bg-base-100 border-base-200/80 active:bg-base-200/60 active:border-primary"
@@ -261,7 +261,7 @@ export default function PinturilloGuess() {
                         <button
                             type="button"
                             onClick={() => setHint2Shown(!hint2Shown)}
-                            className={`w-full flex flex-col p-3 rounded-2xl border transition-all duration-200 text-left ${
+                            className={`w-full flex flex-col p-3 rounded-2xl border transition-transform duration-200 text-left ${
                                 hint2Shown
                                     ? "bg-amber-500/10 border-amber-500/30 text-base-content"
                                     : "bg-base-100 border-base-200/80 active:bg-base-200/60 active:border-primary"
@@ -302,7 +302,7 @@ export default function PinturilloGuess() {
                         <button
                             type="button"
                             onClick={() => setHint3Shown(!hint3Shown)}
-                            className={`w-full flex flex-col p-3 rounded-2xl border transition-all duration-200 text-left ${
+                            className={`w-full flex flex-col p-3 rounded-2xl border transition-transform duration-200 text-left ${
                                 hint3Shown
                                     ? "bg-amber-500/10 border-amber-500/30 text-base-content"
                                     : "bg-base-100 border-base-200/80 active:bg-base-200/60 active:border-primary"
@@ -367,7 +367,7 @@ export default function PinturilloGuess() {
 
                     <button
                         onClick={() => navigate('/pinturillo')}
-                        className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-all"
+                        className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-transform"
                     >
                         Volver a partidas
                     </button>
@@ -389,7 +389,7 @@ export default function PinturilloGuess() {
                             }}
                             placeholder="Escribe la palabra aquí..."
                             disabled={createGuessMutation.isPending || isLoadingGame}
-                            className="input input-bordered rounded-2xl w-full text-center text-lg font-bold uppercase tracking-wider focus:outline-none focus:border-primary transition-all shadow-2xs placeholder:normal-case placeholder:font-normal placeholder:tracking-normal placeholder:text-base-content/40 min-h-12"
+                            className="input input-bordered rounded-2xl w-full text-center text-lg font-bold uppercase tracking-wider focus:outline-none focus:border-primary transition-transform shadow-2xs placeholder:normal-case placeholder:font-normal placeholder:tracking-normal placeholder:text-base-content/40 min-h-12"
                         />
                     </div>
 
@@ -403,7 +403,7 @@ export default function PinturilloGuess() {
                     <button
                         type="submit"
                         disabled={!userWord.trim() || createGuessMutation.isPending || isLoadingGame}
-                        className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-all min-h-12 text-base flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-transform min-h-12 text-base flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                         {createGuessMutation.isPending ? (
                             <>

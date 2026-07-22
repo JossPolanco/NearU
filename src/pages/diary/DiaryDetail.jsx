@@ -125,7 +125,7 @@ export default function DiaryDetail() {
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
                 <button
-                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -178,7 +178,7 @@ export default function DiaryDetail() {
                                 return (
                                     <div
                                         key={entry.id}
-                                        className={`card bg-base-100 border rounded-3xl p-5 space-y-4 shadow-2xs relative overflow-hidden transition-all duration-300 ${isMe
+                                        className={`card bg-base-100 border rounded-3xl p-5 space-y-4 shadow-2xs relative overflow-hidden transition-transform duration-300 ${isMe
                                             ? "from-primary/2 to-base-100 dark:from-primary/1 dark:to-base-950/15 border-primary/20 dark:border-primary/30"
                                             : "from-secondary/2 to-base-100 dark:from-secondary/1 dark:to-base-950/15 border-secondary/20 dark:border-secondary/30"
                                             }`}
@@ -228,7 +228,7 @@ export default function DiaryDetail() {
                     {/* Action button */}
                     <div className="pt-2">
                         <button
-                            className="btn btn-primary rounded-2xl w-full min-h-12 font-bold text-white shadow-xs active:scale-98 active:bg-primary/90 transition-all duration-150 flex items-center justify-center gap-2"
+                            className="btn btn-primary rounded-2xl w-full min-h-12 font-bold text-white shadow-xs active:scale-98 active:bg-primary/90 transition-transform duration-150 flex items-center justify-center gap-2"
                             onClick={handleOpenModal}
                         >
                             {myEntry ? "✏️ Editar mi entrada" : "✍️ Escribir mi entrada"}
@@ -251,7 +251,7 @@ export default function DiaryDetail() {
                                 ¿Qué hicimos en esta cita?
                             </span>
                         </label>
-                        <input className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-all duration-200 ${errors.title ? "input-error" : ""}`}
+                        <input className={`input input-bordered rounded-2xl w-full focus:outline-none focus:border-primary transition-transform duration-200 ${errors.title ? "input-error" : ""}`}
                             type="text"
                             placeholder="Ej. Cena romántica en el mirador"
                             {...register("title")}
@@ -273,7 +273,7 @@ export default function DiaryDetail() {
                         </label>
                         <textarea
                             placeholder="Escribe aquí los mejores recuerdos de ese día..."
-                            className={`textarea textarea-bordered rounded-2xl w-full h-20 resize-none focus:outline-none focus:border-primary transition-all duration-200 ${errors.content ? "input-error" : ""}`}
+                            className={`textarea textarea-bordered rounded-2xl w-full h-20 resize-none focus:outline-none focus:border-primary transition-transform duration-200 ${errors.content ? "input-error" : ""}`}
                             {...register("content")}
                         />
                         {errors.content && (
@@ -299,7 +299,7 @@ export default function DiaryDetail() {
 
                     <button
                         type="submit"
-                        className={`btn btn-primary mt-4 rounded-2xl min-h-12 font-bold text-white shadow-xs active:scale-98 transition-all duration-150`}
+                        className={`btn btn-primary mt-4 rounded-2xl min-h-12 font-bold text-white shadow-xs active:scale-98 transition-transform duration-150`}
                         disabled={isPending}
                     >
                         {isPending && (

@@ -6,16 +6,16 @@ import { useQuery } from '@tanstack/react-query'
 import { getPartnerProfile } from '@/services/user'
 import PinturilloScore from '@/components/games/pinturillo/PinturilloScore'
 
+const parseDateTime = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }) + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 export default function Pinturillo() {
     const navigate = useNavigate()
     const [historyPage, setHistoryPage] = useState(1)
     const HISTORY_LIMIT = 5
-
-    const parseDateTime = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }) + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
 
     const { data: noResolvedDraws, isLoading: isLoadingPending } = useQuery({
         queryKey: ["pinturillo-no-resolved-draws"],
@@ -39,7 +39,7 @@ export default function Pinturillo() {
         <div className="max-w-2xl mx-auto p-4 space-y-6 pb-12">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -57,7 +57,7 @@ export default function Pinturillo() {
             {/* NUEVA PARTIDA */}
             <div className="pt-1">
                 <button
-                    className="btn btn-primary btn-lg w-full rounded-2xl font-extrabold shadow-md active:scale-[0.98] transition-all flex items-center justify-center gap-2 min-h-14 text-base"
+                    className="btn btn-primary btn-lg w-full rounded-2xl font-extrabold shadow-md active:scale-[0.98] transition-transform flex items-center justify-center gap-2 min-h-14 text-base"
                     onClick={() => navigate('/pinturillo/newgame')}
                 >
                     <Plus className="w-5 h-5 stroke-[2.5]" />
@@ -94,7 +94,7 @@ export default function Pinturillo() {
                             <button
                                 key={draw.id}
                                 onClick={() => navigate(`/pinturillo/play/${draw.id}`)}
-                                className="group w-full flex items-center justify-between p-3.5 rounded-2xl bg-base-200/40 dark:bg-base-900/20 border border-base-200/80 dark:border-base-800/60 hover:bg-base-200/80 active:bg-base-300/60 active:scale-[0.99] transition-all text-left"
+                                className="group w-full flex items-center justify-between p-3.5 rounded-2xl bg-base-200/40 dark:bg-base-900/20 border border-base-200/80 dark:border-base-800/60 hover:bg-base-200/80 active:bg-base-300/60 active:scale-[0.99] transition-transform text-left"
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="relative">
@@ -165,7 +165,7 @@ export default function Pinturillo() {
                                 <button
                                     key={draw.id}
                                     onClick={() => navigate(`/pinturillo/play/${draw.id}`)}
-                                    className="group w-full flex items-center justify-between p-3 sm:p-3.5 rounded-2xl bg-base-200/30 dark:bg-base-900/20 border border-base-200/80 dark:border-base-800/60 hover:bg-base-200/70 active:bg-base-300/60 active:scale-[0.99] transition-all text-left"
+                                    className="group w-full flex items-center justify-between p-3 sm:p-3.5 rounded-2xl bg-base-200/30 dark:bg-base-900/20 border border-base-200/80 dark:border-base-800/60 hover:bg-base-200/70 active:bg-base-300/60 active:scale-[0.99] transition-transform text-left"
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 shrink-0">

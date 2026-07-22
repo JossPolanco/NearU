@@ -49,14 +49,14 @@ export default function MessageField({ replyingTo, onCancelReply, isOwn }) {
             )}
 
             <div className="flex gap-2 items-end justify-center animate-slide-up">
-                <div className="flex items-end gap-1.5 bg-base-100 border border-base-content/5 rounded-[22px] px-2.5 py-1.5 shadow-xs focus-within:border-primary/25 transition-all duration-200 flex-1">
-                    <button 
+                <div className="flex items-end gap-1.5 bg-base-100 border border-base-content/5 rounded-[22px] px-2.5 py-1.5 shadow-xs focus-within:border-primary/25 transition-transform duration-200 flex-1">
+                    {/* <button 
                         type="button" 
-                        className="btn btn-ghost btn-circle btn-sm text-base-content/50 hover:text-primary hover:bg-base-200/50 shrink-0 mb-0.5 active:scale-90 transition-all duration-150"
+                        className="btn btn-ghost btn-circle btn-sm text-base-content/50 hover:text-primary hover:bg-base-200/50 shrink-0 mb-0.5 active:scale-90 transition-transform duration-150"
                         aria-label="Cámara"
                     >
-                        {/* <Camera size={18} /> */}
-                    </button>
+                        <Camera size={18} />
+                    </button> */}
                     
                     <textarea
                         rows={1}
@@ -76,7 +76,7 @@ export default function MessageField({ replyingTo, onCancelReply, isOwn }) {
                 {message.trim().length === 0 ? (
                    <button 
                         type="button"
-                        className="btn mask mask-heart btn-primary shrink-0 shadow-md shadow-primary/15 hover:scale-102 active:scale-95 transition-all duration-150"                         
+                        className="btn mask mask-heart btn-primary shrink-0 shadow-md shadow-primary/15 hover:scale-102 active:scale-95 transition-transform duration-150"                         
                         disabled={true}
                         aria-label="Enviar mensaje"
                     >
@@ -85,7 +85,7 @@ export default function MessageField({ replyingTo, onCancelReply, isOwn }) {
                 ) : (
                     <button 
                         type="button"
-                        className="btn mask mask-heart btn-primary shrink-0 shadow-md shadow-primary/15 hover:scale-102 active:scale-95 transition-all duration-150" 
+                        className="btn mask mask-heart btn-primary shrink-0 shadow-md shadow-primary/15 hover:scale-102 active:scale-95 transition-transform duration-150" 
                         onClick={handleSend} 
                         disabled={sendMessageMutation.isPending}
                         aria-label="Enviar mensaje"

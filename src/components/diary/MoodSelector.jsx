@@ -45,7 +45,7 @@ export default function MoodSelector({ value, onChange, selectedMood, onSelectMo
                                 onClick={() => handleSelect && handleSelect(mood.title.toLowerCase())}
                                 className={`
                                     flex flex-col items-center justify-center py-3 px-1 rounded-2xl border
-                                    transition-all duration-200 min-h-24 focus:outline-none 
+                                    transition-transform duration-200 min-h-24 focus:outline-none 
                                     active:scale-95
                                     ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}
                                     ${isSelected

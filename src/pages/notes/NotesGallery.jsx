@@ -55,7 +55,7 @@ export default function NotesGallery() {
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-all duration-200"
+                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -78,7 +78,7 @@ export default function NotesGallery() {
                             key={tab.id}
                             type="button"
                             onClick={() => setSelectedTab(tab.id)}
-                            className={`py-2 px-4 rounded-full text-xs font-bold transition-all duration-200 active:scale-95 ease-in-out ${selectedTab === tab.id
+                            className={`py-2 px-4 rounded-full text-xs font-bold transition-transform duration-200 active:scale-95 ease-in-out ${selectedTab === tab.id
                                 ? "bg-primary text-white shadow-sm"
                                 : "text-base-content/60 hover:text-base-content active:bg-base-300/20 dark:active:bg-base-900/20"
                                 }`}
@@ -164,10 +164,10 @@ export default function NotesGallery() {
                                     // Update selectedNote favorite state in the lightbox locally
                                     setSelectedNote(prev => ({ ...prev, favorite: !prev.favorite }));
                                 }}
-                                className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:scale-90 transition-all text-white border border-white/10"
+                                className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:scale-90 transition-transform text-white border border-white/10"
                                 aria-label={selectedNote.favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
                             >
-                                <Heart className={`w-5 h-5 transition-all duration-200 ${selectedNote.favorite ? "fill-red-500 text-red-500 scale-110" : "text-white/80"}`} />
+                                <Heart className={`w-5 h-5 transition-transform duration-200 ${selectedNote.favorite ? "fill-red-500 text-red-500 scale-110" : "text-white/80"}`} />
                             </button>
                         </div>
                     </div>

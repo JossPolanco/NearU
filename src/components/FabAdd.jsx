@@ -1,7 +1,7 @@
 export default function FabAdd({ onClick, ...props }) {
     return (
         <div className="fixed bottom-16 right-4 z-50">
-            <button className="btn btn-lg btn-circle btn-primary shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer select-none active:scale-98"
+            <button className="btn btn-lg btn-circle btn-primary shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer select-none active:scale-98"
                 type="button"
                 onClick={onClick}
                 {...props}
