@@ -43,7 +43,7 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center px-4 py-8">
+        <div className="min-h-screen bg-base-300 flex flex-col items-center justify-center px-4 py-8">
             <div className="w-full max-w-md">
                 <div className="flex flex-col items-center text-center mb-6 px-2">
                     <div className="bg-primary/10 p-4 rounded-full mb-4 animate-pulse">
@@ -57,14 +57,14 @@ export default function Login() {
                         NearU
                     </h1>
 
-                    <p className="text-base-content/70 mt-3 text-sm leading-relaxed max-w-sm">
+                    <p className="text-base-content mt-3 text-sm leading-relaxed max-w-sm">
                         Hay cosas que no necesitan ser públicas para ser importantes.
                         Un espacio íntimo para nuestros mensajes, recuerdos y pequeños momentos.
                     </p>
                 </div>
 
                 {/* FORMULARIO */}
-                <div className="card bg-base-100 shadow-2xl border border-base-300">
+                <div className="card bg-base-100 shadow-2xl border border-base-200">
                     <div className="card-body gap-4">
                         <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
                             <div>

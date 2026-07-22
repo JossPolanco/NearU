@@ -36,7 +36,7 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
+        <div className="min-h-screen bg-base-300 flex items-center justify-center px-4">
             <div className="w-full max-w-md">
                 {/* Botón volver */}
                 <Link
@@ -47,7 +47,7 @@ export default function Register() {
                     Volver
                 </Link>
 
-                <div className="card bg-base-100 shadow-2xl border border-base-300">
+                <div className="card bg-base-100 shadow-2xl border border-base-200">
                     <div className="card-body">
                         <div className="flex flex-col items-center text-center mb-6">
                             <div className="bg-primary/10 p-4 rounded-full mb-4">
