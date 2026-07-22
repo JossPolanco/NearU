@@ -9,19 +9,12 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { React, useRef } from 'react';
 import { z } from "zod";
 
-const MOOD_INFO = {
-    feliz: { label: 'Feliz', photo: "http://dummyimage.com/131x100.png/cc0000/ffffff", colorClass: 'border-success/20 bg-success/10 text-success' },
-    triste: { label: 'Triste', photo: "http://dummyimage.com/131x100.png/cc0000/ffffff", colorClass: 'border-info/20 bg-info/10 text-info' },
-    neutral: { label: 'Neutral', photo: "http://dummyimage.com/131x100.png/cc0000/ffffff", colorClass: 'border-base-300 bg-base-200/55 text-base-content/80' },
-    enojado: { label: 'Enojado', photo: "http://dummyimage.com/131x100.png/cc0000/ffffff", colorClass: 'border-error/20 bg-error/10 text-error' },
-    hot: { label: 'Hot', photo: "http://dummyimage.com/131x100.png/cc0000/ffffff", colorClass: 'border-primary/20 bg-primary/10 text-primary' },
-    emocionado: { label: 'Emocionado', photo: "http://dummyimage.com/131x100.png/cc0000/ffffff", colorClass: 'border-secondary/20 bg-secondary/10 text-secondary' }
-};
+import { getMoodData } from "@/utils/getMoods";
 
 const createDiaryEntrySchema = z.object({
     title: z.string().min(1, "El título es obligatorio").max(100, "El título debe tener menos de 100 caracteres"),
     content: z.string().min(1, "El contenido es obligatorio"),
-    mood: z.enum(["feliz", "triste", "neutral", "enojado", "emocionado", "hot"]),
+    mood: z.string().min(1, "Selecciona un estado de ánimo"),
 })
 
 export default function DiaryDetail() {
@@ -35,7 +28,7 @@ export default function DiaryDetail() {
         defaultValues: {
             title: "",
             content: "",
-            mood: "neutral",
+            mood: "normal",
         }
     })
 
@@ -100,7 +93,7 @@ export default function DiaryDetail() {
             reset({
                 title: "",
                 content: "",
-                mood: "neutral"
+                mood: "normal"
             });
         }
         refModal.current?.open();
@@ -180,7 +173,7 @@ export default function DiaryDetail() {
                                 const profile = isMe ? myProfile : partnerProfile;
                                 const authorName = profile?.nickname || profile?.display_name || (isMe ? "Yo" : "Mi pareja");
                                 const avatarUrl = profile?.avatar_url;
-                                const mood = MOOD_INFO[entry.mood] || MOOD_INFO.neutral;
+                                const moodData = getMoodData(profile?.gender, entry.mood);
 
                                 return (
                                     <div
@@ -209,9 +202,15 @@ export default function DiaryDetail() {
                                             </div>
 
                                             {/* Mood Badge */}
-                                            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl border text-[11px] font-bold shadow-2xs ${mood.colorClass}`}>
-                                                <img src={mood.photo} alt={mood.label} className="w-6 h-6 rounded-lg object-cover shadow-2xs border border-white/10" />
-                                                <span>{mood.label}</span>
+                                            <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border text-[11px] font-bold shadow-2xs ${moodData.className || "bg-base-200/50 border-base-300/80"}`}>
+                                                {moodData.photo ? (
+                                                    <img src={moodData.photo} alt={moodData.title} className="w-5 h-5 object-contain drop-shadow-xs" />
+                                                ) : (
+                                                    <span className="text-sm select-none" role="img" aria-label={moodData.title}>
+                                                        {moodData.emoji}
+                                                    </span>
+                                                )}
+                                                <span>{moodData.title}</span>
                                             </div>
                                         </div>
 

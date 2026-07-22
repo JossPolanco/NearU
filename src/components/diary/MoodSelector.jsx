@@ -1,51 +1,17 @@
-const MOODS = [
-    {
-        value: 'feliz',
-        photo: "http://dummyimage.com/131x100.png/cc0000/ffffff",
-        label: 'Feliz',
-        selectedClass: 'border-success bg-success/10 text-success ring-2 ring-success/20',
-        hoverClass: 'md:hover:border-success/30 md:hover:bg-success/5'
-    },
-    {
-        value: 'triste',
-        photo: "http://dummyimage.com/131x100.png/cc0000/ffffff",
-        label: 'Triste',
-        selectedClass: 'border-info bg-info/10 text-info ring-2 ring-info/20',
-        hoverClass: 'md:hover:border-info/30 md:hover:bg-info/5'
-    },
-    {
-        value: 'neutral',
-        photo: "http://dummyimage.com/131x100.png/cc0000/ffffff",
-        label: 'Neutral',
-        selectedClass: 'border-neutral bg-neutral/15 text-base-content ring-2 ring-neutral/20',
-        hoverClass: 'md:hover:border-neutral/30 md:hover:bg-neutral/5'
-    },
-    {
-        value: 'enojado',
-        photo: "http://dummyimage.com/131x100.png/cc0000/ffffff",
-        label: 'Enojado',
-        selectedClass: 'border-error bg-error/10 text-error ring-2 ring-error/20',
-        hoverClass: 'md:hover:border-error/30 md:hover:bg-error/5'
-    },
-    {
-        value: 'emocionado',
-        photo: "http://dummyimage.com/131x100.png/cc0000/ffffff",
-        label: 'Emocionado',
-        selectedClass: 'border-secondary bg-secondary/10 text-secondary ring-2 ring-secondary/20',
-        hoverClass: 'md:hover:border-secondary/30 md:hover:bg-secondary/5'
-    },
-    {
-        value: 'hot',
-        photo: "http://dummyimage.com/131x100.png/cc0000/ffffff",
-        label: 'Hot',
-        selectedClass: 'border-primary bg-primary/10 text-primary ring-2 ring-primary/20',
-        hoverClass: 'md:hover:border-primary/30 md:hover:bg-primary/5'
-    }
-];
+import { getUserProfile } from "@/services/user/userService";
+import { getMoodsByGender } from "@/utils/getMoods";
+import { useQuery } from "@tanstack/react-query";
 
 export default function MoodSelector({ value, onChange, selectedMood, onSelectMood, label, error, disabled = false }) {
     const activeValue = value !== undefined ? value : selectedMood;
     const handleSelect = onChange || onSelectMood;
+
+    const { data: profile, isLoading } = useQuery({
+        queryKey: ["userProfile"],
+        queryFn: getUserProfile,
+    });
+
+    const moods = getMoodsByGender(profile?.gender);
 
     return (
         <div className="form-control w-full">
@@ -55,45 +21,61 @@ export default function MoodSelector({ value, onChange, selectedMood, onSelectMo
                 </label>
             )}
 
-            <div
-                role="radiogroup"
-                aria-label={label || "Seleccionar estado de ánimo"}
-                className="grid grid-cols-3 sm:grid-cols-6 gap-2 w-full"
-            >
-                {MOODS.map((mood) => {
-                    const isSelected = activeValue === mood.value;
-                    return (
-                        <button
-                            key={mood.value}
-                            type="button"
-                            role="radio"
-                            aria-checked={isSelected}
-                            disabled={disabled}
-                            onClick={() => handleSelect && handleSelect(mood.value)}
-                            className={`
-                                flex flex-col items-center justify-center py-3 px-1 rounded-2xl border
-                                transition-all duration-200 min-h-24 focus:outline-none 
-                                active:scale-95
-                                ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}
-                                ${isSelected
-                                    ? mood.selectedClass
-                                    : `border-base-300 dark:border-base-800 bg-base-100 text-base-content/70 ${mood.hoverClass}`
-                                }
-                                ${error && !isSelected ? 'border-error/60 dark:border-error/40' : ''}
-                            `}
-                        >
-                            <img 
-                                src={mood.photo} 
-                                alt={mood.label}
-                                className={`w-10 h-10 object-cover rounded-xl mb-1.5 transition-all duration-200 select-none ${isSelected ? 'scale-110 shadow-sm border-2 border-primary/20' : 'opacity-85'}`} 
-                            />
-                            <span className={`text-[10px] sm:text-xs font-semibold tracking-wide select-none ${isSelected ? 'font-bold' : ''}`}>
-                                {mood.label}
-                            </span>
-                        </button>
-                    );
-                })}
-            </div>
+            {isLoading ? (
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 w-full animate-pulse">
+                    {Array.from({ length: 10 }).map((_, idx) => (
+                        <div key={idx} className="h-24 bg-base-200/60 dark:bg-base-800/40 rounded-2xl" />
+                    ))}
+                </div>
+            ) : (
+                <div
+                    role="radiogroup"
+                    aria-label={label || "Seleccionar estado de ánimo"}
+                    className="grid grid-cols-3 sm:grid-cols-5 gap-2.5 w-full"
+                >
+                    {moods.map((mood) => {
+                        const isSelected = activeValue ? activeValue.toString().toLowerCase() === mood.title.toLowerCase() : false;
+                        return (
+                            <button
+                                key={mood.title}
+                                type="button"
+                                role="radio"
+                                aria-checked={isSelected}
+                                disabled={disabled}
+                                onClick={() => handleSelect && handleSelect(mood.title.toLowerCase())}
+                                className={`
+                                    flex flex-col items-center justify-center py-3 px-1 rounded-2xl border
+                                    transition-all duration-200 min-h-24 focus:outline-none 
+                                    active:scale-95
+                                    ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}
+                                    ${isSelected
+                                        ? `${mood.className || 'border-primary bg-primary/10 text-primary'} ring-2 ring-primary/30 shadow-xs font-bold scale-[1.02]`
+                                        : 'border-base-200/90 dark:border-base-800 bg-base-100/80 dark:bg-base-900/30 text-base-content/75 md:hover:border-base-300 dark:md:hover:border-base-750 md:hover:bg-base-200/40'
+                                    }
+                                    ${error && !isSelected ? 'border-error/60 dark:border-error/40' : ''}
+                                `}
+                            >
+                                <div className={`w-10 h-10 flex items-center justify-center mb-1.5 transition-transform duration-200 ${isSelected ? 'scale-110' : ''}`}>
+                                    {mood.photo ? (
+                                        <img
+                                            src={mood.photo}
+                                            alt={mood.title}
+                                            className="w-10 h-10 object-contain drop-shadow-xs select-none"
+                                        />
+                                    ) : (
+                                        <span className="text-2xl select-none" role="img" aria-label={mood.title}>
+                                            {mood.emoji}
+                                        </span>
+                                    )}
+                                </div>
+                                <span className={`text-[10px] sm:text-xs font-semibold tracking-wide text-center truncate w-full px-1 select-none ${isSelected ? 'font-bold' : ''}`}>
+                                    {mood.title}
+                                </span>
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
 
             {error && (
                 <label className="label mt-1 animate-fade-in">
@@ -103,3 +85,4 @@ export default function MoodSelector({ value, onChange, selectedMood, onSelectMo
         </div>
     );
 }
+

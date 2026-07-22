@@ -40,7 +40,7 @@ export async function getUserProfile() {
 
     const result = await supabaseClient
         .from("tbl_profiles")
-        .select("id, display_name, nickname, avatar, image_metadata:avatar(id, storage_path, bucket)")
+        .select("id, display_name, nickname, avatar, gender, image_metadata:avatar(id, storage_path, bucket)")
         .eq("id", user.id)
         .single();    
 
