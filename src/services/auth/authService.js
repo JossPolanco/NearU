@@ -14,9 +14,13 @@ export async function loginUser({ email, password }) {
 
 export async function registerUser({ email }) {
     const trimmedEmail = email.trim();
+    const redirectUrl = `${window.location.origin}${import.meta.env.BASE_URL}`;
 
     const { data, error } = await supabaseClient.auth.signInWithOtp({
         email: trimmedEmail,
+        options: {
+            emailRedirectTo: redirectUrl,
+        },
     });
     console.log(data, error);
     if (error) throw error;    
