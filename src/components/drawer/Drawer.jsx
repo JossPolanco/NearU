@@ -248,18 +248,18 @@ const Drawer = forwardRef((props, ref) => {
                         </summary>
                         <ul className="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-2xl w-48 z-30 border border-base-200 mt-1">
                             <li>
-                                <button onClick={handleExportPNG} className="flex items-center gap-2 py-2 px-3 text-xs font-semibold">
+                                <button type="button" onClick={handleExportPNG} className="flex items-center gap-2 py-2 px-3 text-xs font-semibold">
                                     <Download className="w-4 h-4" /> Exportar PNG
                                 </button>
                             </li>
                             <li>
-                                <button onClick={handleExportSVG} className="flex items-center gap-2 py-2 px-3 text-xs font-semibold">
+                                <button type="button" onClick={handleExportSVG} className="flex items-center gap-2 py-2 px-3 text-xs font-semibold">
                                     <Download className="w-4 h-4" /> Exportar SVG
                                 </button>
                             </li>
                             <div className="divider my-1"></div>
                             <li>
-                                <button onClick={handleClearCanvas} className="flex items-center gap-2 py-2 px-3 text-xs text-error font-semibold">
+                                <button type="button" onClick={handleClearCanvas} className="flex items-center gap-2 py-2 px-3 text-xs text-error font-semibold">
                                     <Trash2 className="w-4 h-4" /> Limpiar lienzo
                                 </button>
                             </li>

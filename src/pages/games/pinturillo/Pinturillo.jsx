@@ -39,7 +39,7 @@ export default function Pinturillo() {
         <div className="max-w-2xl mx-auto p-4 space-y-6 pb-12">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -56,7 +56,7 @@ export default function Pinturillo() {
 
             {/* NUEVA PARTIDA */}
             <div className="pt-1">
-                <button
+                <button type="button"
                     className="btn btn-primary btn-lg w-full rounded-2xl font-extrabold shadow-md active:scale-[0.98] transition-transform flex items-center justify-center gap-2 min-h-14 text-base"
                     onClick={() => navigate('/pinturillo/newgame')}
                 >
@@ -91,7 +91,7 @@ export default function Pinturillo() {
                 ) : noResolvedDraws && noResolvedDraws.length > 0 ? (
                     <div className="grid grid-cols-1 gap-3">
                         {noResolvedDraws.map((draw) => (
-                            <button
+                            <button type="button"
                                 key={draw.id}
                                 onClick={() => navigate(`/pinturillo/play/${draw.id}`)}
                                 className="group w-full flex items-center justify-between p-3.5 rounded-2xl bg-base-200/40 dark:bg-base-900/20 border border-base-200/80 dark:border-base-800/60 hover:bg-base-200/80 active:bg-base-300/60 active:scale-[0.99] transition-transform text-left"
@@ -162,7 +162,7 @@ export default function Pinturillo() {
                     <div className="space-y-3">
                         <div className="grid grid-cols-1 gap-2.5">
                             {pastDraws.map((draw) => (
-                                <button
+                                <button type="button"
                                     key={draw.id}
                                     onClick={() => navigate(`/pinturillo/play/${draw.id}`)}
                                     className="group w-full flex items-center justify-between p-3 sm:p-3.5 rounded-2xl bg-base-200/30 dark:bg-base-900/20 border border-base-200/80 dark:border-base-800/60 hover:bg-base-200/70 active:bg-base-300/60 active:scale-[0.99] transition-transform text-left"
@@ -195,7 +195,7 @@ export default function Pinturillo() {
                         {/* CONTROLES DE PAGINACION */}
                         {totalPages > 1 && (
                             <div className="flex items-center justify-between pt-2 border-t border-base-200/60 dark:border-base-800/60">
-                                <button onClick={() => setHistoryPage((prev) => Math.max(prev - 1, 1))} disabled={historyPage <= 1} className="btn btn-xs sm:btn-sm btn-ghost rounded-xl font-bold gap-1 disabled:opacity-40" >
+                                <button type="button" onClick={() => setHistoryPage((prev) => Math.max(prev - 1, 1))} disabled={historyPage <= 1} className="btn btn-xs sm:btn-sm btn-ghost rounded-xl font-bold gap-1 disabled:opacity-40" >
                                     <ChevronLeft className="w-4 h-4" />
                                     <span>Anterior</span>
                                 </button>
@@ -204,7 +204,7 @@ export default function Pinturillo() {
                                     Página {historyPage} de {totalPages}
                                 </span>
 
-                                <button onClick={() => setHistoryPage((prev) => Math.min(prev + 1, totalPages))} disabled={historyPage >= totalPages} className="btn btn-xs sm:btn-sm btn-ghost rounded-xl font-bold gap-1 disabled:opacity-40" >
+                                <button type="button" onClick={() => setHistoryPage((prev) => Math.min(prev + 1, totalPages))} disabled={historyPage >= totalPages} className="btn btn-xs sm:btn-sm btn-ghost rounded-xl font-bold gap-1 disabled:opacity-40" >
                                     <span>Siguiente</span>
                                     <ChevronRight className="w-4 h-4" />
                                 </button>

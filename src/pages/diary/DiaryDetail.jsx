@@ -124,7 +124,7 @@ export default function DiaryDetail() {
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button
+                <button type="button"
                     className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
@@ -159,7 +159,7 @@ export default function DiaryDetail() {
                 <div className="flex flex-col gap-6">
                     {diaryEntries.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-14 px-6 text-center bg-base-100/40 dark:bg-base-950/10 border border-dashed border-base-300 dark:border-base-800 rounded-3xl gap-4">
-                            <span className="text-4xl animate-bounce">✍️</span>
+                            <span className="text-4xl">✍️</span>
                             <div>
                                 <h4 className="text-base font-bold text-base-content">Aún no hay entradas</h4>
                                 <p className="text-xs text-base-content/50 max-w-xs mt-1">Ninguno de los dos ha escrito una entrada hoy. ¡Escribe la tuya para empezar!</p>
@@ -227,7 +227,7 @@ export default function DiaryDetail() {
 
                     {/* Action button */}
                     <div className="pt-2">
-                        <button
+                        <button type="button"
                             className="btn btn-primary rounded-2xl w-full min-h-12 font-bold text-white shadow-xs active:scale-98 active:bg-primary/90 transition-transform duration-150 flex items-center justify-center gap-2"
                             onClick={handleOpenModal}
                         >

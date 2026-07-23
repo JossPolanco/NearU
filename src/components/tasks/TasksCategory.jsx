@@ -56,7 +56,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
                         className="dropdown-content menu p-1.5 shadow-xl bg-base-100/95 dark:bg-base-950/95 border border-base-200 dark:border-base-800 rounded-2xl w-36 z-1 backdrop-blur"
                     >
                         <li>
-                            <button
+                            <button type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     e.currentTarget.blur();
@@ -68,7 +68,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
                             </button>
                         </li>
                         <li>
-                            <button
+                            <button type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     e.currentTarget.blur();

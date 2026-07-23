@@ -1,6 +1,6 @@
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { getUserId } from "../../services/user/userService";
-import { fetchStarredMessages } from "../../services/chat";
+import { fetchStarredMessages } from "../../services/chat/starredService";
 import { ArrowLeft, Star } from 'lucide-react';
 import { StarredBubble } from "@/components";
 import { useNavigate } from "react-router";
@@ -27,7 +27,7 @@ export default function StarredMessages() {
         <div className="fixed inset-0 flex flex-col bg-base-300">
             <div className="bg-base-100/80 backdrop-blur-md border-b border-base-content/5 px-3 py-2.5 flex items-center gap-3 z-10 shadow-xs select-none">
                 {/* VOLVER */}
-                <button className="btn btn-primary btn-circle text-white hover:bg-base-200/50 hover:text-base-content active:scale-95 transition-transform duration-200"
+                <button type="button" className="btn btn-primary btn-circle text-white hover:bg-base-200/50 hover:text-base-content active:scale-95 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >

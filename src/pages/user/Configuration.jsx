@@ -181,7 +181,7 @@ export default function Configuration() {
                                 Editar
                             </button>
 
-                            <button className="btn btn-sm btn-ghost text-error/70 active:text-error active:bg-error/10 hover:bg-error/5 rounded-xl font-medium text-xs px-3"
+                            <button type="button" className="btn btn-sm btn-ghost text-error/70 active:text-error active:bg-error/10 hover:bg-error/5 rounded-xl font-medium text-xs px-3"
                                 onClick={() => logoutMutation.mutate()}
                                 disabled={logoutMutation.isPending}
                             >
@@ -223,7 +223,7 @@ export default function Configuration() {
                         </div>
                     </div>
 
-                    <button className="btn btn-primary btn-sm rounded-full px-5 font-semibold text-xs active:scale-95 transition-transform" onClick={() => navigate('/create-password')}>
+                    <button type="button" className="btn btn-primary btn-sm rounded-full px-5 font-semibold text-xs active:scale-95 transition-transform" onClick={() => navigate('/create-password')}>
                         Cambiar
                     </button>
                 </div>
@@ -261,7 +261,7 @@ export default function Configuration() {
                         <ul className="dropdown-content bg-base-300 rounded-box z-1 w-40 p-2 shadow-2xl mt-1">
                             {themes.map((theme) => (
                                 <li key={theme}>
-                                    <button
+                                    <button type="button"
                                         className="btn btn-sm btn-ghost justify-start w-full capitalize"
                                         onClick={() => changeTheme(theme)}
                                     >

@@ -19,7 +19,7 @@ export default function TestingPage() {
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center py-2 border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -41,16 +41,16 @@ export default function TestingPage() {
             <div className="space-y-2">
                 <p className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Galería Activa</p>
                 <div role="tablist" className="tabs tabs-boxed">
-                    <button role="tab" className={`tab ${activeGallery === 'default' ? 'tab-active' : ''}`} onClick={() => setActiveGallery('default')} >
+                    <button type="button" role="tab" className={`tab ${activeGallery === 'default' ? 'tab-active' : ''}`} onClick={() => setActiveGallery('default')} >
                         Por Defecto (default)
                     </button>
-                    <button role="tab" className={`tab ${activeGallery === 'citas' ? 'tab-active' : ''}`} onClick={() => setActiveGallery('citas')} >
+                    <button type="button" role="tab" className={`tab ${activeGallery === 'citas' ? 'tab-active' : ''}`} onClick={() => setActiveGallery('citas')} >
                         Citas (citas)
                     </button>
                 </div>
             </div>
 
-            <button className="btn btn-primary w-full" onClick={() => modalRef.current?.open()}>
+            <button type="button" className="btn btn-primary w-full" onClick={() => modalRef.current?.open()}>
                 Abrir Modal de Prueba ({activeGallery})
             </button>
 

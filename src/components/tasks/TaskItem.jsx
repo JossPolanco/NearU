@@ -52,12 +52,12 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete, isToggling,
                 {!isDeleting && (
                     <ul className="dropdown-content menu p-1.5 shadow-xl bg-base-100/95 dark:bg-base-950/95 border border-base-200 dark:border-base-800 rounded-2xl w-36 z-1 backdrop-blur">
                         <li>
-                            <button onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); onEdit(); }} className="flex items-center gap-2 text-xs font-medium py-2 rounded-xl text-base-content active:bg-base-200/60 md:hover:bg-base-200/60 transition-colors">
+                            <button type="button" onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); onEdit(); }} className="flex items-center gap-2 text-xs font-medium py-2 rounded-xl text-base-content active:bg-base-200/60 md:hover:bg-base-200/60 transition-colors">
                                 <Edit2 className="w-3.5 h-3.5" /> Editar
                             </button>
                         </li>
                         <li>
-                            <button onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); onDelete(); }}
+                            <button type="button" onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); onDelete(); }}
                                 className="flex items-center gap-2 text-xs font-medium py-2 rounded-xl text-error active:text-error active:bg-error/10 md:hover:text-error md:hover:bg-error/10 transition-colors"
                             >
                                 <Trash2 className="w-3.5 h-3.5" /> Eliminar

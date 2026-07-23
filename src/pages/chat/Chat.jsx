@@ -1,5 +1,6 @@
 import { UnreadSeparator, MessageField, MessageBubble, ChatHeader } from "@/components";
-import { fetchMessages, subscribeToMessages } from "../../services/chat";
+import { fetchMessages } from "../../services/chat/messagesService";
+import { subscribeToMessages } from "../../services/chat/subscriptionService";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { getUserId } from "../../services/user/userService";
 import { useReadReceipts, useReplyState } from "@/hooks";

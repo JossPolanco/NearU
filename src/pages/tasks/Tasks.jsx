@@ -116,7 +116,7 @@ export default function Tasks() {
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -158,7 +158,7 @@ export default function Tasks() {
                     <p className="text-xs text-base-content/50 max-w-sm mt-2 leading-relaxed">
                         Aún no hay listas de tareas creadas. Agrega una lista para organizar planes, peliculas o cositas por hacer.
                     </p>
-                    <button
+                    <button type="button"
                         onClick={handleOpenCreateModal}
                         className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-transform font-semibold"
                     >

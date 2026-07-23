@@ -145,7 +145,7 @@ export default function PintNewGame() {
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center py-2 mb-2">
-                <button
+                <button type="button"
                     className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={handleBack}
                     aria-label="Volver"
@@ -171,7 +171,7 @@ export default function PintNewGame() {
                     </div>
 
                     <div className="grid grid-cols-1 gap-3">
-                        <button
+                        <button type="button"
                             className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-transform text-left"
                             onClick={() => getFiveWords("facil")}
                         >
@@ -187,7 +187,7 @@ export default function PintNewGame() {
                             <ChevronRight className="w-5 h-5 text-base-content/40 group-active:text-primary transition-colors shrink-0" />
                         </button>
 
-                        <button
+                        <button type="button"
                             className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-transform text-left"
                             onClick={() => getFiveWords("medio")}
                         >
@@ -203,7 +203,7 @@ export default function PintNewGame() {
                             <ChevronRight className="w-5 h-5 text-base-content/40 group-active:text-primary transition-colors shrink-0" />
                         </button>
 
-                        <button
+                        <button type="button"
                             className="group flex items-center justify-between p-4 rounded-2xl bg-base-100 border border-base-200/80 shadow-xs active:scale-[0.98] active:border-primary md:hover:border-primary/50 transition-transform text-left"
                             onClick={() => getFiveWords("dificil")}
                         >
@@ -261,7 +261,7 @@ export default function PintNewGame() {
                                 Elige una palabra ({difficulty})
                             </span>
                         </div>
-                        <button
+                        <button type="button"
                             onClick={() => getFiveWords(difficulty)}
                             className="btn btn-ghost btn-xs gap-1.5 text-xs text-primary active:scale-95 transition-transform"
                             title="Regenerar palabras"
@@ -273,7 +273,7 @@ export default function PintNewGame() {
 
                     <div className="grid grid-cols-1 gap-2.5">
                         {wordsList.map((word, index) => (
-                            <button
+                            <button type="button"
                                 key={index}
                                 onClick={() => setSelectedWord(word)}
                                 className="group flex items-center justify-between p-4 bg-base-100 border border-base-200/80 active:border-primary active:bg-primary/5 md:hover:border-primary/60 rounded-2xl shadow-xs transition-transform duration-150 text-left min-h-14"

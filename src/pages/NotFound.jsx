@@ -29,7 +29,7 @@ export default function NotFound() {
                             Volver a home
                         </Link>
 
-                        <button
+                        <button type="button"
                             onClick={() => window.history.back()}
                             className="btn btn-ghost"
                         >

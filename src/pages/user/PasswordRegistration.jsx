@@ -44,7 +44,7 @@ export default function PasswordRegistration() {
         <div className="min-h-screen bg-base-200 flex items-center justify-center px-4 py-8">
             <div className="w-full max-w-md">
                 {/* Botón volver */}
-                <button
+                <button type="button"
                     className="btn btn-ghost btn-sm gap-1.5 text-base-content/60 active:bg-base-300 rounded-xl mb-4 px-3 font-semibold text-xs transition-colors"
                     onClick={() => navigate(-1)}
                 >

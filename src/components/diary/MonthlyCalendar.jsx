@@ -163,19 +163,19 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-primary md:hover:text-primary transition-transform duration-200"
+                    <button type="button" className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-primary md:hover:text-primary transition-transform duration-200"
                         onClick={handleGoToday}
                     >
                         Hoy
                     </button>
                     <div className="join border border-base-200 dark:border-base-800/60 rounded-xl overflow-hidden">
-                        <button className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-primary md:hover:text-primary transition-colors"
+                        <button type="button" className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-primary md:hover:text-primary transition-colors"
                             onClick={handlePrevMonth}
                             aria-label="Mes anterior"
                         >
                             <ChevronLeft className="w-4 h-4" />
                         </button>
-                        <button
+                        <button type="button"
                             onClick={handleNextMonth}
                             className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-primary md:hover:text-primary transition-colors"
                             aria-label="Mes siguiente"
@@ -205,7 +205,7 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
                     const isCellSelected = isSelected(cell.date);
 
                     return (
-                        <button
+                        <button type="button"
                             key={`${cell.date.getTime()}-${idx}`}
                             onMouseDown={() => startPress(cell.date)}
                             onMouseUp={cancelPress}

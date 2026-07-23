@@ -225,7 +225,7 @@ export default function Geolocation() {
         <div className="max-w-2xl mx-auto p-4 flex flex-col gap-5 min-h-[90vh]">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -250,9 +250,8 @@ export default function Geolocation() {
                             NearU utiliza tu ubicación mi amor, para mostrarte en el mapa y que nos podamos ver. Solo nosotros dos podremos vernos.
                         </p>
                     </div>
-                    <button className="btn btn-primary rounded-full px-8 font-semibold shadow-md active:scale-95 transition-transform"
+                    <button type="button" className="btn btn-primary rounded-full px-8 font-semibold shadow-md active:scale-95 transition-transform"
                         onClick={() => navigate('/config')}
-                        type="button"
                     >
                         Configurar Permisos
                     </button>
@@ -326,7 +325,7 @@ export default function Geolocation() {
                                                 )}
                                             </p>
                                         </div>
-                                        <button className='btn btn-primary btn-sm btn-circle shadow-md shadow-primary/20 hover:shadow-lg active:shadow-sm transition-transform duration-300' onClick={() => resetOptions()}>
+                                        <button type="button" className='btn btn-primary btn-sm btn-circle shadow-md shadow-primary/20 hover:shadow-lg active:shadow-sm transition-transform duration-300' onClick={() => resetOptions()}>
                                             <LocateFixed className='w-4 h-4' />
                                         </button>
                                     </div>

@@ -16,22 +16,22 @@ export default function Dockbar({ children }) {
             {children}
 
             <div className="dock">
-                <button className={active === 'drawing' ? 'dock-active' : ''} onClick={() => setDockActive('drawing', '/drawing')}>
+                <button type="button" className={active === 'drawing' ? 'dock-active' : ''} onClick={() => setDockActive('drawing', '/drawing')}>
                     <PenLine size={18} />
                     <span className="dock-label">Dibujo</span>
                 </button>
 
-                <button className={active === 'chat' ? 'dock-active' : ''} onClick={() => setDockActive('chat', '/chat')}>
+                <button type="button" className={active === 'chat' ? 'dock-active' : ''} onClick={() => setDockActive('chat', '/chat')}>
                     <MessageCircleMore size={18} />
                     <span className="dock-label">Chat</span>
                 </button>
 
-                <button className={active === 'home' ? 'dock-active' : ''} onClick={() => setDockActive('home', '/home')} >
+                <button type="button" className={active === 'home' ? 'dock-active' : ''} onClick={() => setDockActive('home', '/home')} >
                     <House size={18} />
                     <span className="dock-label">Hogar</span>
                 </button>
 
-                <button className={active === 'config' ? 'dock-active' : ''} onClick={() => setDockActive('config', '/config')}>
+                <button type="button" className={active === 'config' ? 'dock-active' : ''} onClick={() => setDockActive('config', '/config')}>
                     <Settings size={18} />
                     <span className="dock-label">Configuración</span>
                 </button>

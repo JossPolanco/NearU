@@ -1,4 +1,4 @@
-import { unStarredMessage } from "../../services/chat";
+import { unStarredMessage } from "../../services/chat/starredService";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -102,7 +102,7 @@ export default function StarredBubble({ message, isOwn, messageRef, onScrollToPa
                     <>
                         <div className="fixed inset-0 z-9998 bg-base-300/30 backdrop-blur-xs transition-opacity duration-300 animate-fade-in" onClick={() => setShowMenu(false)} />
                         <div className="fixed z-9999 bg-base-100/95 backdrop-blur-md shadow-xl rounded-2xl flex flex-col gap-0.5 p-1.5 border border-base-content/5 animate-scale-in" style={{ left: `${left}px`, top: `${top}px`, width: `${menuWidth}px` }} >
-                            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left"
+                            <button type="button" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left"
                                 onClick={handleUnStarredMessage}
                             >
                                 <Star size={16} className="text-yellow-500 fill-yellow-500 shrink-0" />

@@ -86,19 +86,19 @@ export default function YearlyCalendar({ currentDate, setCurrentDate, onViewMont
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-secondary md:hover:text-secondary  transition-transform duration-200"
+                    <button type="button" className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-secondary md:hover:text-secondary  transition-transform duration-200"
                         onClick={handleGoToday}
                     >
                         Hoy
                     </button>
                     <div className="join border border-base-200 dark:border-base-800/60 rounded-xl overflow-hidden">
-                        <button className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-secondary md:hover:text-secondary "
+                        <button type="button" className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-secondary md:hover:text-secondary "
                             onClick={handlePrevYear}
                             aria-label="Año anterior"
                         >
                             <ChevronLeft className="w-4 h-4" />
                         </button>
-                        <button className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-secondary md:hover:text-secondary "
+                        <button type="button" className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-secondary md:hover:text-secondary "
                             onClick={handleNextYear}
                             aria-label="Año siguiente"
                         >

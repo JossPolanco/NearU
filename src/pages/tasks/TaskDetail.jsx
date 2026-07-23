@@ -1,4 +1,5 @@
-import { getTasks, getTaskCategory, createTask, deleteTask, completeTask, updateTask } from "../../services/tasks"
+import { getTasks, createTask, deleteTask, completeTask, updateTask } from "../../services/tasks/tasksService";
+import { getTaskCategory } from "../../services/tasks/tasksCategoryService";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { ArrowLeft, Sparkles, Heart, ClipboardList } from "lucide-react"
 import { Modal, FabAdd, TaskItem } from "@/components"
@@ -128,7 +129,7 @@ export default function TaskDetail() {
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -192,7 +193,7 @@ export default function TaskDetail() {
                                     🌸 No hay tareas creadas todavía en esta lista.
                                 </span>
                             ) : allCompleted ? (
-                                <span className="text-success flex items-center justify-center gap-1 animate-bounce">
+                                <span className="text-success flex items-center justify-center gap-1">
                                     <Sparkles className="w-3.5 h-3.5 text-yellow-500 fill-yellow-400" />
                                     ¡Completamos todas las tareas! ¡Buen trabajo mi amooor! 💕✨
                                 </span>

@@ -129,7 +129,7 @@ export default function PinturilloGuess() {
         <div className="max-w-2xl mx-auto p-4 space-y-6 pb-12">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 pb-3 mb-2">
-                <button
+                <button type="button"
                     className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate('/pinturillo')}
                     aria-label="Volver"
@@ -173,7 +173,7 @@ export default function PinturilloGuess() {
                                 className="max-h-85 sm:max-h-105 w-auto max-w-full h-auto object-contain rounded-xl transition-transform duration-300 group-hover:scale-[1.01] cursor-pointer"
                                 onClick={() => setIsZoomOpen(true)}
                             />
-                            <button
+                            <button type="button"
                                 onClick={() => setIsZoomOpen(true)}
                                 className="absolute bottom-3 right-3 btn btn-circle btn-sm bg-base-100/90 dark:bg-base-800/90 text-base-content hover:bg-base-100 dark:hover:bg-base-800 shadow-md border border-base-200/60 dark:border-base-700/60 active:scale-95 transition-transform opacity-85 group-hover:opacity-100"
                                 title="Ampliar imagen"
@@ -189,7 +189,7 @@ export default function PinturilloGuess() {
             {isZoomOpen && (
                 <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200" onClick={() => setIsZoomOpen(false)}>
                     <div className="relative max-w-4xl w-full max-h-[90vh] bg-base-100 rounded-3xl p-3 sm:p-5 shadow-2xl border border-base-200/20 flex flex-col items-center justify-center" onClick={e => e.stopPropagation()}>
-                        <button
+                        <button type="button"
                             onClick={() => setIsZoomOpen(false)}
                             className="absolute top-3 right-3 btn btn-circle btn-sm btn-ghost text-base-content/70 hover:bg-base-200"
                         >
@@ -343,7 +343,7 @@ export default function PinturilloGuess() {
             {/* VICTORIA O FORMULARIO DE INTENTOS */}
             {isWon ? (
                 <div className="bg-base-100/80 border border-emerald-500/30 rounded-3xl p-6 text-center space-y-4 shadow-sm animate-in zoom-in-95 duration-300">
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 mx-auto flex items-center justify-center animate-bounce">
+                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 mx-auto flex items-center justify-center">
                         <Trophy className="w-8 h-8" />
                     </div>
                     <div className="space-y-1">
@@ -365,7 +365,7 @@ export default function PinturilloGuess() {
                         Logrado en {pastGuesses.length} {pastGuesses.length === 1 ? 'intento' : 'intentos'}
                     </p>
 
-                    <button
+                    <button type="button"
                         onClick={() => navigate('/pinturillo')}
                         className="btn btn-primary btn-lg w-full rounded-2xl font-bold shadow-md active:scale-[0.98] transition-transform"
                     >

@@ -57,7 +57,7 @@ export default function Anniversary() {
                 </p>
                 <p className="text-xl font-bold text-primary mb-2 mt-6">💕💕 Te amo mucho Evelyn 💕💕</p>
 
-                <button className="mt-6 px-4 py-2 bg-primary text-white rounded hover:bg-primary-focus hover:cursor-pointer" onClick={() => navigate(-1)}>
+                <button type="button" className="mt-6 px-4 py-2 bg-primary text-white rounded hover:bg-primary-focus hover:cursor-pointer" onClick={() => navigate(-1)}>
                     Vamonos de regreso a la app mi amor 😚😚
                 </button>
             </div>

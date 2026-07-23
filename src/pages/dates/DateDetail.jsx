@@ -147,7 +147,7 @@ export default function DateDetail() {
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
             {/* Header / Navigation */}
             <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
@@ -214,7 +214,7 @@ export default function DateDetail() {
                                     <Sparkles className="w-3.5 h-3.5" />
                                     <span>Nuestros Recuerdos</span>
                                 </div>
-                                <button
+                                <button type="button"
                                     onClick={handleOpenDescriptionModal}
                                     className="btn btn-ghost btn-circle btn-xs text-base-content/40 active:text-primary active:bg-base-200/50 md:hover:text-primary md:hover:bg-base-200/50 transition-colors"
                                     aria-label="Editar recuerdos"
@@ -236,7 +236,7 @@ export default function DateDetail() {
                                 <p className="text-sm text-base-content/40 font-medium">
                                     Aún no hay recuerdos escritos para esta cita.
                                 </p>
-                                <button
+                                <button type="button"
                                     onClick={handleOpenDescriptionModal}
                                     className="btn btn-outline border-primary/20 hover:border-primary/45 active:border-primary/45 text-primary btn-sm rounded-xl mt-3 gap-1.5 font-bold shadow-3xs text-xs active:scale-95 transition-transform"
                                 >
@@ -253,7 +253,7 @@ export default function DateDetail() {
                                 <ClipboardList className="w-5 h-5 text-primary" />
                                 <h2 className="text-lg font-bold text-base-content">Planes juntos</h2>
                             </div>
-                            <button className="btn btn-ghost btn-circle btn-sm text-primary active:bg-primary/10 md:hover:bg-primary/10 transition-colors" onClick={handleOpenCreateModal} aria-label="Añadir plan">
+                            <button type="button" className="btn btn-ghost btn-circle btn-sm text-primary active:bg-primary/10 md:hover:bg-primary/10 transition-colors" onClick={handleOpenCreateModal} aria-label="Añadir plan">
                                 <Plus className="w-5 h-5" />
                             </button>
                         </div>
@@ -269,7 +269,7 @@ export default function DateDetail() {
                                 <span className="text-3xl mb-3">💕</span>
                                 <p className="text-sm font-semibold text-base-content/60">¿Qué haremos?</p>
                                 <p className="text-xs text-base-content/40 mt-1 max-w-60">Añade actividades o cositas pendientes para hacer juntos durante esta cita.</p>
-                                <button
+                                <button type="button"
                                     onClick={handleOpenCreateModal}
                                     className="btn btn-primary btn-sm rounded-xl mt-4 gap-1.5 font-bold shadow-xs active:scale-95 transition-transform text-xs"
                                 >

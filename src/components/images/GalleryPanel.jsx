@@ -71,7 +71,7 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
                     <div className="alert alert-error">
                         <span className="text-sm">{error?.message || "Error al cargar la galería."}</span>
                     </div>
-                    <button className="btn btn-ghost btn-sm" onClick={refetch}>
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={refetch}>
                         Reintentar
                     </button>
                 </div>
@@ -87,7 +87,7 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
                         Galería de fotos
                         <span className="badge badge-ghost font-normal text-xs">{total} fotos</span>
                     </h2>
-                    <button className="btn btn-ghost btn-xs text-primary font-bold" onClick={refetch}>
+                    <button type="button" className="btn btn-ghost btn-xs text-primary font-bold" onClick={refetch}>
                         Refrescar
                     </button>
                 </div>
@@ -128,11 +128,10 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
 
                                 {/* Botón de eliminar (Hover) */}
                                 {enableDelete && (
-                                    <button
+                                    <button type="button"
                                         onClick={(e) => handleDeleteClick(e, photo)}
                                         className="absolute top-2 right-2 btn btn-circle btn-error btn-xs text-white shadow-md border-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
                                         title="Eliminar imagen"
-                                        type="button"
                                         disabled={deleteMutation.isPending}
                                     >
                                         {deleteMutation.isPending && deleteMutation.variables?.id === photo.id ? (
@@ -158,7 +157,7 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
             {selectedImage && (
                 <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md animate-fade-in" onClick={() => setSelectedImage(null)} >
                     {/* Botón de cerrar */}
-                    <button className="absolute top-4 right-4 btn btn-circle btn-ghost text-white/80 hover:text-white z-50" onClick={() => setSelectedImage(null)} type="button" aria-label="Cerrar" >
+                    <button type="button" className="absolute top-4 right-4 btn btn-circle btn-ghost text-white/80 hover:text-white z-50" onClick={() => setSelectedImage(null)} aria-label="Cerrar" >
                         <X className="w-6 h-6" />
                     </button>
 
