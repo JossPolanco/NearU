@@ -39,10 +39,7 @@ export default function Chat() {
     const firstUnreadIndex = useMemo(() => {
         if (!messages || !userId) return -1;
         return messages.findIndex(m => m.sender_id !== userId && !m.read_at);
-    }, [
-        messages?.length,
-        userId
-    ]);
+    }, [messages, userId]);
 
     return (
         <div className="fixed inset-0 flex flex-col bg-base-300">

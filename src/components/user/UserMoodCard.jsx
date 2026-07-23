@@ -167,11 +167,11 @@ export default function UserMoodCard() {
                         <input type="hidden" {...register("mood")} />
 
                         <div className="grid grid-cols-3 gap-3">
-                            {moodsList.map((mood, index) => {
+                            {moodsList.map((mood) => {
                                 const isSelected = activeMood.toLowerCase() === mood.title.toLowerCase();
                                 return (
                                     <button
-                                        key={index}
+                                        key={mood.id || mood.title}
                                         type="button"
                                         onClick={() => {
                                             setActiveMood(mood.title);

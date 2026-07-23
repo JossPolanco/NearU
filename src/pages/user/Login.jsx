@@ -22,7 +22,7 @@ export default function Login() {
             session?.user ? navigate('/home') : navigate('/');
         });
         return () => subscription.unsubscribe();
-    }, []);
+    }, [navigate]);
 
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(loginSchema)

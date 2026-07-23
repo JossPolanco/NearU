@@ -120,6 +120,9 @@ export default function PintNewGame() {
             }
 
             const response = await fetch(data.dataUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const blob = await response.blob();
             const cleanTitle = selectedWord || "dibujo";
             const filename = `${cleanTitle.toLowerCase().replace(/[^a-z0-9]+/g, "_") || "dibujo"}.png`;
@@ -274,7 +277,7 @@ export default function PintNewGame() {
                     <div className="grid grid-cols-1 gap-2.5">
                         {wordsList.map((word, index) => (
                             <button type="button"
-                                key={index}
+                                key={word}
                                 onClick={() => setSelectedWord(word)}
                                 className="group flex items-center justify-between p-4 bg-base-100 border border-base-200/80 active:border-primary active:bg-primary/5 md:hover:border-primary/60 rounded-2xl shadow-xs transition-transform duration-150 text-left min-h-14"
                             >

@@ -69,11 +69,11 @@ export default function HistoryConfig({ paths, history = [], canvasRef, canvasCo
                 <div className="space-y-2 pt-2 border-t border-base-200">
                     <span className="text-xs text-base-content/60 block">Linecita de tiempo de trazitos</span>
                     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
-                        {history.map((_, index) => {
+                        {history.map((stroke, index) => {
                             const isActive = index === paths.length - 1;
                             return (
                                 <button
-                                    key={index}
+                                    key={stroke?.id || stroke?.timestamp || `history-step-${index}`}
                                     type="button"
                                     onClick={() => handleJumpToHistory(index)}
                                     className={`shrink-0 w-16 h-16 rounded-lg border overflow-hidden relative active:scale-95 bg-base-100 flex items-center justify-center transition-transform ${isActive

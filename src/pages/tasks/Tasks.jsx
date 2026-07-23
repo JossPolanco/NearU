@@ -194,9 +194,9 @@ export default function Tasks() {
                             💡 Ideas rápidas:
                         </span>
                         <div className="flex flex-wrap gap-2">
-                            {SUGGESTIONS.map((sug, index) => (
+                            {SUGGESTIONS.map((sug) => (
                                 <button
-                                    key={index}
+                                    key={sug.id || sug.title}
                                     type="button"
                                     onClick={() => {
                                         setValue("title", sug.title);

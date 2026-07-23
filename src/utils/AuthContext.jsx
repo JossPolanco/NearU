@@ -7,8 +7,11 @@ export default function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
+
         async function checkSession() {
             const { data: { session }, } = await supabaseClient.auth.getSession();
+            if (!isMounted) return;
 
             if (!session) {
                 navigate("/");
@@ -18,6 +21,10 @@ export default function AuthProvider({ children }) {
         }
 
         checkSession();
+
+        return () => {
+            isMounted = false;
+        };
     }, [navigate]);
 
     if (loading) {

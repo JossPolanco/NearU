@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, useRouteError } from "react-router";
 import { lazy, Suspense } from "react";
 import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
@@ -43,18 +43,42 @@ const LazyPage = ({ children }) => (
     </Suspense>
 );
 
+const RootErrorBoundary = () => {
+    const error = useRouteError();
+    console.error(error);
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center bg-base-100 text-base-content">
+            <h1 className="text-2xl font-bold mb-2">¡Ups! Algo salió mal.</h1>
+            <p className="text-sm opacity-70 mb-4">
+                {error?.statusText || error?.message || "Ha ocurrido un error inesperado."}
+            </p>
+            <button
+                type="button"
+                onClick={() => window.location.assign('/NearU/')}
+                className="btn btn-primary btn-sm rounded-xl"
+            >
+                Volver al inicio
+            </button>
+        </div>
+    );
+};
+
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <LazyPage><Login /></LazyPage>
+        element: <LazyPage><Login /></LazyPage>,
+        errorElement: <RootErrorBoundary />
     },
     {
-        path: "/register", element: (
+        path: "/register",
+        element: (
             <LazyPage><Register /></LazyPage>
         ),
+        errorElement: <RootErrorBoundary />
     },
     {
         element: <AuthProvider />,
+        errorElement: <RootErrorBoundary />,
         children: [
             {
                 path: "/home", element: (
@@ -227,10 +251,12 @@ export const router = createBrowserRouter([
     },
     {
         path: "*",
-        element: <LazyPage><NotFound /></LazyPage>
+        element: <LazyPage><NotFound /></LazyPage>,
+        errorElement: <RootErrorBoundary />
     },
     {
         path: "/anniversary",
-        element: <LazyPage><Anniversary /></LazyPage>
+        element: <LazyPage><Anniversary /></LazyPage>,
+        errorElement: <RootErrorBoundary />
     }
 ], { basename: '/NearU' });

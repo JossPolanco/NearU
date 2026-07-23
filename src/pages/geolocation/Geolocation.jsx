@@ -2,7 +2,7 @@ import { setCurrentLocation, getCurrentUserLocation, getPartnerLocation } from '
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, MapPin, RefreshCw, Heart, LocateFixed } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -136,7 +136,7 @@ export default function Geolocation() {
         },
     });
 
-    const triggerInitialLocation = () => {
+    const triggerInitialLocation = useCallback(() => {
         if (!navigator.geolocation) return;
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -155,7 +155,7 @@ export default function Geolocation() {
                 maximumAge: 0
             }
         );
-    };
+    }, [updateLocationMutation]);
 
     const handleRefresh = () => {
         if (!navigator.geolocation) return;
@@ -185,6 +185,8 @@ export default function Geolocation() {
     };
 
     useEffect(() => {
+        let isMounted = true;
+
         async function checkPermission() {
             if (!navigator.permissions) return;
 
@@ -193,6 +195,8 @@ export default function Geolocation() {
                     name: "geolocation",
                 });
 
+                if (!isMounted) return;
+
                 setLocationPermission(permission.state);
 
                 if (permission.state === "granted") {
@@ -200,7 +204,9 @@ export default function Geolocation() {
                 }
 
                 permission.onchange = () => {
-                    setLocationPermission(permission.state);
+                    if (isMounted) {
+                        setLocationPermission(permission.state);
+                    }
                     if (permission.state === "granted") {
                         triggerInitialLocation();
                     }
@@ -211,7 +217,11 @@ export default function Geolocation() {
         }
 
         checkPermission();
-    }, []);
+
+        return () => {
+            isMounted = false;
+        };
+    }, [triggerInitialLocation]);
 
     const resetOptions = () => {
         console.log('hola');

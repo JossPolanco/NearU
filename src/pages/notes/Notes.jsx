@@ -66,6 +66,9 @@ export default function Notes() {
             }
 
             const response = await fetch(data.dataUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const blob = await response.blob();
             const cleanTitle = data.title.trim() || "Sin título";
             const filename = `${cleanTitle.toLowerCase().replace(/[^a-z0-9]+/g, "_") || "dibujo"}.png`;

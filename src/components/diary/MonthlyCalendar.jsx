@@ -206,7 +206,7 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
 
                     return (
                         <button type="button"
-                            key={`${cell.date.getTime()}-${idx}`}
+                            key={cell.date.toISOString()}
                             onMouseDown={() => startPress(cell.date)}
                             onMouseUp={cancelPress}
                             onMouseLeave={cancelPress}
