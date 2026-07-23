@@ -1,6 +1,6 @@
 import { useResolveSignedUrls } from "../../hooks/images/useResolveSignedUrls";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { FabAdd, Modal, Drawer, CarouselNotes } from "@/components";
+import { FabAdd, Modal, Drawer, CarouselNotes, Alert } from "@/components";
 import { useImageUpload } from "../../hooks/images/useImageUpload";
 import { ArrowLeft, Loader2, StickyNote } from "lucide-react";
 import { createNote, getLast5Notes } from "@/services/notes";
@@ -12,6 +12,7 @@ import { useRef } from 'react';
 export default function Notes() {
     const navigate = useNavigate();
     const refModal = useRef();
+    const alertRef = useRef();
     const drawerRef = useRef();
     const pendingTitleRef = useRef("Sin título");
     const queryClient = useQueryClient();
@@ -61,7 +62,11 @@ export default function Notes() {
             if (!drawerRef.current) return;
             const data = await drawerRef.current.getDrawingData();
             if (!data || data.isEmpty) {
-                alert("Por favor, realiza un dibujo antes de guardar.");
+                alertRef.current?.open({
+                    type: 'warning',
+                    title: 'Dibujo requerido',
+                    message: 'Por favor, realiza un dibujo antes de guardar.'
+                });
                 return;
             }
 
@@ -75,7 +80,11 @@ export default function Notes() {
             const file = new File([blob], filename, { type: "image/png" });
 
             if (!userId) {
-                alert("Usuario no autenticado.");
+                alertRef.current?.open({
+                    type: 'danger',
+                    title: 'Error de Autenticación',
+                    message: 'Usuario no autenticado.'
+                });
                 return;
             }
 
@@ -83,7 +92,11 @@ export default function Notes() {
             await upload(file, userId);
         } catch (error) {
             console.error("Error al guardar la nota:", error);
-            alert("Ocurrió un error al guardar la nota.");
+            alertRef.current?.open({
+                type: 'danger',
+                title: 'Error al guardar',
+                message: 'Ocurrió un error al guardar la nota.'
+            });
         }
     };
 
@@ -135,6 +148,8 @@ export default function Notes() {
                     <p className="text-error text-xs text-center mt-2 font-semibold">{state.error}</p>
                 )}
             </Modal>
+            
+            <Alert ref={alertRef} />
         </div>
     )
 }

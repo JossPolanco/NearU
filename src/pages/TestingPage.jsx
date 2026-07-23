@@ -88,8 +88,14 @@ export default function TestingPage() {
                                         type="button"
                                         className="btn btn-xs btn-warning text-white"
                                         onClick={() => {
-                                            alert('¡Confirmado!');
                                             setAlertConfig(null);
+                                            setTimeout(() => {
+                                                alertRef.current?.open({
+                                                    type: 'success',
+                                                    title: 'Acción Confirmada',
+                                                    message: '¡Has confirmado la acción con éxito!'
+                                                });
+                                            }, 100);
                                         }}
                                     >
                                         Aceptar

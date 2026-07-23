@@ -7,12 +7,14 @@ import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import Modal from '../../components/Modal';
+import Alert from '../../components/Alert';
 import { z } from 'zod';
 import { requestLocationPermission } from '../../utils/geolocation';
 import { setCurrentLocation } from '../../services/geolocation';
 
 export default function Configuration() {
     const modalRef = useRef(null);
+    const alertRef = useRef(null);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -99,7 +101,11 @@ export default function Configuration() {
         },
         onError: (error) => {
             console.error("Error al subir el avatar:", error);
-            alert(error.message || "Error al subir la imagen");
+            alertRef.current?.open({
+                type: 'danger',
+                title: 'Error al subir la imagen',
+                message: error.message || 'Ocurrió un error al subir el avatar.'
+            });
         }
     });
 
@@ -112,7 +118,11 @@ export default function Configuration() {
         },
         onError: (error) => {
             console.error("Error al eliminar el avatar:", error);
-            alert(error.message || "Error al eliminar la imagen");
+            alertRef.current?.open({
+                type: 'danger',
+                title: 'Error al eliminar la imagen',
+                message: error.message || 'Ocurrió un error al eliminar el avatar.'
+            });
         }
     });
 
@@ -320,6 +330,7 @@ export default function Configuration() {
                     </div>
                 </div>
             </div>
+            <Alert ref={alertRef} />
         </div>
 
     )

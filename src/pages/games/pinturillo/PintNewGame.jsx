@@ -3,6 +3,7 @@ import { ArrowLeft, Sparkles, RefreshCw, Smile, Zap, Flame, ChevronRight, Check,
 import { useNavigate } from 'react-router'
 import { default as words } from '../../../utils/words.json'
 import Drawer from '../../../components/drawer/Drawer'
+import { Alert } from '@/components'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +32,7 @@ export default function PintNewGame() {
     const [selectedWord, setSelectedWord] = useState("")
     const [customWord, setCustomWord] = useState("")
     const drawerRef = useRef(null)
+    const alertRef = useRef(null)
 
     const { data: userId } = useQuery({
         queryKey: ["user-id"],
@@ -115,7 +117,11 @@ export default function PintNewGame() {
             if (!drawerRef.current) return;
             const data = await drawerRef.current.getDrawingData();
             if (!data || data.isEmpty) {
-                alert("Por favor, realiza un dibujo antes de guardar.");
+                alertRef.current?.open({
+                    type: 'warning',
+                    title: 'Dibujo requerido',
+                    message: 'Por favor, realiza un dibujo antes de guardar.'
+                });
                 return;
             }
 
@@ -129,14 +135,22 @@ export default function PintNewGame() {
             const file = new File([blob], filename, { type: "image/png" });
 
             if (!userId) {
-                alert("Usuario no autenticado.");
+                alertRef.current?.open({
+                    type: 'danger',
+                    title: 'Error de Autenticación',
+                    message: 'Usuario no autenticado.'
+                });
                 return;
             }
 
             await upload(file, userId);
         } catch (error) {
             console.error("Error al guardar el dibujo:", error);
-            alert("Ocurrió un error al guardar el dibujo.");
+            alertRef.current?.open({
+                type: 'danger',
+                title: 'Error al Guardar',
+                message: 'Ocurrió un error al guardar el dibujo.'
+            });
         }
     }
 
@@ -458,6 +472,7 @@ export default function PintNewGame() {
 
                 </div>
             )}
+            <Alert ref={alertRef} />
         </div>
     )
 }
