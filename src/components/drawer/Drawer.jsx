@@ -194,7 +194,7 @@ const Drawer = forwardRef((props, ref) => {
             {/* HEADER CONTROLS */}
             <div className="flex items-center justify-between px-3 py-2 bg-base-100 rounded-2xl border border-base-200 shadow-sm min-h-14">
                 <div className="flex items-center gap-1">
-                    <button type="button" className="btn btn-ghost btn-circle btn-sm" onClick={() => extraModal.current?.open()}>
+                    <button type="button" className="btn btn-ghost btn-circle btn-sm" onClick={() => extraModal.current?.open()} aria-label="Menú de opciones">
                         <Menu className="w-5 h-5 text-base-content/70" />
                     </button>
                     {isEditingTitle ? (
@@ -205,6 +205,7 @@ const Drawer = forwardRef((props, ref) => {
                             onBlur={saveTitle}
                             onKeyDown={handleKeyDown}
                             autoFocus
+                            aria-label="Título del dibujo"
                         />
                     ) : (
                         <div className="flex items-center gap-1">
@@ -215,6 +216,7 @@ const Drawer = forwardRef((props, ref) => {
                                 type="button"
                                 onClick={startEditing}
                                 className="btn btn-ghost btn-xs btn-circle text-base-content/40 hover:text-primary active:scale-95"
+                                aria-label="Editar título"
                             >
                                 <Pencil className="w-3.5 h-3.5" />
                             </button>
@@ -243,7 +245,7 @@ const Drawer = forwardRef((props, ref) => {
 
                     {/* DROPDOWN MENU PARA EXPORTAR Y LIMPIAR */}
                     <details ref={dropdownRef} className="dropdown dropdown-end">
-                        <summary className="btn btn-ghost btn-circle btn-sm list-none select-none outline-none [&::-webkit-details-marker]:hidden">
+                        <summary className="btn btn-ghost btn-circle btn-sm list-none select-none outline-none [&::-webkit-details-marker]:hidden" aria-label="Más opciones">
                             <MoreVertical className="w-5 h-5 text-base-content/80" />
                         </summary>
                         <ul className="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-2xl w-48 z-30 border border-base-200 mt-1">

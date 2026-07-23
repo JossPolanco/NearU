@@ -61,6 +61,7 @@ export default function ColorConfig({ strokeColor, setStrokeColor }) {
                         key={color}
                         type="button"
                         onClick={() => setStrokeColor(color)}
+                        aria-label={`Color ${color}`}
                         className={`w-11 h-11 rounded-full border transition-transform active:scale-95 flex items-center justify-center shadow-xs ${strokeColor.toLowerCase() === color.toLowerCase()
                             ? 'border-primary ring-2 ring-primary/40'
                             : 'border-base-300'
@@ -77,6 +78,7 @@ export default function ColorConfig({ strokeColor, setStrokeColor }) {
                 <button
                     type="button"
                     onClick={handleCustomColorClick}
+                    aria-label="Color personalizado"
                     className={`w-9 h-9 rounded-full border border-base-300 active:scale-95 shadow-xs flex items-center justify-center
                         ${!QUICK_COLORS.includes(strokeColor.toLowerCase())
                             ? 'ring-2 ring-primary/40'

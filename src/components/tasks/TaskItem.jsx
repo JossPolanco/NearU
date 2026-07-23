@@ -2,7 +2,7 @@ import { MoreVertical, Edit2, Trash2, Loader2 } from "lucide-react"
 
 export default function TaskItem({ task, onToggle, onEdit, onDelete, isToggling, isDeleting }) {
     return (
-        <div role="button" tabIndex={0} aria-label={`Tarea: ${task.title}`} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!isToggling && !isDeleting) onToggle(task.id, task.completed); } }} onClick={() => !isToggling && !isDeleting && onToggle(task.id, task.completed)}
+        <div onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!isToggling && !isDeleting) onToggle(task.id, task.completed); } }} onClick={() => !isToggling && !isDeleting && onToggle(task.id, task.completed)}
             className={`group flex items-center justify-between gap-4 p-4 rounded-2xl border transition-transform duration-300 cursor-pointer select-none active:scale-98
                 ${task.completed
                     ? "bg-base-200/30 border-base-200 text-base-content/40"
@@ -21,6 +21,7 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete, isToggling,
                             type="checkbox"
                             checked={task.completed || false}
                             onChange={() => { }} // Handled by parent div onClick
+                            aria-label={`Marcar tarea ${task.title}`}
                             className="checkbox checkbox-primary checkbox-sm rounded-lg border-base-300/80 transition-transform duration-300 pointer-events-none"
                         />
                     )}

@@ -1,17 +1,21 @@
 // components/MessageField.jsx
 import { Send, Mic, Camera, X, CornerUpLeft } from 'lucide-react';
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "../../services/chat/messagesService";
 import { useState } from "react";
 
 export default function MessageField({ replyingTo, onCancelReply, isOwn }) {
     const [message, setMessage] = useState("");
+    const queryClient = useQueryClient();
 
     const sendMessageMutation = useMutation({
         mutationFn: sendMessage,
         onSuccess: () => {
             setMessage("");
             onCancelReply();  // Limpiar respuesta al enviar
+            queryClient.invalidateQueries({
+                queryKey: ["messages"]
+            });
         },
         onError: (error) => {
             console.error("Error sending message:", error);
@@ -42,6 +46,7 @@ export default function MessageField({ replyingTo, onCancelReply, isOwn }) {
                     <button  className="btn btn-ghost btn-xs btn-circle shrink-0 hover:bg-base-200/60 text-base-content/60" 
                         type="button"
                         onClick={onCancelReply} 
+                        aria-label="Cancelar respuesta"
                     >
                         <X size={14} />
                     </button>

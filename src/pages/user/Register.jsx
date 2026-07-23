@@ -1,7 +1,7 @@
 import { registerUser } from "../../services/auth/authService";
 import { ArrowLeft, Mail, Sparkles } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
@@ -17,11 +17,13 @@ export default function Register() {
     });
 
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const sendMagicLinkMutation = useMutation({
         mutationFn: registerUser,
 
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['userProfile'] });
             navigate('/create-password');
         },
 

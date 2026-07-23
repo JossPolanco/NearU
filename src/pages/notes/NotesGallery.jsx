@@ -185,10 +185,10 @@ export default function NotesGallery() {
                     {/* CONTROLES DE SWIPE/NAVIGATION MÓVILES (ABAJO) */}
                     {data?.length > 1 && (
                         <div className="absolute bottom-6 flex gap-4 md:hidden z-50">
-                            <button className="btn btn-circle btn-sm btn-ghost text-white border border-white/20" onClick={handlePrev} type="button">
+                            <button className="btn btn-circle btn-sm btn-ghost text-white border border-white/20" onClick={handlePrev} type="button" aria-label="Nota anterior">
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
-                            <button className="btn btn-circle btn-sm btn-ghost text-white border border-white/20" onClick={handleNext} type="button">
+                            <button className="btn btn-circle btn-sm btn-ghost text-white border border-white/20" onClick={handleNext} type="button" aria-label="Siguiente nota">
                                 <ChevronRight className="w-5 h-5" />
                             </button>
                         </div>

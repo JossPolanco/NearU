@@ -325,7 +325,7 @@ export default function Geolocation() {
                                                 )}
                                             </p>
                                         </div>
-                                        <button type="button" className='btn btn-primary btn-sm btn-circle shadow-md shadow-primary/20 hover:shadow-lg active:shadow-sm transition-transform duration-300' onClick={() => resetOptions()}>
+                                        <button type="button" className='btn btn-primary btn-sm btn-circle shadow-md shadow-primary/20 hover:shadow-lg active:shadow-sm transition-transform duration-300' onClick={() => resetOptions()} aria-label="Centrar mapa">
                                             <LocateFixed className='w-4 h-4' />
                                         </button>
                                     </div>

@@ -1,6 +1,6 @@
 import { setUserPassword } from "../../services/auth/authService";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Lock, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
@@ -24,10 +24,13 @@ export default function PasswordRegistration() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const setPswMutation = useMutation({
         mutationFn: setUserPassword,
 
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['userProfile'] });
             navigate('/home');
         },
 
@@ -89,6 +92,7 @@ export default function PasswordRegistration() {
                                     <button className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base-content/40 active:text-base-content/75 focus:outline-none"
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
+                                        aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                                         tabIndex={-1}
                                     >
                                         {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -119,6 +123,7 @@ export default function PasswordRegistration() {
                                     <button className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base-content/40 active:text-base-content/75 focus:outline-none"
                                         type="button"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        aria-label={showConfirmPassword ? "Ocultar confirmación de contraseña" : "Mostrar confirmación de contraseña"}
                                         tabIndex={-1}
                                     >
                                         {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}

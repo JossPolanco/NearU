@@ -216,6 +216,7 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
                                 className="btn btn-circle btn-sm btn-ghost text-white border border-white/20"
                                 onClick={handlePrev}
                                 type="button"
+                                aria-label="Imagen anterior"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
@@ -223,6 +224,7 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
                                 className="btn btn-circle btn-sm btn-ghost text-white border border-white/20"
                                 onClick={handleNext}
                                 type="button"
+                                aria-label="Siguiente imagen"
                             >
                                 <ChevronRight className="w-5 h-5" />
                             </button>

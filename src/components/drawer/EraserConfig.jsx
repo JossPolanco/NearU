@@ -12,6 +12,7 @@ export default function EraserConfig({ eraserWidth, setEraserWidth, eraserMode, 
                             key={sz}
                             type="button"
                             onClick={() => setEraserWidth(sz)}
+                            aria-label={`Tamaño del borrador ${sz} px`}
                             className={`w-11 h-11 flex items-center justify-center rounded-xl border transition-transform transform active:scale-110 ease-in-out ${eraserWidth === sz
                                 ? 'border-primary bg-primary/5 text-primary'
                                 : 'border-base-200 text-base-content/70 active:bg-base-200'
@@ -30,6 +31,7 @@ export default function EraserConfig({ eraserWidth, setEraserWidth, eraserMode, 
                             max="40"
                             value={eraserWidth}
                             onChange={(e) => setEraserWidth(Number(e.target.value))}
+                            aria-label="Tamaño del borrador"
                             className="range range-primary range-sm w-full"
                         />
                     </div>

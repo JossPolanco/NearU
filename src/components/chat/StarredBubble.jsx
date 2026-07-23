@@ -39,7 +39,7 @@ export default function StarredBubble({ message, isOwn, messageRef, onScrollToPa
     return (
         <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'} relative ${showMenu ? 'z-50' : 'z-0'} transition-transform duration-200 my-1.5`} data-message-id={message.id} >
 
-            <div role="button" tabIndex={0} className={`chat-bubble max-w-[75%] cursor-pointer select-none rounded-[18px] px-3.5 py-2.5 text-sm shadow-xs before:hidden ${isOwn ? 'chat-bubble-primary rounded-tr-none text-primary-content' : 'chat-bubble-secondary rounded-tl-none text-secondary-content'}`}
+            <div className={`chat-bubble max-w-[75%] cursor-pointer select-none rounded-[18px] px-3.5 py-2.5 text-sm shadow-xs before:hidden ${isOwn ? 'chat-bubble-primary rounded-tr-none text-primary-content' : 'chat-bubble-secondary rounded-tl-none text-secondary-content'}`}
                 style={{ overflowWrap: 'anywhere' }}
                 onMouseDown={handlePressStart}
                 onMouseUp={handlePressEnd}

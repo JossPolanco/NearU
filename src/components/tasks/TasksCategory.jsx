@@ -15,7 +15,7 @@ export default function TasksCategory({ idCategory, title, description, icon, to
     const isImageUrl = typeof icon === 'string' && (icon.startsWith('http') || icon.startsWith('/') || icon.startsWith('.') || icon.startsWith('data:'));
 
     return (
-        <div role="button" tabIndex={0} aria-label={`Categoría: ${title || "Categoría sin título"}`} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleNavigate(); } }} className={`w-full bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 rounded-3xl p-5 mb-4 shadow-2xs active:shadow-xs active:border-primary/20 dark:active:border-primary/30 md:hover:shadow-xs md:hover:border-primary/20 dark:md:hover:border-primary/30 transition-transform duration-300 active:scale-[0.985] cursor-pointer group `}
+        <div onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleNavigate(); } }} className={`w-full bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 rounded-3xl p-5 mb-4 shadow-2xs active:shadow-xs active:border-primary/20 dark:active:border-primary/30 md:hover:shadow-xs md:hover:border-primary/20 dark:md:hover:border-primary/30 transition-transform duration-300 active:scale-[0.985] cursor-pointer group `}
             onClick={handleNavigate}
         >
             <div className="flex gap-4 items-start pb-4 border-b border-base-100 dark:border-base-850/30">

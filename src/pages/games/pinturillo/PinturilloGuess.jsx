@@ -195,6 +195,7 @@ export default function PinturilloGuess() {
                     <div className="relative z-10 max-w-4xl w-full max-h-[90vh] bg-base-100 rounded-3xl p-3 sm:p-5 shadow-2xl border border-base-200/20 flex flex-col items-center justify-center">
                         <button type="button"
                             onClick={() => setIsZoomOpen(false)}
+                            aria-label="Cerrar dibujo ampliado"
                             className="absolute top-3 right-3 btn btn-circle btn-sm btn-ghost text-base-content/70 hover:bg-base-200"
                         >
                             <X className="w-5 h-5" />

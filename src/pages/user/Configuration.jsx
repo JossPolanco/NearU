@@ -122,6 +122,7 @@ export default function Configuration() {
         mutationFn: logoutUser,
 
         onSuccess: () => {
+            queryClient.clear();
             navigate('/');
         },
     })

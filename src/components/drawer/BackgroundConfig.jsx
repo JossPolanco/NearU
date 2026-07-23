@@ -130,6 +130,7 @@ export default function BackgroundConfig({ canvasColor, setCanvasColor, bgType, 
                         max="100"
                         value={opacity}
                         onChange={(e) => setOpacity(Number(e.target.value))}
+                        aria-label="Opacidad de fondo"
                         className="range range-primary range-sm flex-1"
                     />
                     <span className="text-xs font-mono font-semibold text-base-content/75 min-w-8 text-right">

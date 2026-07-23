@@ -84,9 +84,6 @@ export default function UserMoodCard() {
         <>
             {/* CARD PRINCIPAL*/}
             <div
-                role="button"
-                tabIndex={0}
-                aria-label="Nuestros Ánimos - Cambiar mi mood"
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { handleCardClick(); } }}
                 onClick={handleCardClick}
                 className="group relative overflow-hidden rounded-3xl bg-base-100/50 dark:from-base-900/70 dark:via-base-900/50 dark:to-primary/10 border border-base-200/90 dark:border-base-800/60 p-4 sm:p-5 shadow-xs hover:shadow-md active:scale-[0.99] transition-transform duration-200 cursor-pointer"

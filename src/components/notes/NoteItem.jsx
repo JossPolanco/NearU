@@ -7,7 +7,7 @@ const parseDateTime = (dateString) => {
 
 export default function NoteItem({ note, onClick, onToggleFavorite }) {
     return (
-        <div role="button" tabIndex={0} aria-label={`Ver nota ${note.title}`} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { onClick?.(); } }} className="flex flex-col bg-base-100 dark:bg-base-900/40 p-3 pb-5 rounded-3xl shadow-xs border border-base-200/60 dark:border-base-800/40 w-full max-w-41.25 transition-transform duration-300 md:hover:scale-[1.02] active:scale-98 relative justify-self-center cursor-pointer"
+        <div onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { onClick?.(); } }} className="flex flex-col bg-base-100 dark:bg-base-900/40 p-3 pb-5 rounded-3xl shadow-xs border border-base-200/60 dark:border-base-800/40 w-full max-w-41.25 transition-transform duration-300 md:hover:scale-[1.02] active:scale-98 relative justify-self-center cursor-pointer"
             onClick={onClick}
         >
             <div className="relative w-full aspect-square overflow-hidden rounded-2xl bg-base-200/50 dark:bg-base-950/20 border border-base-200/30 dark:border-base-850/20">

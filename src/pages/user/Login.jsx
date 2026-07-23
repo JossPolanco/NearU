@@ -1,7 +1,7 @@
 import { Mail, Lock, Heart, Eye, EyeOff } from 'lucide-react';
 import { loginUser } from '../../services/auth/authService';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabaseClient } from '../../utils/supabase';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -28,9 +28,12 @@ export default function Login() {
         resolver: zodResolver(loginSchema)
     });
 
+    const queryClient = useQueryClient();
+
     const loginMutation = useMutation({
         mutationFn: loginUser,
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['userProfile'] });
             navigate('/home');
         },
         onError: (error) => {
@@ -103,6 +106,7 @@ export default function Login() {
                                         type="button"
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content/70 focus:outline-none"
                                         onClick={() => setShowPassword(!showPassword)}
+                                        aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                                         tabIndex={-1}
                                     >
                                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

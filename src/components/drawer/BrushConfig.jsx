@@ -66,6 +66,7 @@ export default function BrushConfig({ strokeWidth, setStrokeWidth, strokeStyle, 
                             key={sz}
                             type="button"
                             onClick={() => setStrokeWidth(sz)}
+                            aria-label={`Tamaño ${sz} px`}
                             className={`w-11 h-11 flex items-center justify-center rounded-xl border transition-transform transform active:scale-110 ease-in-out ${strokeWidth === sz
                                 ? 'border-primary bg-primary/5 text-primary'
                                 : 'border-base-200 text-base-content/70 active:bg-base-200'
@@ -81,6 +82,7 @@ export default function BrushConfig({ strokeWidth, setStrokeWidth, strokeStyle, 
                             max="40"
                             value={strokeWidth}
                             onChange={(e) => setStrokeWidth(Number(e.target.value))}
+                            aria-label="Tamaño de trazo"
                         />
                     </div>
                     <span className="text-xs font-mono font-semibold text-base-content/75 min-w-8 text-right">
@@ -123,6 +125,7 @@ export default function BrushConfig({ strokeWidth, setStrokeWidth, strokeStyle, 
                             key={color}
                             type="button"
                             onClick={() => setStrokeColor(color)}
+                            aria-label={`Color ${color}`}
                             className={`w-9 h-9 rounded-full border transition-transform active:scale-95 flex items-center justify-center shadow-xs ${strokeColor.toLowerCase() === color.toLowerCase()
                                 ? 'border-primary ring-2 ring-primary/40'
                                 : 'border-base-300'
@@ -139,6 +142,7 @@ export default function BrushConfig({ strokeWidth, setStrokeWidth, strokeStyle, 
                     <button
                         type="button"
                         onClick={handleCustomColorClick}
+                        aria-label="Color personalizado"
                         className={`w-9 h-9 rounded-full border border-base-300 active:scale-95 shadow-xs flex items-center justify-center
                         ${!QUICK_COLORS.includes(strokeColor.toLowerCase())
                                 ? 'ring-2 ring-primary/40'
