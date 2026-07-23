@@ -1,0 +1,1 @@
+import{r as o}from"./imageUrl-DsLi_Z2g.js";import{c as n}from"./vendor-query-BZJ2Ot_t.js";const m=(e,r,s={})=>n({queryKey:e,queryFn:async()=>{const t=await r();return o(t)},staleTime:300*1e3,gcTime:1800*1e3,refetchOnWindowFocus:!1,retry:1,...s});export{m as u};
