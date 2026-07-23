@@ -348,12 +348,12 @@ export default function PinturilloGuess() {
             {/* VICTORIA O FORMULARIO DE INTENTOS */}
             {isWon ? (
                 <div className="bg-base-100/80 border border-emerald-500/30 rounded-3xl p-6 text-center space-y-4 shadow-sm animate-in zoom-in-95 duration-300">
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 mx-auto flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 mx-auto flex items-center justify-center animate-bounce">
                         <Trophy className="w-8 h-8" />
                     </div>
                     <div className="space-y-1">
                         <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
-                            ¡Felicidades! 🎉
+                            ¡Felicidades!
                         </h3>
                         <p className="text-xs text-base-content/70 font-medium">
                             Has adivinado la palabra secreta

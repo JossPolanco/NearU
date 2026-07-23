@@ -221,7 +221,7 @@ export default function Geolocation() {
         return () => {
             isMounted = false;
         };
-    }, [triggerInitialLocation]);
+    }, []);
 
     const resetOptions = () => {
         console.log('hola');

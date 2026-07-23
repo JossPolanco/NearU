@@ -76,10 +76,6 @@ export async function getLast5Notes() {
 }
 
 export async function toggleFavorite(id, currentFavoriteStatus){
-
-    console.log("Llego")
-    console.log(currentFavoriteStatus)
-
     const { data, error } = await supabaseClient
         .from('tbl_notes')
         .update({ 
@@ -90,7 +86,6 @@ export async function toggleFavorite(id, currentFavoriteStatus){
         .single();
 
     if (error) throw error;
-    console.log("Saliendo")
     return data;
 }
 

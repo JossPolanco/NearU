@@ -40,7 +40,7 @@ export default function Notes() {
     });
 
     const { upload, state, reset } = useImageUpload({
-        bucket: "drawing",
+        bucket: "drawings",
         profile: "drawing",
         gallery: "notes",
         invalidateQueries: [imageKeys.list("drawing", "notes")],

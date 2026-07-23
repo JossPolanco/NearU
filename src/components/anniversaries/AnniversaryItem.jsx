@@ -169,7 +169,7 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
                                 Siguiente
                             </span>
                             {stats.daysRemaining === 0 ? (
-                                <span className="text-xs font-bold text-success">
+                                <span className="text-xs font-bold text-success animate-bounce">
                                     ¡Hoy es el día! 🎉
                                 </span>
                             ) : (
