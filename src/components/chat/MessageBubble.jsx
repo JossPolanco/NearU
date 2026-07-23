@@ -18,7 +18,7 @@ const parseDateTime = (dateString) => {
 };
 
 export default function MessageBubble({ message, isOwn, onReply, messageRef, onScrollToParent, user }) {
-    const [messageEdited, setMessageEdited] = useState(message.content);
+    const [messageEdited, setMessageEdited] = useState('');
     const [showMenu, setShowMenu] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const longPressTimer = useRef(null);
@@ -99,17 +99,23 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
     return (
         <div ref={messageRef} className={`chat ${isOwn ? 'chat-end' : 'chat-start'} relative ${showMenu ? 'z-50' : 'z-0'} transition-transform duration-200 my-1.5`} data-message-id={message.id} >
 
-            <div className={`chat-bubble max-w-[75%] cursor-pointer select-none rounded-[18px] px-3.5 py-2.5 text-sm shadow-xs before:hidden ${isOwn ? 'chat-bubble-primary rounded-br-none text-primary-content' : 'chat-bubble-secondary rounded-bl-none text-secondary-content'}`}
+            <div role="button" tabIndex={0} className={`chat-bubble max-w-[75%] cursor-pointer select-none rounded-[18px] px-3.5 py-2.5 text-sm shadow-xs before:hidden ${isOwn ? 'chat-bubble-primary rounded-br-none text-primary-content' : 'chat-bubble-secondary rounded-bl-none text-secondary-content'}`}
                 style={{ overflowWrap: 'anywhere' }}
                 onMouseDown={handlePressStart}
                 onMouseUp={handlePressEnd}
                 onTouchStart={handlePressStart}
                 onTouchEnd={handlePressEnd}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        pointerPos.current = { x: 100, y: 100 };
+                        setShowMenu(true);
+                    }
+                }}
                 onContextMenu={(e) => { e.preventDefault(); const clientX = e.clientX; const clientY = e.clientY; pointerPos.current = { x: clientX, y: clientY }; setShowMenu(true); }}>
 
                 {/* BLOQUE DE RESPUESTA (SI ES UNA RESPUESTA) */}
                 {message.reply_to_id && (
-                    <div className={`mb-2 px-2.5 py-1.5 rounded-lg border-l-3 text-[11px] cursor-pointer select-none truncate transition-colors ${isOwn
+                    <button type="button" className={`w-full text-left mb-2 px-2.5 py-1.5 rounded-lg border-l-3 text-[11px] cursor-pointer select-none truncate transition-colors ${isOwn
                             ? 'bg-black/15 border-primary-content/60 text-primary-content/95 hover:bg-black/20'
                             : 'bg-base-300/50 border-secondary text-base-content/90 hover:bg-base-300/75'
                             }`}
@@ -121,7 +127,7 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
                         <p className="truncate max-w-50">
                             {message.reply_preview ?? "Mensaje eliminado"}
                         </p>
-                    </div>
+                    </button>
                 )}
 
                 <div className="flex flex-col ">
@@ -165,14 +171,14 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
 
                 return createPortal(
                     <>
-                        <div className="fixed inset-0 z-9998 bg-base-300/30 backdrop-blur-xs transition-opacity duration-300 animate-fade-in" onClick={() => setShowMenu(false)} />
+                        <button type="button" aria-label="Cerrar menú" className="fixed inset-0 z-9998 bg-base-300/30 backdrop-blur-xs transition-opacity duration-300 animate-fade-in" onClick={() => setShowMenu(false)} />
                         <div className="fixed z-9999 bg-base-100 backdrop-blur-md shadow-xl rounded-2xl flex flex-col gap-0.5 p-1.5 border border-base-200 animate-scale-in" style={{ left: `${left}px`, top: `${top}px`, width: `${menuWidth}px` }}  >
                             <button type="button" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left" onClick={() => { onReply(message); setShowMenu(false); }} >
                                 <Reply size={16} className="text-base-content/40" />
                                 <span>Responder</span>
                             </button>
                             {isOwn && (
-                                <button type="button" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left" onClick={() => { setShowMenu(false); setEditMode(true); }} >
+                                <button type="button" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-base-content/85 hover:bg-base-200/60 active:scale-98 transition-transform text-left" onClick={() => { setMessageEdited(message.content); setShowMenu(false); setEditMode(true); }} >
                                     <Pencil size={16} className="text-base-content/40" />
                                     <span>Editar</span>
                                 </button>
@@ -208,8 +214,9 @@ export default function MessageBubble({ message, isOwn, onReply, messageRef, onS
             })()}
 
             {editMode && createPortal(
-                <div className="fixed inset-0 z-9998 flex items-center justify-center bg-base-300/40 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setEditMode(false)} >
-                    <div className="bg-base-100 shadow-2xl rounded-2xl p-4 border border-base-content/5 w-full max-w-sm flex flex-col gap-3 animate-scale-in" onClick={(e) => e.stopPropagation()}>
+                <div className="fixed inset-0 z-9998 flex items-center justify-center p-4">
+                    <button type="button" aria-label="Cerrar edición" className="fixed inset-0 bg-base-300/40 backdrop-blur-sm animate-fade-in" onClick={() => setEditMode(false)} />
+                    <div className="relative z-10 bg-base-100 shadow-2xl rounded-2xl p-4 border border-base-content/5 w-full max-w-sm flex flex-col gap-3 animate-scale-in">
                         <h3 className="font-bold text-[11px] text-base-content/50 uppercase tracking-widest px-1">Editar mensaje</h3>
                         <div className="flex gap-2 items-end">
                             <textarea

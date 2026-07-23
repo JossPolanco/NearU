@@ -168,6 +168,9 @@ export default function PinturilloGuess() {
                     <div className="flex justify-center w-full">
                         <div className="relative group inline-flex items-center justify-center rounded-2xl overflow-hidden bg-base-200/30 dark:bg-base-900/30 p-1.5 border border-base-200/80 dark:border-base-800/80 shadow-xs transition-transform duration-300 hover:shadow-md">
                             <img
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setIsZoomOpen(true); } }}
                                 src={game?.coverUrl}
                                 alt="Dibujo de Pinturillo"
                                 className="max-h-85 sm:max-h-105 w-auto max-w-full h-auto object-contain rounded-xl transition-transform duration-300 group-hover:scale-[1.01] cursor-pointer"
@@ -187,8 +190,9 @@ export default function PinturilloGuess() {
 
             {/* MODAL ZOOM DIBUJO */}
             {isZoomOpen && (
-                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200" onClick={() => setIsZoomOpen(false)}>
-                    <div className="relative max-w-4xl w-full max-h-[90vh] bg-base-100 rounded-3xl p-3 sm:p-5 shadow-2xl border border-base-200/20 flex flex-col items-center justify-center" onClick={e => e.stopPropagation()}>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <button type="button" aria-label="Cerrar vista ampliada" className="fixed inset-0 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200" onClick={() => setIsZoomOpen(false)} />
+                    <div className="relative z-10 max-w-4xl w-full max-h-[90vh] bg-base-100 rounded-3xl p-3 sm:p-5 shadow-2xl border border-base-200/20 flex flex-col items-center justify-center">
                         <button type="button"
                             onClick={() => setIsZoomOpen(false)}
                             className="absolute top-3 right-3 btn btn-circle btn-sm btn-ghost text-base-content/70 hover:bg-base-200"

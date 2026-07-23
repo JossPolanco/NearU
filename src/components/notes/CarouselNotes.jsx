@@ -61,7 +61,7 @@ export default function CarouselNotes({ notes, isLoading }) {
                     <div className={`carousel carousel-center backdrop-blur-md rounded-3xl w-full gap-6 p-6 ${getJustifyClass()}`}>
                         {/* ITEMS */}
                         {notes?.map((note, index) => (
-                            <div className="carousel-item flex-col bg-base-100 dark:bg-base-900/50 p-3.5 pb-6 rounded-3xl shadow-md border border-base-200/60 dark:border-base-800/40 w-72 min-w-72 rotate-[-1.5deg]  transition-transform duration-300 md:hover:rotate-0 md:hover:scale-[1.02] cursor-pointer active:scale-98"
+                            <button type="button" className="carousel-item flex-col text-left bg-base-100 dark:bg-base-900/50 p-3.5 pb-6 rounded-3xl shadow-md border border-base-200/60 dark:border-base-800/40 w-72 min-w-72 rotate-[-1.5deg]  transition-transform duration-300 md:hover:rotate-0 md:hover:scale-[1.02] cursor-pointer active:scale-98"
                                 key={note.id}
                                 id={`item${index + 1}`}
                                 onClick={() => setSelectedNote(note)}
@@ -79,7 +79,7 @@ export default function CarouselNotes({ notes, isLoading }) {
                                 </div>
                                 <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm px-2 truncate w-full">{note.title}</p>
                                 <span className="text-base-content/50 text-xs mt-1.5 text-center font-mono">{parseDateTime(note.created_at)}</span>
-                            </div>
+                            </button>
                         ))}
                     </div>
 

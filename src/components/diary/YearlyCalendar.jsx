@@ -115,7 +115,7 @@ export default function YearlyCalendar({ currentDate, setCurrentDate, onViewMont
                     const isCurrentMonthOfToday = today.getFullYear() === year && today.getMonth() === monthIndex;
 
                     return (
-                        <div className="group p-4 bg-base-100/50 dark:bg-base-900/10 rounded-2xl border border-base-200/60 dark:border-base-800/30 hover:border-secondary/40 dark:hover:border-secondary/30  transition-transform duration-300 hover:shadow-md cursor-pointer select-none active:scale-[0.98]"
+                        <button type="button" className="group text-left w-full p-4 bg-base-100/50 dark:bg-base-900/10 rounded-2xl border border-base-200/60 dark:border-base-800/30 hover:border-secondary/40 dark:hover:border-secondary/30 transition-transform duration-300 hover:shadow-md cursor-pointer select-none active:scale-[0.98]"
                             key={monthName}
                             onClick={() => onViewMonth(new Date(year, monthIndex, 1))}
                         >
@@ -151,7 +151,7 @@ export default function YearlyCalendar({ currentDate, setCurrentDate, onViewMont
                                     );
                                 })}
                             </div>
-                        </div>
+                        </button>
                     );
                 })}
             </div>

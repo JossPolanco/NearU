@@ -107,6 +107,14 @@ export default function GalleryPanel({ bucket = 'photos', gallery = 'default', d
                         {images.map((photo) => (
                             <div
                                 key={photo.id}
+                                role="button"
+                                tabIndex={0}
+                                aria-label={`Ver foto ${photo.original_name ?? ''}`}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        setSelectedImage(photo);
+                                    }
+                                }}
                                 className="group relative rounded-2xl overflow-hidden bg-base-200 dark:bg-base-950 aspect-square border border-base-200/55 dark:border-base-800/40 cursor-pointer shadow-3xs hover:shadow-xs transition-transform duration-300 active:scale-98"
                                 onClick={() => setSelectedImage(photo)}
                             >
