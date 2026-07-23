@@ -1,4 +1,4 @@
-import { UploadPanel, GalleryPanel, Modal, UserMoodCard } from "@/components";
+import { UploadPanel, GalleryPanel, Modal, UserMoodCard, Alert } from "@/components";
 import { getCurrentUser } from '@/services/user';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
@@ -8,12 +8,18 @@ import { ArrowLeft } from "lucide-react";
 export default function TestingPage() {
     const navigate = useNavigate()
     const modalRef = useRef(null)
+    const alertRef = useRef(null)
     const [activeGallery, setActiveGallery] = useState('default')
+    const [alertConfig, setAlertConfig] = useState(null)
 
     const { data: user } = useQuery({
         queryKey: ["user"],
         queryFn: getCurrentUser,
     });
+
+    const openControlledAlert = (config) => {
+        setAlertConfig(config)
+    }
 
     return (
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
@@ -30,6 +36,114 @@ export default function TestingPage() {
                     <Title />
                 </div>
             </div>
+
+            {/* Pruebas de Componente Alert */}
+            <div className="space-y-3 p-4 bg-base-200/50 rounded-2xl border border-base-300">
+                <p className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Pruebas del Componente Alert</p>
+                <div className="grid grid-cols-2 gap-2">
+                    <button
+                        type="button"
+                        className="btn btn-info btn-sm text-white"
+                        onClick={() => openControlledAlert({
+                            type: 'info',
+                            position: 'center',
+                            title: 'Mensajes sin leer',
+                            message: 'Tienes 12 mensajes sin leer en tu bandeja de entrada.'
+                        })}
+                    >
+                        Info (Centrado)
+                    </button>
+
+                    <button
+                        type="button"
+                        className="btn btn-success btn-sm text-white"
+                        onClick={() => openControlledAlert({
+                            type: 'success',
+                            position: 'top',
+                            title: '¡Operación Exitosa!',
+                            message: 'Los cambios se han guardado correctamente.'
+                        })}
+                    >
+                        Success (Superior)
+                    </button>
+
+                    <button
+                        type="button"
+                        className="btn btn-warning btn-sm text-white"
+                        onClick={() => openControlledAlert({
+                            type: 'warning',
+                            position: 'center',
+                            title: '¿Confirmar Acción?',
+                            message: 'Esta acción no se puede deshacer.',
+                            actions: (
+                                <div className="flex gap-2">
+                                    <button
+                                        type="button"
+                                        className="btn btn-xs btn-outline"
+                                        onClick={() => setAlertConfig(null)}
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-xs btn-warning text-white"
+                                        onClick={() => {
+                                            alert('¡Confirmado!');
+                                            setAlertConfig(null);
+                                        }}
+                                    >
+                                        Aceptar
+                                    </button>
+                                </div>
+                            )
+                        })}
+                    >
+                        Warning + Botones
+                    </button>
+
+                    <button
+                        type="button"
+                        className="btn btn-error btn-sm text-white"
+                        onClick={() => openControlledAlert({
+                            type: 'danger',
+                            position: 'center',
+                            title: 'Error de Conexión',
+                            message: 'No se pudo establecer conexión con el servidor.'
+                        })}
+                    >
+                        Danger / Error
+                    </button>
+                </div>
+
+                <button
+                    type="button"
+                    className="btn btn-outline btn-secondary btn-sm w-full mt-2"
+                    onClick={() => alertRef.current?.open({
+                        type: 'info',
+                        position: 'top',
+                        title: 'Alerta Abierta Vía Ref',
+                        message: 'Esta alerta fue lanzada utilizando alertRef.current.open()'
+                    })}
+                >
+                    Probar Alerta vía Ref
+                </button>
+            </div>
+
+            {/* Alert controlado */}
+            {alertConfig && (
+                <Alert
+                    isOpen={Boolean(alertConfig)}
+                    onClose={() => setAlertConfig(null)}
+                    type={alertConfig.type}
+                    position={alertConfig.position}
+                    title={alertConfig.title}
+                    message={alertConfig.message}
+                    actions={alertConfig.actions}
+                />
+            )}
+
+            {/* Alert imperativo vía Ref */}
+            <Alert ref={alertRef} />
 
             {/* Componente UserMoodCard */}
             <div className="space-y-2">
