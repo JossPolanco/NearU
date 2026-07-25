@@ -10,7 +10,7 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
         },
     },
-    base: '/NearU',
+    base: process.env.VITE_BASE_PATH || '/',
     build: {
         chunkSizeWarningLimit: 1000,
         rollupOptions: {

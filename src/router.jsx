@@ -54,7 +54,7 @@ const RootErrorBoundary = () => {
             </p>
             <button
                 type="button"
-                onClick={() => window.location.assign('/NearU/')}
+                onClick={() => window.location.assign(import.meta.env.BASE_URL)}
                 className="btn btn-primary btn-sm rounded-xl"
             >
                 Volver al inicio
@@ -259,4 +259,4 @@ export const router = createBrowserRouter([
         element: <LazyPage><Anniversary /></LazyPage>,
         errorElement: <RootErrorBoundary />
     }
-], { basename: '/NearU' });
+], { basename: import.meta.env.BASE_URL });
