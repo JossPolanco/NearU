@@ -13,6 +13,7 @@ export { default as DrawingPage } from "./drawer/DrawingPage";
 
 // OTHER PAGES
 export { default as Configuration } from "./user/Configuration";
+export { default as GirlfriendsDay } from "./GirlfriendsDay";
 export { default as Anniversary } from "./Anniversary";
 export { default as TestingPage } from "./TestingPage";
 export { default as NotFound } from "./NotFound";

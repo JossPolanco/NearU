@@ -1,20 +1,45 @@
 import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, Sparkle } from 'lucide-react';
-// import { getUserPosition } from '@/utils/geolocation';
+import { getUserPosition } from '@/utils/geolocation';
 import { UserMoodCard } from '@/components';
 import { useNavigate } from 'react-router';
+import confetti from 'canvas-confetti';
 import { useEffect } from 'react';
+
+const triggerConfetti = () => {
+    confetti({
+        particleCount: 50,
+        spread: 70,
+        origin: { y: 0.6 }
+    })
+    // Ráfagas laterales de confeti
+    setTimeout(() => {
+        confetti({
+            particleCount: 40,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0.1, y: 0.6 }
+        })
+        confetti({
+            particleCount: 40,
+            angle: 120,
+            spread: 55,
+            origin: { x: 0.9, y: 0.6 }
+        })
+    }, 250)
+}
 
 export default function Home() {
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     getUserPosition();
-    // }, []);
+    useEffect(() => {
+        getUserPosition();
+        triggerConfetti();
+    }, []);
 
     return (
         <div className="max-w-3xl mx-auto p-4 sm:p-6 space-y-5 animate-fade-in pb-20">
             {/* HEADER CON ATTS */}
-            <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-secondary/15 via-primary/10 to-accent/15 border border-secondary/20 p-5 sm:p-6 shadow-sm">
+            <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-secondary/15 via-primary/10 to-accent/15 border border-secondary/20 p-5 sm:p-6 shadow-sm" onClick={() => navigate('/girlfriendsday')}>
                 <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-secondary/10 rounded-full blur-2xl pointer-events-none" />
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-secondary/20 flex items-center justify-center shrink-0 text-secondary shadow-inner">
@@ -25,11 +50,16 @@ export default function Home() {
                             <Sparkle className="w-3.5 h-3.5 fill-secondary" />
                             <span>Our App Bbyyyy</span>
                         </div>
-                        <h1 className="text-lg sm:text-xl font-bold tracking-tight text-base-content">
-                            FELICES 3 MESESITOS BBYYY
-                        </h1>
+                        <div className="flex items-center gap-4">
+                            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-base-content">
+                                FELIZ DIA DE LA NOVIA MI AMOOOR 😚
+                            </h1>
+                            <h1 className="text-xs font-bold tracking-tight text-base-content/10 animate-pulse">
+                                Click?!
+                            </h1>
+                        </div>
                         <p className="text-xs sm:text-sm text-base-content/70 font-medium">
-                            Att. Josué 💕
+                            Att. Josué 💕 (2026/08/01)
                         </p>
                     </div>
                 </div>

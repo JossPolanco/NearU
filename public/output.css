@@ -5076,6 +5076,12 @@
   .text-base-content {
     color: var(--color-base-content);
   }
+  .text-base-content\/10 {
+    color: var(--color-base-content);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+    }
+  }
   .text-base-content\/20 {
     color: var(--color-base-content);
     @supports (color: color-mix(in lab, red, red)) {
@@ -7240,6 +7246,47 @@
     }
   }
 }
+@keyframes aura-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@layer components {
+  .aura::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, var(--aura-color, #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055));
+    animation: aura-spin 4s linear infinite;
+    z-index: 0;
+  }
+  .aura::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, var(--aura-color, #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055));
+    filter: blur(12px);
+    opacity: 0.75;
+    animation: aura-spin 4s linear infinite;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .aura>* {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    border-radius: calc(var(--rounded-box, 1.5rem) - 2px);
+  }
+}
 .rdp-root {
   --rdp-accent-color: var(--color-primary) !important;
   --rdp-accent-background-color: var(--color-primary) !important;
@@ -7341,6 +7388,64 @@
 .chrome-picker svg {
   fill: var(--color-base-content) !important;
   color: var(--color-base-content) !important;
+}
+@keyframes aura-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@layer utilities {
+  .aura {
+    position: relative;
+    isolation: isolate;
+    padding: 2px;
+    border-radius: var(--rounded-box, 1.5rem);
+    display: flex;
+    overflow: hidden;
+  }
+  .aura-rainbow {
+    --aura-color: #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055;
+  }
+  .aura-primary {
+    --aura-color: var(--color-primary, #7928ca), var(--color-secondary, #ff007f), var(--color-accent, #0070f3), var(--color-primary, #7928ca);
+  }
+  .aura-secondary {
+    --aura-color: var(--color-secondary, #ff007f), var(--color-accent, #0070f3), var(--color-primary, #7928ca), var(--color-secondary, #ff007f);
+  }
+}
+.aura::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, var(--aura-color, #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055));
+  animation: aura-spin 4s linear infinite;
+  z-index: 0;
+}
+.aura::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, var(--aura-color, #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055));
+  filter: blur(12px);
+  opacity: 0.75;
+  animation: aura-spin 4s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+.aura>* {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  border-radius: calc(var(--rounded-box, 1.5rem) - 2px);
 }
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {

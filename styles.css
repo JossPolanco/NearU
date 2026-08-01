@@ -4,6 +4,75 @@
     themes: light --default, dark --prefersdark, valentine;
 }
 
+/* DaisyUI / Custom Aura Moving Rainbow Border Component */
+@keyframes aura-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@utility aura {
+    position: relative;
+    isolation: isolate;
+    padding: 2px;
+    border-radius: var(--rounded-box, 1.5rem);
+    display: flex;
+    overflow: hidden;
+}
+
+@utility aura-rainbow {
+    --aura-color: #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055;
+}
+
+@utility aura-primary {
+    --aura-color: var(--color-primary, #7928ca), var(--color-secondary, #ff007f), var(--color-accent, #0070f3), var(--color-primary, #7928ca);
+}
+
+@utility aura-secondary {
+    --aura-color: var(--color-secondary, #ff007f), var(--color-accent, #0070f3), var(--color-primary, #7928ca), var(--color-secondary, #ff007f);
+}
+
+@layer components {
+    .aura::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(from 0deg, var(--aura-color, #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055));
+        animation: aura-spin 4s linear infinite;
+        z-index: 0;
+    }
+
+    .aura::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(from 0deg, var(--aura-color, #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055));
+        filter: blur(12px);
+        opacity: 0.75;
+        animation: aura-spin 4s linear infinite;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .aura>* {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        border-radius: calc(var(--rounded-box, 1.5rem) - 2px);
+    }
+}
+
+
 /* e9f0f8 - 100 */
 /* dfe9f0 - 200 */
 /* f5fdff - 300 */
@@ -230,4 +299,72 @@
 .chrome-picker svg {
     fill: var(--color-base-content) !important;
     color: var(--color-base-content) !important;
+}
+
+/* DaisyUI / Custom Aura Moving Rainbow Border Component */
+@keyframes aura-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@layer utilities {
+    .aura {
+        position: relative;
+        isolation: isolate;
+        padding: 2px;
+        border-radius: var(--rounded-box, 1.5rem);
+        display: flex;
+        overflow: hidden;
+    }
+
+    .aura-rainbow {
+        --aura-color: #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055;
+    }
+
+    .aura-primary {
+        --aura-color: var(--color-primary, #7928ca), var(--color-secondary, #ff007f), var(--color-accent, #0070f3), var(--color-primary, #7928ca);
+    }
+
+    .aura-secondary {
+        --aura-color: var(--color-secondary, #ff007f), var(--color-accent, #0070f3), var(--color-primary, #7928ca), var(--color-secondary, #ff007f);
+    }
+}
+
+.aura::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, var(--aura-color, #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055));
+    animation: aura-spin 4s linear infinite;
+    z-index: 0;
+}
+
+.aura::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, var(--aura-color, #ff0055, #ff7700, #ffeb3b, #00e676, #00b0ff, #aa00ff, #ff0055));
+    filter: blur(12px);
+    opacity: 0.75;
+    animation: aura-spin 4s linear infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.aura>* {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    border-radius: calc(var(--rounded-box, 1.5rem) - 2px);
 }
