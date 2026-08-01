@@ -1,15 +1,43 @@
-import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, Sparkle } from 'lucide-react';
+import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, Sparkle, RotateCw, X } from 'lucide-react';
 import { getUserPosition } from '@/utils/geolocation';
 import { UserMoodCard } from '@/components';
 import { useNavigate } from 'react-router';
 import confetti from 'canvas-confetti';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import razones from '@/utils/razones.json';
+
+var heart = confetti.shapeFromPath({
+    path: 'M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z',
+    matrix: [0.03333333333333333, 0, 0, 0.03333333333333333, -5.566666666666666, -5.533333333333333]
+});
+
+const COLORS = [
+    "#FF6B9A", // Rosa chicle
+    "#FF8FAB", // Rosa pastel intenso
+    "#F472B6", // Pink 400
+    "#EC4899", // Fucsia suave
+    "#FB7185", // Coral rosado
+    "#F59E8B", // Salmón
+    "#FDBA74", // Durazno
+    "#FACC15", // Amarillo cálido
+    "#86EFAC", // Verde menta
+    "#6EE7B7", // Turquesa pastel
+    "#67E8F9", // Cian pastel
+    "#7DD3FC", // Azul cielo
+    "#93C5FD", // Azul pastel
+    "#A5B4FC", // Índigo pastel
+    "#C4B5FD", // Lavanda
+    "#D8B4FE", // Lila
+];
 
 const triggerConfetti = () => {
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
     confetti({
         particleCount: 50,
         spread: 70,
-        origin: { y: 0.6 }
+        origin: { y: 0.6 },
+        shapes: [heart],
+        colors: [color],
     })
     // Ráfagas laterales de confeti
     setTimeout(() => {
@@ -30,10 +58,54 @@ const triggerConfetti = () => {
 
 export default function Home() {
     const navigate = useNavigate();
+    const [razonActual, setRazonActual] = useState(null);
+    const [timeLeft, setTimeLeft] = useState(20);
+    const timerRef = useRef(null);
+    const progressIntervalRef = useRef(null);
 
     useEffect(() => {
         getUserPosition();
         triggerConfetti();
+    }, []);
+
+    const cerrarRazon = useCallback(() => {
+        setRazonActual(null);
+        if (timerRef.current) clearTimeout(timerRef.current);
+        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    }, []);
+
+    const obtenerRazonAleatoria = useCallback(() => {
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 }, shapes: [heart], colors: [COLORS] });
+
+        if (timerRef.current) clearTimeout(timerRef.current);
+        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+
+        const index = Math.floor(Math.random() * razones.length);
+        setRazonActual(razones[index]);
+        setTimeLeft(20);
+
+        const startTime = Date.now();
+        const DURATION = 20000;
+
+        timerRef.current = setTimeout(() => {
+            setRazonActual(null);
+        }, DURATION);
+
+        progressIntervalRef.current = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const remaining = Math.max(0, Math.ceil((DURATION - elapsed) / 1000));
+            setTimeLeft(remaining);
+            if (elapsed >= DURATION) {
+                clearInterval(progressIntervalRef.current);
+            }
+        }, 200);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+            if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+        };
     }, []);
 
     return (
@@ -69,10 +141,9 @@ export default function Home() {
             <UserMoodCard />
 
             {/* GRID PARA LOS BOTONES */}
-
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
 
-                {/* DIARIO (2C COLUMNAS DE ANCHO) */}
+                {/* DIARIO (2 COLUMNAS DE ANCHO) */}
                 <button type="button" onClick={() => navigate('/diary')} className="btn btn-soft btn-primary col-span-2 min-h-35 sm:min-h-40 h-full w-full rounded-3xl p-5 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none">
                     <div className="w-full flex items-center justify-between">
                         <span className="badge badge-primary badge-sm font-medium tracking-wide">
@@ -134,7 +205,26 @@ export default function Home() {
                     <span className="text-sm font-bold">Mapita</span>
                 </button>
 
-                {/* LIENZO DE DIBUJO (2C COLUMNAS DE ANCHO) */}
+                {/* RAZONES PARA AMARTE (2 COLUMNAS DE ANCHO) */}
+                <button
+                    type="button"
+                    onClick={obtenerRazonAleatoria}
+                    className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-between group active:scale-[0.98] transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
+                >
+                    <div className="flex items-center gap-3 text-left">
+                        <div className="p-2.5 rounded-2xl bg-secondary/20 text-secondary group-hover:scale-110 active:scale-95 transition-transform duration-200 shrink-0">
+                            <Heart className="w-6 h-6 fill-secondary/30 text-secondary animate-pulse" />
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-sm sm:text-base font-bold text-base-content">¿Por qué te amo? 💕</span>                                
+                            </div>
+                            <span className="text-xs opacity-75 font-normal block">Toca para descubrir una razón</span>
+                        </div>
+                    </div>         
+                </button>
+
+                {/* JUEGOS (2 COLUMNAS DE ANCHO) */}
                 <button type="button" onClick={() => navigate('/games')} className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-center gap-3 group border-2 active:scale-[0.98] transition-transform duration-200">
                     <div className="p-2 rounded-2xl bg-secondary/10 group-hover:scale-110 transition-transform duration-200">
                         <Palette className="w-6 h-6" />
@@ -151,12 +241,89 @@ export default function Home() {
                     <span className="text-xs font-semibold">Pruebas</span>
                 </button>
 
+                {/* AJUSTES (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
                 <button type="button" onClick={() => navigate('/config')} className="btn btn-soft btn-neutral col-span-1 min-h-23.75 h-full w-full rounded-3xl p-3 flex flex-col items-center justify-center text-center gap-1 group border-2 active:scale-[0.97] transition-transform duration-200 opacity-80 hover:opacity-100">
                     <Settings className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                     <span className="text-xs font-semibold">Ajustes</span>
                 </button>
 
             </div>
+
+            {/* MODAL / OVERLAY PARA MOSTRAR LA RAZÓN DE AMOR */}
+            {razonActual && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in"
+                    onClick={cerrarRazon}
+                >
+                    <div
+                        className="relative w-full max-w-lg bg-base-100 rounded-3xl p-6 sm:p-8 shadow-2xl border border-secondary/30 text-center overflow-hidden animate-scale-in"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* ADORNOS DE FONDO */}
+                        <div className="absolute -right-12 -top-12 w-36 h-36 bg-secondary/15 rounded-full blur-2xl pointer-events-none" />
+                        <div className="absolute -left-12 -bottom-12 w-36 h-36 bg-primary/15 rounded-full blur-2xl pointer-events-none" />
+
+                        <div className="flex items-center justify-end mb-2 relative z-10">
+                            <button
+                                type="button"
+                                onClick={cerrarRazon}
+                                className="btn btn-sm btn-circle btn-ghost text-base-content/60 hover:text-base-content hover:bg-base-200"
+                                aria-label="Cerrar"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div className="my-2 flex justify-center items-center gap-2">
+                            <div className="w-14 h-14 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary shadow-inner">
+                                <Heart className="w-8 h-8 fill-secondary text-secondary animate-pulse" />
+                            </div>
+                        </div>
+
+                        <div className="my-4 min-h-20 flex items-center justify-center">
+                            <p className="text-base sm:text-lg font-medium text-base-content leading-relaxed px-1">
+                                "{razonActual.texto}"
+                            </p>
+                        </div>
+
+                        <p className="text-xs text-base-content/60 font-medium mb-5">
+                            Una de las muchas razones por las que te amo 💕
+                        </p>
+
+                        {/* BARRA DE PROGRESO */}
+                        <div className="w-full bg-base-200 h-2 rounded-full overflow-hidden mb-4">
+                            <div
+                                className="bg-linear-to-r from-secondary to-primary h-full transition-all duration-200 ease-linear rounded-full"
+                                style={{ width: `${(timeLeft / 20) * 100}%` }}
+                            />
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+                            <span className="text-xs text-base-content/50 font-mono order-2 sm:order-1">
+                                Desaparece en {timeLeft}s
+                            </span>
+                            <div className="flex gap-2 w-full sm:w-auto justify-end order-1 sm:order-2">
+                                <button
+                                    type="button"
+                                    onClick={obtenerRazonAleatoria}
+                                    className="btn btn-soft btn-secondary btn-sm rounded-xl flex-1 sm:flex-none gap-1.5 active:scale-95 transition-transform"
+                                >
+                                    <RotateCw className="w-3.5 h-3.5" />
+                                    Otra razón
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={cerrarRazon}
+                                    className="btn btn-neutral btn-sm rounded-xl flex-1 sm:flex-none active:scale-95 transition-transform"
+                                >
+                                    Muuuy bien ❤️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
+
