@@ -5,8 +5,8 @@ import Layout from "./Layout";
 
 // Lazy loaded page components
 const Login = lazy(() => import("./pages/user/Login"));
-const Register = lazy(() => import("./pages/user/Register"));
-const PasswordRegistration = lazy(() => import("./pages/user/PasswordRegistration"));
+// const Register = lazy(() => import("./pages/user/Register"));
+// const PasswordRegistration = lazy(() => import("./pages/user/PasswordRegistration"));
 const Configuration = lazy(() => import("./pages/user/Configuration"));
 const Home = lazy(() => import("./pages/Home"));
 const DrawingPage = lazy(() => import("./pages/drawer/DrawingPage"));
@@ -70,13 +70,13 @@ export const router = createBrowserRouter([
         element: <LazyPage><Login /></LazyPage>,
         errorElement: <RootErrorBoundary />
     },
-    {
-        path: "/register",
-        element: (
-            <LazyPage><Register /></LazyPage>
-        ),
-        errorElement: <RootErrorBoundary />
-    },
+    // {
+    //     path: "/register",
+    //     element: (
+    //         <LazyPage><Register /></LazyPage>
+    //     ),
+    //     errorElement: <RootErrorBoundary />
+    // },
     {
         element: <AuthProvider />,
         errorElement: <RootErrorBoundary />,
@@ -88,10 +88,10 @@ export const router = createBrowserRouter([
                     </Layout>
                 ),
             },
-            {
-                path: "/create-password",
-                element: <LazyPage><PasswordRegistration /></LazyPage>
-            },
+            // {
+            //     path: "/create-password",
+            //     element: <LazyPage><PasswordRegistration /></LazyPage>
+            // },
             {
                 path: "/drawing",
                 element: (
