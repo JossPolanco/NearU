@@ -1,4 +1,4 @@
-import { ArrowLeft, Loader2, X, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { ArrowLeft, Loader2, X, ChevronLeft, ChevronRight, Heart, RotateCw } from 'lucide-react';
 import { getNotes, toggleFavorite, getFavoriteNotes } from '@/services/notes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useResolveSignedUrls } from '@/hooks';
@@ -51,6 +51,10 @@ export default function NotesGallery() {
         }
     }
 
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["notes"] })
+    }
+
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
@@ -65,6 +69,13 @@ export default function NotesGallery() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
             {/* FILTRO DE NOTAS */}

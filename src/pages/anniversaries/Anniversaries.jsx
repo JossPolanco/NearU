@@ -1,15 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createAnniversary, getAnniversaries, updateAnniversary, deleteAnniversary } from '@/services/anniversaries';
+import { ArrowLeft, Calendar, Loader2, Plus, Heart, RotateCw } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { FabAdd, Modal, AnniversaryItem } from '@/components';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from 'react-hook-form';
-import { ArrowLeft, Calendar, Loader2, Plus, Heart, Trash2 } from 'lucide-react';
-import { FabAdd, Modal, AnniversaryItem } from '@/components';
-import { useNavigate } from 'react-router';
 import { DayPicker } from "react-day-picker";
-import { es } from "date-fns/locale";
+import { useNavigate } from 'react-router';
 import { useRef, useState } from 'react';
-import { z } from 'zod';
 import "react-day-picker/dist/style.css";
+import { es } from "date-fns/locale";
+import { z } from 'zod';
 
 const anniversarySchema = z.object({
     title: z.string().min(1, "Debes escribir un título para tu aniversario"),
@@ -149,6 +149,10 @@ export default function Anniversaries() {
         }
     }
 
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["anniversaries"] })
+    }
+
     const modalTitle = editingAnniversaryId ? "Editar aniversario" : "Aniversario"
     const modalSubtitle = editingAnniversaryId ? "Actualiza los detalles de nuestro aniversario." : "Añade un nuevo aniversario"
     const isPending = addAnniversaryMutation.isPending || updateAnniversaryMutation.isPending
@@ -168,6 +172,13 @@ export default function Anniversaries() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
             {/* List / Loading / Empty states */}

@@ -1,14 +1,14 @@
-import { createTaskCategory, getTaskCategories, updateTaskCategory, deleteTaskCategory } from "@/services/tasks"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { ArrowLeft, ClipboardList, Plus, Loader2 } from "lucide-react"
-import { FabAdd, Modal, TasksCategory } from "@/components"
-import { PRESET_ICONS } from "../../utils/getCategoryIcon"
-import { SUGGESTIONS } from "../../utils/getSuggestions"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate } from "react-router"
-import { useForm } from "react-hook-form"
-import { useRef, useState } from "react"
-import z from "zod"
+import { createTaskCategory, getTaskCategories, updateTaskCategory, deleteTaskCategory } from "@/services/tasks";
+import { ArrowLeft, ClipboardList, Plus, Loader2, RotateCw } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { FabAdd, Modal, TasksCategory } from "@/components";
+import { PRESET_ICONS } from "../../utils/getCategoryIcon";
+import { SUGGESTIONS } from "../../utils/getSuggestions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { useRef, useState } from "react";
+import z from "zod";
 
 const createTaskCategorySchema = z.object({
     title: z.string().min(1, "El título es requerido"),
@@ -106,6 +106,10 @@ export default function Tasks() {
         }
     }
 
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["task-categories"] })
+    }
+
     const modalTitle = editingCategoryId ? "Editar listita" : "Nueva listita"
     const modalSubtitle = editingCategoryId ? "Actualiza los detalles de la listita." : "Añade una nueva listita."
     const isPending = addTaskCategoryMutation.isPending || updateTaskCategoryMutation.isPending
@@ -126,6 +130,13 @@ export default function Tasks() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
             {isLoading ? (

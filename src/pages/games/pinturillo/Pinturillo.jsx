@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { ArrowLeft, Plus, Play, History, ChevronLeft, ChevronRight, Gamepad2, CheckCircle2, Clock } from 'lucide-react'
-import { useNavigate } from 'react-router'
-import { getNoResolvedDraws, getPinturilloHistory } from '@/services/games/pinturillo'
-import { useQuery } from '@tanstack/react-query'
-import { getPartnerProfile } from '@/services/user'
-import PinturilloScore from '@/components/games/pinturillo/PinturilloScore'
+import { ArrowLeft, Plus, Play, History, ChevronLeft, ChevronRight, Gamepad2, CheckCircle2, Clock, RotateCw } from 'lucide-react';
+import { getNoResolvedDraws, getPinturilloHistory } from '@/services/games/pinturillo';
+import PinturilloScore from '@/components/games/pinturillo/PinturilloScore';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getPartnerProfile } from '@/services/user';
+import { useNavigate } from 'react-router';
+import { useState } from 'react';
 
 const parseDateTime = (dateString) => {
     if (!dateString) return '';
@@ -16,6 +16,7 @@ export default function Pinturillo() {
     const navigate = useNavigate()
     const [historyPage, setHistoryPage] = useState(1)
     const HISTORY_LIMIT = 5
+    const queryClient = useQueryClient();
 
     const { data: noResolvedDraws, isLoading: isLoadingPending } = useQuery({
         queryKey: ["pinturillo-no-resolved-draws"],
@@ -31,6 +32,12 @@ export default function Pinturillo() {
         queryKey: ["pinturillo-history", historyPage],
         queryFn: () => getPinturilloHistory({ page: historyPage, limit: HISTORY_LIMIT }),
     })
+
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["pinturillo-history", historyPage] })
+        queryClient.invalidateQueries({ queryKey: ["pinturillo-no-resolved-draws"] })
+        queryClient.invalidateQueries({ queryKey: ["partner-profile"] })
+    }
 
     const pastDraws = historyData?.draws || []
     const totalPages = historyData?.totalPages || 1
@@ -49,6 +56,13 @@ export default function Pinturillo() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
             {/* SCORE COMPONENT */}

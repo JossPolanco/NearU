@@ -1,12 +1,12 @@
 import { getDateById, getDateTasks, createDateTask, updateDateTask, completeDateTask, deleteDateTask, updateDateDescription } from "@/services/dates";
-import { ArrowLeft, Sparkles, Heart, ClipboardList, CalendarHeart, Plus, Calendar, Edit2 } from "lucide-react";
+import { ArrowLeft, Sparkles, ClipboardList, CalendarHeart, Plus, Calendar, Edit2, RotateCw } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useResolveSignedUrls } from "@/hooks/images/useResolveSignedUrls";
-import { useParams, useNavigate } from 'react-router';
 import { TaskItem, Modal, GalleryPanel, UploadPanel } from "@/components";
-import { useRef, useState } from 'react';
 import { addImageToDate } from "@/services/images/imageMetadata";
 import { imageKeys } from "@/hooks/images/useImages";
+import { useParams, useNavigate } from 'react-router';
+import { useRef, useState } from 'react';
 
 const parseDate = (dateString) => {
     if (!dateString) return ""
@@ -143,6 +143,11 @@ export default function DateDetail() {
         updateDescriptionMutation.mutate({ description: descriptionText.trim() })
     }
 
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["date", id] })
+        queryClient.invalidateQueries({ queryKey: ["DateTasks", id] })
+    }
+
     return (
         <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
             {/* Header / Navigation */}
@@ -157,6 +162,13 @@ export default function DateDetail() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
             {isLoadingDate ? (

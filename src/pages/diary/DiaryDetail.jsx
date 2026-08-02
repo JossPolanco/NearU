@@ -1,12 +1,12 @@
 import { getCurrentUser, getUserProfile, getPartnerProfile } from "@/services/user/userService";
 import { getDiaryEntryByDate, createDiaryEntry, updateDiaryEntry } from "@/services/diary"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, Loader2, RotateCw } from 'lucide-react';
 import { useNavigate, useParams, } from 'react-router';
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, MoodSelector } from "@/components";
-import { ArrowLeft, Loader2 } from 'lucide-react';
-import { React, useRef } from 'react';
+import { useRef } from 'react';
 import { z } from "zod";
 
 import { getMoodData } from "@/utils/getMoods";
@@ -118,6 +118,10 @@ export default function DiaryDetail() {
         }
     }
 
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["diary", currentDate] })
+    }
+
     const isPending = createDiaryMutation.isPending || updateDiaryMutation.isPending;
 
     return (
@@ -134,6 +138,13 @@ export default function DiaryDetail() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
             {/* Display formatted date */}

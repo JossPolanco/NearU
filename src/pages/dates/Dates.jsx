@@ -1,5 +1,5 @@
+import { ArrowLeft, Plus, Loader2, CalendarHeart, Calendar, RotateCw } from "lucide-react";
 import { createDate, updateDate, deleteDate, getDatesByStatus } from "@/services/dates";
-import { ArrowLeft, Plus, Loader2, CalendarHeart, Calendar } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FabAdd, Modal, DateItem, UploadPanel } from "@/components";
 import { useForm, Controller } from "react-hook-form";
@@ -156,6 +156,10 @@ export default function Dates() {
         }
     }
 
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["dates"] })
+    }
+
     const modalTitle = editingDateId ? "Editar cita" : "Nueva cita"
     const modalSubtitle = editingDateId ? "Actualiza los detalles de nuestra cita." : "Añade una nueva cita."
     const isPending = addDateMutation.isPending || updateDateMutation.isPending
@@ -174,6 +178,13 @@ export default function Dates() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
             {/* FILTRO DE CITAS */}
@@ -189,8 +200,8 @@ export default function Dates() {
                             type="button"
                             onClick={() => setSelectedTab(tab.id)}
                             className={`py-2 px-3 rounded-xl text-xs font-bold transition-transform duration-200 transform active:scale-105 ease-in-out ${selectedTab === tab.id
-                                    ? "bg-primary text-white shadow-xs"
-                                    : "text-base-content/60 active:bg-base-300/35 dark:active:bg-base-900/40"
+                                ? "bg-primary text-white shadow-xs"
+                                : "text-base-content/60 active:bg-base-300/35 dark:active:bg-base-900/40"
                                 }`}
                         >
                             {tab.label}
@@ -336,8 +347,8 @@ export default function Dates() {
                             </label>
                             <div className="grid grid-cols-2 gap-2 bg-base-200/40 dark:bg-base-950/30 p-1.5 rounded-2xl border border-base-200/60 dark:border-base-850/60">
                                 <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold cursor-pointer transition-transform duration-200 active:scale-[0.97] select-none ${watchStatus === "yap"
-                                        ? "bg-success/20 text-success border border-success/30 shadow-xs"
-                                        : "text-base-content/50 border border-transparent active:bg-base-250/50 dark:active:bg-base-900/30"
+                                    ? "bg-success/20 text-success border border-success/30 shadow-xs"
+                                    : "text-base-content/50 border border-transparent active:bg-base-250/50 dark:active:bg-base-900/30"
                                     }`}>
                                     <input
                                         type="radio"
@@ -348,8 +359,8 @@ export default function Dates() {
                                     <span>Yap</span>
                                 </label>
                                 <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold cursor-pointer transition-transform duration-200 active:scale-[0.97] select-none ${watchStatus === "nop"
-                                        ? "bg-error/20 text-error border border-error/30 shadow-xs"
-                                        : "text-base-content/50 border border-transparent active:bg-base-250/50 dark:active:bg-base-900/30"
+                                    ? "bg-error/20 text-error border border-error/30 shadow-xs"
+                                    : "text-base-content/50 border border-transparent active:bg-base-250/50 dark:active:bg-base-900/30"
                                     }`}>
                                     <input
                                         type="radio"

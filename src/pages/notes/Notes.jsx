@@ -1,8 +1,8 @@
 import { useResolveSignedUrls } from "../../hooks/images/useResolveSignedUrls";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { FabAdd, Modal, Drawer, CarouselNotes, Alert } from "@/components";
+import { ArrowLeft, Loader2, StickyNote, RotateCw } from "lucide-react";
 import { useImageUpload } from "../../hooks/images/useImageUpload";
-import { ArrowLeft, Loader2, StickyNote } from "lucide-react";
 import { createNote, getLast5Notes } from "@/services/notes";
 import { getUserId } from "../../services/user/userService";
 import { imageKeys } from "../../hooks/images/useImages";
@@ -100,6 +100,10 @@ export default function Notes() {
         }
     };
 
+    const handleRefresh = () => {
+        queryClient.invalidateQueries({ queryKey: ["last-five-notes"] })
+    }
+
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6">
             {/* Header / Navigation */}
@@ -113,6 +117,13 @@ export default function Notes() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
 

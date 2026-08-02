@@ -1,7 +1,7 @@
 import { getTasks, createTask, deleteTask, completeTask, updateTask } from "../../services/tasks/tasksService";
+import { ArrowLeft, Sparkles, Heart, ClipboardList, RotateCw } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTaskCategory } from "../../services/tasks/tasksCategoryService";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { ArrowLeft, Sparkles, Heart, ClipboardList } from "lucide-react"
 import { Modal, FabAdd, TaskItem } from "@/components"
 import { useParams, useNavigate } from "react-router"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -115,6 +115,11 @@ export default function TaskDetail() {
         }
     }
 
+    const handleRefresh = () => {        
+        queryClient.invalidateQueries({ queryKey: ["tasks", id] })
+        queryClient.invalidateQueries({ queryKey: ["task-categories"] })
+    }
+
     const totalTasksCount = tasks ? tasks.length : 0
     const completedTasksCount = tasks ? tasks.filter(t => t.completed).length : 0
     const percentage = totalTasksCount > 0 ? (completedTasksCount / totalTasksCount) * 100 : 0
@@ -139,6 +144,13 @@ export default function TaskDetail() {
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
+
+                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                    onClick={() => handleRefresh()}
+                    aria-label="Refrescar"
+                >
+                    <RotateCw className="w-5 h-5" />
+                </button>
             </div>
 
             {isLoading ? (
