@@ -10,6 +10,7 @@ export { default as Drawer } from './drawer/Drawer';
 export { default as DrawConf } from './drawer/DrawerConf';
 
 // OTHER COMPONENTS
+export { default as FabScrollTop } from './FabScrollTop';
 export { default as Modal } from './Modal';
 export { default as FabAdd } from './FabAdd';
 export { default as Alert } from './Alert';
@@ -38,4 +39,4 @@ export { default as MoodSelector } from './diary/MoodSelector'
 export { default as AnniversaryItem } from './anniversaries/AnniversaryItem'
 
 // USER COMPONENTS
-export { default as UserMoodCard } from './user/UserMoodCard'
+export { default as UserMoodCard } from './user/UserMoodCard'

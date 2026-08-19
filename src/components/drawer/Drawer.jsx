@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 import { Menu, Pencil, Undo2, Redo2, MoreVertical, Trash2, Download } from "lucide-react";
+import FabScrollTop from '../FabScrollTop'
 import DrawerConf from "./DrawerConf";
 import Modal from '../Modal';
 
@@ -327,8 +328,9 @@ const Drawer = forwardRef((props, ref) => {
             <Modal ref={extraModal} modalTitle="Funciones extra" modalSubtitle="Aqui iran futuras funciones extra no importantes">
                 pssss aun no hay nada aca
             </Modal>
-        </div>
 
+            <FabScrollTop />
+        </div>
     );
 });
 
