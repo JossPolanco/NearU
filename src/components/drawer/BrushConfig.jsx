@@ -31,16 +31,26 @@ const isLightColor = (color) => {
 
 // PALETA DE COLORES RAPIDOS
 const QUICK_COLORS = [
-    '#000000', // Charcoal/Black
-    '#8e8e93', // Gray
-    '#d1d1d6', // Light Gray
-    '#ffffff', // White
-    '#ff3b30', // Warm Red
-    '#ff9500', // Warm Orange
-    '#ffcc00', // Warm Yellow
-    '#34c759', // Warm Green
-    '#007aff', // Warm Blue
-    '#af52de', // Warm Purple
+    '#000000', // Black
+    '#374151', // Dark Gray
+    '#9CA3AF', // Gray
+    '#FFFFFF', // White
+    '#EF4444', // Red
+    '#B91C1C', // Dark Red
+    '#F97316', // Orange
+    '#C2410C', // Dark Orange
+    '#F59E0B', // Amber
+    '#EAB308', // Yellow
+    '#84CC16', // Lime
+    '#22C55E', // Green
+    '#15803D', // Dark Green
+    '#14B8A6', // Teal
+    '#06B6D4', // Cyan
+    '#3B82F6', // Blue
+    '#1D4ED8', // Dark Blue
+    '#6366F1', // Indigo
+    '#A855F7', // Purple
+    '#EC4899', // Pink
 ];
 
 // ESQUEMA DE COLORES PARA EL PICKER PERSONALIZADO

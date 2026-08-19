@@ -87,8 +87,7 @@ export default function Configuration() {
     const themes = [
         'valentine',
         'evelyn',
-        'dark',
-        'light',
+        'dark',        
         // 'modern-dark',
     ]
 
