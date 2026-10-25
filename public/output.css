@@ -61,7 +61,6 @@
     --container-2xl: 42rem;
     --container-3xl: 48rem;
     --container-4xl: 56rem;
-    --container-5xl: 64rem;
     --container-7xl: 80rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
@@ -92,6 +91,7 @@
     --tracking-widest: 0.1em;
     --leading-tight: 1.25;
     --leading-snug: 1.375;
+    --leading-normal: 1.5;
     --leading-relaxed: 1.625;
     --radius-md: 0.375rem;
     --radius-lg: 0.5rem;
@@ -2693,6 +2693,9 @@
   .my-4 {
     margin-block: calc(var(--spacing) * 4);
   }
+  .my-auto {
+    margin-block: auto;
+  }
   .label {
     @layer daisyui.l1.l2.l3 {
       display: inline-flex;
@@ -2756,6 +2759,9 @@
       border-inline-end-width: calc(var(--border, 1px) * var(--join-v));
       border-block-end-width: calc(var(--border, 1px) * var(--join-h));
     }
+  }
+  .-mt-0\.5 {
+    margin-top: calc(var(--spacing) * -0.5);
   }
   .mt-0\.5 {
     margin-top: calc(var(--spacing) * 0.5);
@@ -2828,9 +2834,6 @@
   }
   .mb-8 {
     margin-bottom: calc(var(--spacing) * 8);
-  }
-  .ml-2\.5 {
-    margin-left: calc(var(--spacing) * 2.5);
   }
   .ml-auto {
     margin-left: auto;
@@ -3050,6 +3053,23 @@
   .aspect-square {
     aspect-ratio: 1 / 1;
   }
+  .modal-middle {
+    @layer daisyui.l1.l2 {
+      place-items: center;
+      .modal-box {
+        height: auto;
+        width: calc(11 / 12 * 100%);
+        max-width: 32rem;
+        max-height: calc(100vh - 5em);
+        translate: 0 2%;
+        scale: 98%;
+        --modal-tl: var(--radius-box);
+        --modal-tr: var(--radius-box);
+        --modal-bl: var(--radius-box);
+        --modal-br: var(--radius-box);
+      }
+    }
+  }
   .btn-circle {
     @layer daisyui.l1.l2 {
       border-radius: calc(infinity * 1px);
@@ -3175,6 +3195,9 @@
   }
   .max-h-\[90vh\] {
     max-height: 90vh;
+  }
+  .max-h-\[calc\(100dvh-2\.5rem\)\] {
+    max-height: calc(100dvh - 2.5rem);
   }
   .min-h-8 {
     min-height: calc(var(--spacing) * 8);
@@ -3366,9 +3389,6 @@
   }
   .max-w-4xl {
     max-width: var(--container-4xl);
-  }
-  .max-w-5xl {
-    max-width: var(--container-5xl);
   }
   .max-w-7xl {
     max-width: var(--container-7xl);
@@ -3712,6 +3732,9 @@
   }
   .overflow-y-auto {
     overflow-y: auto;
+  }
+  .overscroll-contain {
+    overscroll-behavior: contain;
   }
   .rounded {
     border-radius: 0.25rem;
@@ -4845,6 +4868,9 @@
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
+  .py-5 {
+    padding-block: calc(var(--spacing) * 5);
+  }
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
   }
@@ -4872,8 +4898,14 @@
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
   }
+  .pt-5 {
+    padding-top: calc(var(--spacing) * 5);
+  }
   .pt-6 {
     padding-top: calc(var(--spacing) * 6);
+  }
+  .pr-3 {
+    padding-right: calc(var(--spacing) * 3);
   }
   .pr-10 {
     padding-right: calc(var(--spacing) * 10);
@@ -5010,6 +5042,10 @@
     --tw-leading: 1;
     line-height: 1;
   }
+  .leading-normal {
+    --tw-leading: var(--leading-normal);
+    line-height: var(--leading-normal);
+  }
   .leading-relaxed {
     --tw-leading: var(--leading-relaxed);
     line-height: var(--leading-relaxed);
@@ -5061,6 +5097,9 @@
   .tracking-widest {
     --tw-tracking: var(--tracking-widest);
     letter-spacing: var(--tracking-widest);
+  }
+  .break-words {
+    overflow-wrap: break-word;
   }
   .whitespace-nowrap {
     white-space: nowrap;
@@ -6535,25 +6574,6 @@
       display: inline;
     }
   }
-  .sm\:modal-middle {
-    @media (width >= 40rem) {
-      @layer daisyui.l1.l2 {
-        place-items: center;
-        .modal-box {
-          height: auto;
-          width: calc(11 / 12 * 100%);
-          max-width: 32rem;
-          max-height: calc(100vh - 5em);
-          translate: 0 2%;
-          scale: 98%;
-          --modal-tl: var(--radius-box);
-          --modal-tr: var(--radius-box);
-          --modal-bl: var(--radius-box);
-          --modal-br: var(--radius-box);
-        }
-      }
-    }
-  }
   .sm\:h-14 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 14);
@@ -6567,6 +6587,11 @@
   .sm\:max-h-105 {
     @media (width >= 40rem) {
       max-height: calc(var(--spacing) * 105);
+    }
+  }
+  .sm\:max-h-\[calc\(100dvh-4rem\)\] {
+    @media (width >= 40rem) {
+      max-height: calc(100dvh - 4rem);
     }
   }
   .sm\:min-h-40 {
