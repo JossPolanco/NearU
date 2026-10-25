@@ -213,7 +213,7 @@ export default function Anniversaries() {
                     </button>
                 </div>
             ) : (
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 pb-8">
                     {data?.map((anniversary) => (
                         <AnniversaryItem
                             key={anniversary.id}

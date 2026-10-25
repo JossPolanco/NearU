@@ -65,7 +65,7 @@ export default function Home() {
 
     useEffect(() => {
         getUserPosition();
-        triggerConfetti();
+        // triggerConfetti(); // Comentado temporalmente: descomentar para volver a activar la explosión de confeti en Home
     }, []);
 
     const cerrarRazon = useCallback(() => {

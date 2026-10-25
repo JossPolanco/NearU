@@ -15,7 +15,7 @@ export default function Dockbar({ children }) {
         <>
             {children}
 
-            <div className="dock">
+            <div className="dock z-40 bg-base-100/95 dark:bg-base-900/95 backdrop-blur border-t border-base-200/60 dark:border-base-800/60 shadow-lg">
                 <button type="button" className={active === 'drawing' ? 'dock-active' : ''} onClick={() => setDockActive('drawing', '/drawing')}>
                     <PenLine size={18} />
                     <span className="dock-label">Dibujo</span>

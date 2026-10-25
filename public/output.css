@@ -2597,6 +2597,9 @@
   .z-30 {
     z-index: 30;
   }
+  .z-40 {
+    z-index: 40;
+  }
   .z-50 {
     z-index: 50;
   }
@@ -4934,17 +4937,20 @@
   .pb-6 {
     padding-bottom: calc(var(--spacing) * 6);
   }
+  .pb-8 {
+    padding-bottom: calc(var(--spacing) * 8);
+  }
   .pb-12 {
     padding-bottom: calc(var(--spacing) * 12);
-  }
-  .pb-16 {
-    padding-bottom: calc(var(--spacing) * 16);
   }
   .pb-20 {
     padding-bottom: calc(var(--spacing) * 20);
   }
   .pb-24 {
     padding-bottom: calc(var(--spacing) * 24);
+  }
+  .pb-28 {
+    padding-bottom: calc(var(--spacing) * 28);
   }
   .pl-1 {
     padding-left: var(--spacing);
@@ -5098,7 +5104,7 @@
     --tw-tracking: var(--tracking-widest);
     letter-spacing: var(--tracking-widest);
   }
-  .break-words {
+  .wrap-break-word {
     overflow-wrap: break-word;
   }
   .whitespace-nowrap {
@@ -6677,6 +6683,11 @@
   .sm\:pt-10 {
     @media (width >= 40rem) {
       padding-top: calc(var(--spacing) * 10);
+    }
+  }
+  .sm\:pb-32 {
+    @media (width >= 40rem) {
+      padding-bottom: calc(var(--spacing) * 32);
     }
   }
   .sm\:text-left {

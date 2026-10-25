@@ -11,6 +11,7 @@ export { default as DrawConf } from './drawer/DrawerConf';
 
 // OTHER COMPONENTS
 export { default as FabScrollTop } from './FabScrollTop';
+export { default as ScrollToTop } from './ScrollToTop';
 export { default as Modal } from './Modal';
 export { default as FabAdd } from './FabAdd';
 export { default as Alert } from './Alert';
