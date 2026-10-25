@@ -1,9 +1,10 @@
-import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, Sparkle, RotateCw, X, Mail } from 'lucide-react';
+import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, RotateCw, X, Mail } from 'lucide-react';
 import { getUserPosition } from '@/utils/geolocation';
 import { UserMoodCard } from '@/components';
 import { useNavigate } from 'react-router';
 import confetti from 'canvas-confetti';
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import razones from '@/utils/razones.json';
 
 var heart = confetti.shapeFromPath({
@@ -30,31 +31,69 @@ const COLORS = [
     "#D8B4FE", // Lila
 ];
 
-const triggerConfetti = () => {
-    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    confetti({
-        particleCount: 50,
-        spread: 70,
-        origin: { y: 0.6 },
-        shapes: [heart],
-        colors: [color],
-    })
-    // Ráfagas laterales de confeti
-    setTimeout(() => {
-        confetti({
-            particleCount: 40,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0.1, y: 0.6 }
-        })
-        confetti({
-            particleCount: 40,
-            angle: 120,
-            spread: 55,
-            origin: { x: 0.9, y: 0.6 }
-        })
-    }, 250)
-}
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.09,
+            delayChildren: 0.04,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -22, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 280,
+            damping: 24,
+        },
+    },
+};
+
+const moodVariants = {
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 280,
+            damping: 24,
+        },
+    },
+};
+
+const gridVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.05,
+            delayChildren: 0.06,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 22, scale: 0.94 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 280,
+            damping: 22,
+        },
+    },
+};
 
 export default function Home() {
     const navigate = useNavigate();
@@ -65,7 +104,6 @@ export default function Home() {
 
     useEffect(() => {
         getUserPosition();
-        // triggerConfetti(); // Comentado temporalmente: descomentar para volver a activar la explosión de confeti en Home
     }, []);
 
     const cerrarRazon = useCallback(() => {
@@ -109,14 +147,26 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="max-w-3xl mx-auto p-4 sm:p-6 space-y-5 animate-fade-in pb-20">
+        <motion.div
+            className="max-w-3xl mx-auto p-4 sm:p-6 space-y-5 pb-20"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
             {/* HEADER / BANNER DE LA APP */}
-            <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-primary/15 via-secondary/10 to-accent/15 border border-primary/20 p-5 sm:p-6 shadow-sm">
+            <motion.div
+                variants={headerVariants}
+                className="relative overflow-hidden rounded-3xl bg-linear-to-r from-primary/15 via-secondary/10 to-accent/15 border border-primary/20 p-5 sm:p-6 shadow-sm"
+            >
                 <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 text-primary shadow-inner">
+                    <motion.div
+                        className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 text-primary shadow-inner"
+                        whileHover={{ rotate: [0, -10, 10, -5, 5, 0], scale: 1.08 }}
+                        transition={{ duration: 0.45 }}
+                    >
                         <Heart className="w-6 h-6 fill-primary animate-pulse" />
-                    </div>
+                    </motion.div>
                     <div className="space-y-0.5">
                         <h1 className="text-lg sm:text-xl font-bold tracking-tight text-base-content">
                             NearU <span className="text-primary font-normal">|</span> Our app bbyyyy ✨
@@ -126,16 +176,27 @@ export default function Home() {
                         </p>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             {/* TARJETA DE ESTADO DE ÁNIMO */}
-            <UserMoodCard />
+            <motion.div variants={moodVariants}>
+                <UserMoodCard />
+            </motion.div>
 
             {/* GRID PARA LOS BOTONES */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
-
+            <motion.div
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4"
+                variants={gridVariants}
+            >
                 {/* DIARIO (2 COLUMNAS DE ANCHO) */}
-                <button type="button" onClick={() => navigate('/diary')} className="btn btn-soft btn-primary col-span-2 min-h-35 sm:min-h-40 h-full w-full rounded-3xl p-5 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -4, scale: 1.015 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => navigate('/diary')}
+                    className="btn btn-soft btn-primary col-span-2 min-h-35 sm:min-h-40 h-full w-full rounded-3xl p-5 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
+                >
                     <div className="w-full flex items-center justify-between">
                         <span className="badge badge-primary badge-sm font-medium tracking-wide">
                             HISTORIAS
@@ -150,10 +211,17 @@ export default function Home() {
                             Nuestros momentos juntos ✨
                         </p>
                     </div>
-                </button>
+                </motion.button>
 
                 {/* CITAS (1 COLUMNA DE ANCHO - 2 FILAS DE ALTO) */}
-                <button type="button" onClick={() => navigate('/dates')} className="btn btn-soft btn-secondary col-span-1 row-span-2 min-h-55 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-center text-center group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => navigate('/dates')}
+                    className="btn btn-soft btn-secondary col-span-1 row-span-2 min-h-55 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-center text-center group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
+                >
                     <div className="p-3 rounded-2xl bg-secondary/15 text-secondary group-hover:scale-110 transition-transform duration-200 mt-2">
                         <CalendarHeart className="w-9 h-9" />
                     </div>
@@ -162,34 +230,62 @@ export default function Home() {
                         <h2 className="text-base sm:text-lg font-bold">Nuestras Cititas</h2>
                         <p className="text-[11px] sm:text-xs opacity-75 mt-0.5">Planes juntos 💖</p>
                     </div>
-                </button>
+                </motion.button>
 
                 {/* NOTAS (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <button type="button" onClick={() => navigate('/notes')} className="btn btn-soft btn-info col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md active:scale-[0.97] transition-transform duration-200 border-none">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -3, scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => navigate('/notes')}
+                    className="btn btn-soft btn-info col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
+                >
                     <div className="p-2 rounded-2xl bg-info/15 text-info group-hover:scale-110 transition-transform duration-200">
                         <StickyNote className="w-6 h-6" />
                     </div>
                     <span className="text-sm font-bold">Notitas</span>
-                </button>
+                </motion.button>
 
                 {/* TAREAS (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <button type="button" onClick={() => navigate('/tasks')} className="btn btn-soft btn-success col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md active:scale-[0.97] transition-transform duration-200 border-none">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -3, scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => navigate('/tasks')}
+                    className="btn btn-soft btn-success col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
+                >
                     <div className="p-2 rounded-2xl bg-success/15 text-success group-hover:scale-110 transition-transform duration-200">
                         <CheckSquare className="w-6 h-6" />
                     </div>
                     <span className="text-sm font-bold">Tareitas</span>
-                </button>
+                </motion.button>
 
                 {/* ANIVERSARIOS (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <button type="button" onClick={() => navigate('/anniversaries')} className="btn btn-soft btn-warning col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md active:scale-[0.97] transition-transform duration-200 border-none">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -3, scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => navigate('/anniversaries')}
+                    className="btn btn-soft btn-warning col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
+                >
                     <div className="p-2 rounded-2xl bg-warning/15 text-warning group-hover:scale-110 transition-transform duration-200">
                         <Sparkles className="w-6 h-6" />
                     </div>
                     <span className="text-sm font-bold">Waniversarios</span>
-                </button>
+                </motion.button>
 
                 {/* UBICACIÓN (1 COLUMNA DE ANCHO - 2 FILAS DE ALTO) */}
-                <button type="button" onClick={() => navigate('/geolocation')} className="btn btn-soft btn-error col-span-1 row-span-2 min-h-55 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-center text-center group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => navigate('/geolocation')}
+                    className="btn btn-soft btn-error col-span-1 row-span-2 min-h-55 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-center text-center group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
+                >
                     <div className="p-3 rounded-2xl bg-error/15 text-error group-hover:scale-110 transition-transform duration-200 mt-2">
                         <MapPin className="w-9 h-9" />
                     </div>
@@ -198,24 +294,34 @@ export default function Home() {
                         <h2 className="text-base sm:text-lg font-bold">Mapita</h2>
                         <p className="text-[11px] sm:text-xs opacity-75 mt-0.5">Nuestra ubicación 📍</p>
                     </div>
-                </button>
+                </motion.button>
 
                 {/* CARTITAS (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <button type="button" onClick={() => navigate('/letters')} className="btn btn-soft btn-primary col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md active:scale-[0.97] transition-transform duration-200 border-none">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -3, scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => navigate('/letters')}
+                    className="btn btn-soft btn-primary col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
+                >
                     <div className="p-2 rounded-2xl bg-primary/15 text-primary group-hover:scale-110 transition-transform duration-200">
                         <Mail className="w-6 h-6" />
                     </div>
                     <span className="text-sm font-bold">Cartitas</span>
-                </button>
+                </motion.button>
 
                 {/* RAZONES PARA AMARTE (2 COLUMNAS DE ANCHO) */}
-                <button
+                <motion.button
                     type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={obtenerRazonAleatoria}
-                    className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-between group active:scale-[0.98] transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
+                    className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-between group transition-shadow duration-200 shadow-sm hover:shadow-md cursor-pointer border-none"
                 >
                     <div className="flex items-center gap-3 text-left">
-                        <div className="p-2.5 rounded-2xl bg-secondary/20 text-secondary group-hover:scale-110 active:scale-95 transition-transform duration-200 shrink-0">
+                        <div className="p-2.5 rounded-2xl bg-secondary/20 text-secondary group-hover:scale-110 transition-transform duration-200 shrink-0">
                             <Heart className="w-6 h-6 fill-secondary/30 text-secondary animate-pulse" />
                         </div>
                         <div>
@@ -225,10 +331,17 @@ export default function Home() {
                             <span className="text-xs opacity-75 font-normal block">Toca para descubrir una razón</span>
                         </div>
                     </div>
-                </button>
+                </motion.button>
 
                 {/* JUEGOS (2 COLUMNAS DE ANCHO) */}
-                <button type="button" onClick={() => navigate('/games')} className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-center gap-3 group border-2 active:scale-[0.98] transition-transform duration-200">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => navigate('/games')}
+                    className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-center gap-3 group border-2 transition-shadow duration-200 cursor-pointer"
+                >
                     <div className="p-2 rounded-2xl bg-secondary/10 group-hover:scale-110 transition-transform duration-200">
                         <Palette className="w-6 h-6" />
                     </div>
@@ -236,97 +349,129 @@ export default function Home() {
                         <span className="text-sm sm:text-base font-bold block">Juegos</span>
                         <span className="text-xs opacity-70 font-normal block">Juegitos para jugar jeje</span>
                     </div>
-                </button>
+                </motion.button>
 
                 {/* PRUEBAS (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <button type="button" onClick={() => navigate('/testing')} className="btn btn-soft btn-neutral col-span-1 min-h-23.75 h-full w-full rounded-3xl p-3 flex flex-col items-center justify-center text-center gap-1 group border-2 active:scale-[0.97] transition-transform duration-200 opacity-80 hover:opacity-100">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -3, scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => navigate('/testing')}
+                    className="btn btn-soft btn-neutral col-span-1 min-h-23.75 h-full w-full rounded-3xl p-3 flex flex-col items-center justify-center text-center gap-1 group border-2 transition-all duration-200 opacity-80 hover:opacity-100 cursor-pointer"
+                >
                     <FlaskConical className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                     <span className="text-xs font-semibold">Pruebas</span>
-                </button>
+                </motion.button>
 
                 {/* AJUSTES (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <button type="button" onClick={() => navigate('/config')} className="btn btn-soft btn-neutral col-span-1 min-h-23.75 h-full w-full rounded-3xl p-3 flex flex-col items-center justify-center text-center gap-1 group border-2 active:scale-[0.97] transition-transform duration-200 opacity-80 hover:opacity-100">
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={{ y: -3, scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => navigate('/config')}
+                    className="btn btn-soft btn-neutral col-span-1 min-h-23.75 h-full w-full rounded-3xl p-3 flex flex-col items-center justify-center text-center gap-1 group border-2 transition-all duration-200 opacity-80 hover:opacity-100 cursor-pointer"
+                >
                     <Settings className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                     <span className="text-xs font-semibold">Ajustes</span>
-                </button>
-
-            </div>
+                </motion.button>
+            </motion.div>
 
             {/* MODAL / OVERLAY PARA MOSTRAR LA RAZÓN DE AMOR */}
-            {razonActual && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in"
-                    onClick={cerrarRazon}
-                >
-                    <div
-                        className="relative w-full max-w-lg bg-base-100 rounded-3xl p-6 sm:p-8 shadow-2xl border border-secondary/30 text-center overflow-hidden animate-scale-in"
-                        onClick={(e) => e.stopPropagation()}
+            <AnimatePresence>
+                {razonActual && (
+                    <motion.div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.22 }}
+                        onClick={cerrarRazon}
                     >
-                        {/* ADORNOS DE FONDO */}
-                        <div className="absolute -right-12 -top-12 w-36 h-36 bg-secondary/15 rounded-full blur-2xl pointer-events-none" />
-                        <div className="absolute -left-12 -bottom-12 w-36 h-36 bg-primary/15 rounded-full blur-2xl pointer-events-none" />
+                        <motion.div
+                            className="relative w-full max-w-lg bg-base-100 rounded-3xl p-6 sm:p-8 shadow-2xl border border-secondary/30 text-center overflow-hidden"
+                            initial={{ opacity: 0, scale: 0.88, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.92, y: 12 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 320 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* ADORNOS DE FONDO */}
+                            <div className="absolute -right-12 -top-12 w-36 h-36 bg-secondary/15 rounded-full blur-2xl pointer-events-none" />
+                            <div className="absolute -left-12 -bottom-12 w-36 h-36 bg-primary/15 rounded-full blur-2xl pointer-events-none" />
 
-                        <div className="flex items-center justify-end mb-2 relative z-10">
-                            <button
-                                type="button"
-                                onClick={cerrarRazon}
-                                className="btn btn-sm btn-circle btn-ghost text-base-content/60 hover:text-base-content hover:bg-base-200"
-                                aria-label="Cerrar"
-                            >
-                                <X className="w-4 h-4" />
-                            </button>
-                        </div>
-
-                        <div className="my-2 flex justify-center items-center gap-2">
-                            <div className="w-14 h-14 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary shadow-inner">
-                                <Heart className="w-8 h-8 fill-secondary text-secondary animate-pulse" />
-                            </div>
-                        </div>
-
-                        <div className="my-4 min-h-20 flex items-center justify-center">
-                            <p className="text-base sm:text-lg font-medium text-base-content leading-relaxed px-1">
-                                "{razonActual.texto}"
-                            </p>
-                        </div>
-
-                        <p className="text-xs text-base-content/60 font-medium mb-5">
-                            Una de las muchas razones por las que te amo 💕
-                        </p>
-
-                        {/* BARRA DE PROGRESO */}
-                        <div className="w-full bg-base-200 h-2 rounded-full overflow-hidden mb-4">
-                            <div
-                                className="bg-linear-to-r from-secondary to-primary h-full transition-all duration-200 ease-linear rounded-full"
-                                style={{ width: `${(timeLeft / 20) * 100}%` }}
-                            />
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
-                            <span className="text-xs text-base-content/50 font-mono order-2 sm:order-1">
-                                Desaparece en {timeLeft}s
-                            </span>
-                            <div className="flex gap-2 w-full sm:w-auto justify-end order-1 sm:order-2">
-                                <button
+                            <div className="flex items-center justify-end mb-2 relative z-10">
+                                <motion.button
                                     type="button"
-                                    onClick={obtenerRazonAleatoria}
-                                    className="btn btn-soft btn-secondary btn-sm rounded-xl flex-1 sm:flex-none gap-1.5 active:scale-95 transition-transform"
-                                >
-                                    <RotateCw className="w-3.5 h-3.5" />
-                                    Otra razón
-                                </button>
-                                <button
-                                    type="button"
+                                    whileTap={{ scale: 0.9 }}
                                     onClick={cerrarRazon}
-                                    className="btn btn-neutral btn-sm rounded-xl flex-1 sm:flex-none active:scale-95 transition-transform"
+                                    className="btn btn-sm btn-circle btn-ghost text-base-content/60 hover:text-base-content hover:bg-base-200"
+                                    aria-label="Cerrar"
                                 >
-                                    Muuuy bien ❤️
-                                </button>
+                                    <X className="w-4 h-4" />
+                                </motion.button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
+
+                            <div className="my-2 flex justify-center items-center gap-2">
+                                <motion.div
+                                    className="w-14 h-14 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary shadow-inner"
+                                    initial={{ scale: 0.6, rotate: -15 }}
+                                    animate={{ scale: 1, rotate: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.1 }}
+                                >
+                                    <Heart className="w-8 h-8 fill-secondary text-secondary animate-pulse" />
+                                </motion.div>
+                            </div>
+
+                            <div className="my-4 min-h-20 flex items-center justify-center">
+                                <p className="text-base sm:text-lg font-medium text-base-content leading-relaxed px-1">
+                                    "{razonActual.texto}"
+                                </p>
+                            </div>
+
+                            <p className="text-xs text-base-content/60 font-medium mb-5">
+                                Una de las muchas razones por las que te amo 💕
+                            </p>
+
+                            {/* BARRA DE PROGRESO */}
+                            <div className="w-full bg-base-200 h-2 rounded-full overflow-hidden mb-4">
+                                <div
+                                    className="bg-linear-to-r from-secondary to-primary h-full transition-all duration-200 ease-linear rounded-full"
+                                    style={{ width: `${(timeLeft / 20) * 100}%` }}
+                                />
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+                                <span className="text-xs text-base-content/50 font-mono order-2 sm:order-1">
+                                    Desaparece en {timeLeft}s
+                                </span>
+                                <div className="flex gap-2 w-full sm:w-auto justify-end order-1 sm:order-2">
+                                    <motion.button
+                                        type="button"
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={obtenerRazonAleatoria}
+                                        className="btn btn-soft btn-secondary btn-sm rounded-xl flex-1 sm:flex-none gap-1.5 cursor-pointer"
+                                    >
+                                        <RotateCw className="w-3.5 h-3.5" />
+                                        Otra razón
+                                    </motion.button>
+                                    <motion.button
+                                        type="button"
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={cerrarRazon}
+                                        className="btn btn-neutral btn-sm rounded-xl flex-1 sm:flex-none cursor-pointer"
+                                    >
+                                        Muuuy bien ❤️
+                                    </motion.button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.div>
     );
 }
+
 
