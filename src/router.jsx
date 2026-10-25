@@ -31,6 +31,8 @@ const Pinturillo = lazy(() => import("./pages/games/pinturillo/Pinturillo"));
 const PintNewGame = lazy(() => import("./pages/games/pinturillo/PintNewGame"));
 const PinturilloGuess = lazy(() => import("./pages/games/pinturillo/PinturilloGuess"));
 const GirlfriendsDay = lazy(() => import("./pages/GirlfriendsDay"));
+const Letters = lazy(() => import("./pages/letters/Letters"));
+const SixthMonth = lazy(() => import("./pages/letters/SixthMonth"));
 
 const PageLoader = () => (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -254,6 +256,20 @@ export const router = createBrowserRouter([
                     <Layout>
                         <LazyPage><GirlfriendsDay /></LazyPage>
                     </Layout>
+                )
+            },
+            {
+                path: "/letters",
+                element: (
+                    <Layout>
+                        <LazyPage><Letters /></LazyPage>
+                    </Layout>
+                )
+            },
+            {
+                path: "/letters/sixthmonth",
+                element: (
+                    <LazyPage><SixthMonth /></LazyPage>
                 )
             }
         ]

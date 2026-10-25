@@ -1,4 +1,4 @@
-import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, Sparkle, RotateCw, X } from 'lucide-react';
+import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, Sparkle, RotateCw, X, Mail } from 'lucide-react';
 import { getUserPosition } from '@/utils/geolocation';
 import { UserMoodCard } from '@/components';
 import { useNavigate } from 'react-router';
@@ -110,28 +110,19 @@ export default function Home() {
 
     return (
         <div className="max-w-3xl mx-auto p-4 sm:p-6 space-y-5 animate-fade-in pb-20">
-            {/* HEADER CON ATTS */}
-            <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-secondary/15 via-primary/10 to-accent/15 border border-secondary/20 p-5 sm:p-6 shadow-sm" onClick={() => navigate('/girlfriendsday')}>
-                <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-secondary/10 rounded-full blur-2xl pointer-events-none" />
+            {/* HEADER / BANNER DE LA APP */}
+            <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-primary/15 via-secondary/10 to-accent/15 border border-primary/20 p-5 sm:p-6 shadow-sm">
+                <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-secondary/20 flex items-center justify-center shrink-0 text-secondary shadow-inner">
-                        <Heart className="w-6 h-6 fill-secondary animate-pulse" />
+                    <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 text-primary shadow-inner">
+                        <Heart className="w-6 h-6 fill-primary animate-pulse" />
                     </div>
                     <div className="space-y-0.5">
-                        <div className="flex items-center gap-1.5 text-xs font-semibold text-secondary uppercase tracking-wider">
-                            <Sparkle className="w-3.5 h-3.5 fill-secondary" />
-                            <span>Our App Bbyyyy</span>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-base-content">
-                                FELIZ DIA DE LA NOVIA MI AMOOOR 😚
-                            </h1>
-                            <h1 className="text-xs font-bold tracking-tight text-base-content/10 animate-pulse">
-                                Click?!
-                            </h1>
-                        </div>
+                        <h1 className="text-lg sm:text-xl font-bold tracking-tight text-base-content">
+                            NearU <span className="text-primary font-normal">|</span> Our app bbyyyy ✨
+                        </h1>
                         <p className="text-xs sm:text-sm text-base-content/70 font-medium">
-                            Att. Josué 💕 (2026/08/01)
+                            Juntitos siempre, sin importar la distancia 💕
                         </p>
                     </div>
                 </div>
@@ -197,12 +188,24 @@ export default function Home() {
                     <span className="text-sm font-bold">Waniversarios</span>
                 </button>
 
-                {/* UBICACIÓN (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <button type="button" onClick={() => navigate('/geolocation')} className="btn btn-soft btn-error col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md active:scale-[0.97] transition-transform duration-200 border-none">
-                    <div className="p-2 rounded-2xl bg-error/15 text-error group-hover:scale-110 transition-transform duration-200">
-                        <MapPin className="w-6 h-6" />
+                {/* UBICACIÓN (1 COLUMNA DE ANCHO - 2 FILAS DE ALTO) */}
+                <button type="button" onClick={() => navigate('/geolocation')} className="btn btn-soft btn-error col-span-1 row-span-2 min-h-55 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-center text-center group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none">
+                    <div className="p-3 rounded-2xl bg-error/15 text-error group-hover:scale-110 transition-transform duration-200 mt-2">
+                        <MapPin className="w-9 h-9" />
                     </div>
-                    <span className="text-sm font-bold">Mapita</span>
+                    <div className="mb-2">
+                        <span className="badge badge-error badge-xs mb-1">GPS</span>
+                        <h2 className="text-base sm:text-lg font-bold">Mapita</h2>
+                        <p className="text-[11px] sm:text-xs opacity-75 mt-0.5">Nuestra ubicación 📍</p>
+                    </div>
+                </button>
+
+                {/* CARTITAS (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
+                <button type="button" onClick={() => navigate('/letters')} className="btn btn-soft btn-primary col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md active:scale-[0.97] transition-transform duration-200 border-none">
+                    <div className="p-2 rounded-2xl bg-primary/15 text-primary group-hover:scale-110 transition-transform duration-200">
+                        <Mail className="w-6 h-6" />
+                    </div>
+                    <span className="text-sm font-bold">Cartitas</span>
                 </button>
 
                 {/* RAZONES PARA AMARTE (2 COLUMNAS DE ANCHO) */}
@@ -217,11 +220,11 @@ export default function Home() {
                         </div>
                         <div>
                             <div className="flex items-center gap-1.5">
-                                <span className="text-sm sm:text-base font-bold text-base-content">¿Por qué te amo? 💕</span>                                
+                                <span className="text-sm sm:text-base font-bold text-base-content">¿Por qué te amo? 💕</span>
                             </div>
                             <span className="text-xs opacity-75 font-normal block">Toca para descubrir una razón</span>
                         </div>
-                    </div>         
+                    </div>
                 </button>
 
                 {/* JUEGOS (2 COLUMNAS DE ANCHO) */}
