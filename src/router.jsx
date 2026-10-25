@@ -1,38 +1,62 @@
 import { createBrowserRouter, useRouteError } from "react-router";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import AuthProvider from "./utils/AuthContext";
 import Layout from "./Layout";
 
-// Lazy loaded page components
-const Login = lazy(() => import("./pages/user/Login"));
-// const Register = lazy(() => import("./pages/user/Register"));
-// const PasswordRegistration = lazy(() => import("./pages/user/PasswordRegistration"));
-const Configuration = lazy(() => import("./pages/user/Configuration"));
-const Home = lazy(() => import("./pages/Home"));
-const DrawingPage = lazy(() => import("./pages/drawer/DrawingPage"));
-const TestingPage = lazy(() => import("./pages/TestingPage"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Chat = lazy(() => import("./pages/chat/Chat"));
-const StarredMessages = lazy(() => import("./pages/chat/StarredMessages"));
-const Tasks = lazy(() => import("./pages/tasks/Tasks"));
-const TaskDetail = lazy(() => import("./pages/tasks/TaskDetail"));
-const Dates = lazy(() => import("./pages/dates/Dates"));
-const DateDetail = lazy(() => import("./pages/dates/DateDetail"));
-const Notes = lazy(() => import("./pages/notes/Notes"));
-const NotesGallery = lazy(() => import("./pages/notes/NotesGallery"));
-const Diary = lazy(() => import("./pages/diary/Diary"));
-const DiaryDetail = lazy(() => import("./pages/diary/DiaryDetail"));
-const Anniversaries = lazy(() => import("./pages/anniversaries/Anniversaries"));
-const AnniversaryDetail = lazy(() => import("./pages/anniversaries/AnniversaryDetail"));
-const Anniversary = lazy(() => import("./pages/Anniversary"));
-const Geolocation = lazy(() => import("./pages/geolocation/Geolocation"));
-const Games = lazy(() => import("./pages/games/Games"));
-const Pinturillo = lazy(() => import("./pages/games/pinturillo/Pinturillo"));
-const PintNewGame = lazy(() => import("./pages/games/pinturillo/PintNewGame"));
-const PinturilloGuess = lazy(() => import("./pages/games/pinturillo/PinturilloGuess"));
-const GirlfriendsDay = lazy(() => import("./pages/GirlfriendsDay"));
-const Letters = lazy(() => import("./pages/letters/Letters"));
-const SixthMonth = lazy(() => import("./pages/letters/SixthMonth"));
+// Helper para reintentar y recargar automáticamente la app si un chunk falló por despliegue de nueva versión
+const lazyRetry = (importFn) =>
+    lazy(async () => {
+        try {
+            return await importFn();
+        } catch (error) {
+            const isImportError =
+                error?.message?.includes("dynamically imported module") ||
+                error?.message?.includes("Failed to fetch") ||
+                error?.message?.includes("Importing a module script failed");
+
+            if (isImportError) {
+                const lastReload = sessionStorage.getItem("chunk_reload_time");
+                const now = Date.now();
+                if (!lastReload || now - parseInt(lastReload, 10) > 10000) {
+                    sessionStorage.setItem("chunk_reload_time", now.toString());
+                    window.location.assign(import.meta.env.BASE_URL || "/");
+                    return new Promise(() => {}); // Espera la redirección
+                }
+            }
+            throw error;
+        }
+    });
+
+// Lazy loaded page components con protección de auto-recarga
+const Login = lazyRetry(() => import("./pages/user/Login"));
+// const Register = lazyRetry(() => import("./pages/user/Register"));
+// const PasswordRegistration = lazyRetry(() => import("./pages/user/PasswordRegistration"));
+const Configuration = lazyRetry(() => import("./pages/user/Configuration"));
+const Home = lazyRetry(() => import("./pages/Home"));
+const DrawingPage = lazyRetry(() => import("./pages/drawer/DrawingPage"));
+const TestingPage = lazyRetry(() => import("./pages/TestingPage"));
+const NotFound = lazyRetry(() => import("./pages/NotFound"));
+const Chat = lazyRetry(() => import("./pages/chat/Chat"));
+const StarredMessages = lazyRetry(() => import("./pages/chat/StarredMessages"));
+const Tasks = lazyRetry(() => import("./pages/tasks/Tasks"));
+const TaskDetail = lazyRetry(() => import("./pages/tasks/TaskDetail"));
+const Dates = lazyRetry(() => import("./pages/dates/Dates"));
+const DateDetail = lazyRetry(() => import("./pages/dates/DateDetail"));
+const Notes = lazyRetry(() => import("./pages/notes/Notes"));
+const NotesGallery = lazyRetry(() => import("./pages/notes/NotesGallery"));
+const Diary = lazyRetry(() => import("./pages/diary/Diary"));
+const DiaryDetail = lazyRetry(() => import("./pages/diary/DiaryDetail"));
+const Anniversaries = lazyRetry(() => import("./pages/anniversaries/Anniversaries"));
+const AnniversaryDetail = lazyRetry(() => import("./pages/anniversaries/AnniversaryDetail"));
+const Anniversary = lazyRetry(() => import("./pages/Anniversary"));
+const Geolocation = lazyRetry(() => import("./pages/geolocation/Geolocation"));
+const Games = lazyRetry(() => import("./pages/games/Games"));
+const Pinturillo = lazyRetry(() => import("./pages/games/pinturillo/Pinturillo"));
+const PintNewGame = lazyRetry(() => import("./pages/games/pinturillo/PintNewGame"));
+const PinturilloGuess = lazyRetry(() => import("./pages/games/pinturillo/PinturilloGuess"));
+const GirlfriendsDay = lazyRetry(() => import("./pages/GirlfriendsDay"));
+const Letters = lazyRetry(() => import("./pages/letters/Letters"));
+const SixthMonth = lazyRetry(() => import("./pages/letters/SixthMonth"));
 
 const PageLoader = () => (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -48,17 +72,47 @@ const LazyPage = ({ children }) => (
 
 const RootErrorBoundary = () => {
     const error = useRouteError();
-    console.error(error);
+    console.error("Route error:", error);
+
+    const errorMessage = error?.message || error?.statusText || "";
+    const isChunkError =
+        errorMessage.includes("dynamically imported module") ||
+        errorMessage.includes("Failed to fetch") ||
+        errorMessage.includes("Importing a module script failed");
+
+    useEffect(() => {
+        if (isChunkError) {
+            const lastReload = sessionStorage.getItem("chunk_error_redirect");
+            const now = Date.now();
+            if (!lastReload || now - parseInt(lastReload, 10) > 8000) {
+                sessionStorage.setItem("chunk_error_redirect", now.toString());
+                window.location.assign(import.meta.env.BASE_URL || "/");
+            }
+        }
+    }, [isChunkError]);
+
+    if (isChunkError) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center bg-base-100 text-base-content">
+                <span className="loading loading-spinner loading-lg text-primary mb-4"></span>
+                <h1 className="text-xl font-bold mb-1">Actualizando la app...</h1>
+                <p className="text-xs opacity-70">
+                    Se detectó una nueva versión de NearU. Redirigiéndote al inicio...
+                </p>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center bg-base-100 text-base-content">
             <h1 className="text-2xl font-bold mb-2">¡Ups! Algo salió mal.</h1>
-            <p className="text-sm opacity-70 mb-4">
-                {error?.statusText || error?.message || "Ha ocurrido un error inesperado."}
+            <p className="text-sm opacity-70 mb-4 max-w-sm">
+                Ha ocurrido un problema temporal al cargar esta sección. Por favor, inténtalo nuevamente.
             </p>
             <button
                 type="button"
-                onClick={() => window.location.assign(import.meta.env.BASE_URL)}
-                className="btn btn-primary btn-sm rounded-xl"
+                onClick={() => window.location.assign(import.meta.env.BASE_URL || "/")}
+                className="btn btn-primary btn-sm rounded-xl font-semibold"
             >
                 Volver al inicio
             </button>
