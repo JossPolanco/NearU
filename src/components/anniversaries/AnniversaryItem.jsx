@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MoreVertical, Edit2, Trash2, Heart, Hourglass, CalendarDays } from "lucide-react";
+import { Calendar, MoreVertical, Edit2, Trash2, Heart, Hourglass, CalendarDays, Sparkles } from "lucide-react";
 
 // Pure helper functions moved to module scope to avoid re-creation on every render
 const getAnniversaryStats = (eventDateStr, recurrenceType) => {
@@ -17,6 +17,14 @@ const getAnniversaryStats = (eventDateStr, recurrenceType) => {
     const timeDiffPassed = today.getTime() - eventDate.getTime();
     const daysPassed = Math.max(0, Math.floor(timeDiffPassed / (1000 * 60 * 60 * 24)));
 
+    // Check if today is the anniversary day
+    let isToday = false;
+    if (recurrenceType === "mensual") {
+        isToday = today.getDate() === day;
+    } else {
+        isToday = today.getDate() === day && today.getMonth() === (month - 1);
+    }
+
     // 2. Days remaining until next anniversary occurrence
     let nextOccurrence = new Date(today.getFullYear(), month - 1, day);
 
@@ -33,7 +41,7 @@ const getAnniversaryStats = (eventDateStr, recurrenceType) => {
     }
 
     const timeDiffRemaining = nextOccurrence.getTime() - today.getTime();
-    const daysRemaining = Math.max(0, Math.ceil(timeDiffRemaining / (1000 * 60 * 60 * 24)));
+    const daysRemaining = isToday ? 0 : Math.max(0, Math.ceil(timeDiffRemaining / (1000 * 60 * 60 * 24)));
 
     // 3. Units passed (years or months)
     let unitsPassed = 0;
@@ -58,7 +66,7 @@ const getAnniversaryStats = (eventDateStr, recurrenceType) => {
         labelUnits = unitsPassed === 1 ? "año" : "años";
     }
 
-    return { daysPassed, daysRemaining, unitsPassed, labelUnits };
+    return { daysPassed, daysRemaining, unitsPassed, labelUnits, isToday };
 };
 
 const formatDate = (dateStr) => {
@@ -79,20 +87,48 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
     const { id, title, description, event_date, recurrence_type, reminder_days_before } = anniversary;
 
     const stats = getAnniversaryStats(event_date, recurrence_type);
+    const isToday = stats?.isToday;
 
     return (
-        <div className="group flex flex-col gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 transition-transform duration-300 shadow-2xs select-none active:scale-[0.99] md:hover:shadow-xs active:border-primary/20 md:hover:border-primary/20">
-            <div className="flex items-start justify-between gap-4">
+        <div
+            className={`group relative flex flex-col gap-4 p-5 rounded-3xl transition-all duration-300 select-none overflow-hidden ${
+                isToday
+                    ? "border-2 border-primary/70 bg-linear-to-br from-primary/15 via-secondary/10 to-base-100 shadow-md shadow-primary/10 active:scale-[0.99]"
+                    : "border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 shadow-2xs active:scale-[0.99] md:hover:shadow-xs active:border-primary/20 md:hover:border-primary/20"
+            }`}
+        >
+            {/* Glow decorativo de fondo para cuando es hoy */}
+            {isToday && (
+                <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary/20 rounded-full blur-2xl pointer-events-none animate-pulse" />
+            )}
+
+            <div className="flex items-start justify-between gap-4 relative z-10">
                 <div className="flex items-center gap-3.5 min-w-0 flex-1">
                     {/* Pink Heart Icon Box */}
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-3xs transition-transform duration-300 bg-error/10 dark:bg-error/15 text-pink-500">
-                        <Heart className="w-6 h-6 animate-pulse" style={{ animationDuration: '3s' }} />
+                    <div
+                        className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-3xs transition-transform duration-300 ${
+                            isToday
+                                ? "bg-primary text-white shadow-sm scale-105"
+                                : "bg-error/10 dark:bg-error/15 text-pink-500"
+                        }`}
+                    >
+                        <Heart
+                            className={`w-6 h-6 fill-current animate-pulse ${isToday ? "text-white" : ""}`}
+                            style={{ animationDuration: isToday ? '1.5s' : '3s' }}
+                        />
                     </div>
 
-                    <div className="space-y-0.5 min-w-0 flex-1">
-                        <h3 className="font-bold text-base leading-tight text-base-content">
-                            {title}
-                        </h3>
+                    <div className="space-y-1 min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className={`font-bold text-base leading-tight ${isToday ? "text-primary dark:text-primary" : "text-base-content"}`}>
+                                {title}
+                            </h3>
+                            {isToday && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wide uppercase bg-primary text-white shadow-xs animate-bounce">
+                                    <Sparkles className="w-3 h-3" /> ¡Es Hoy!
+                                </span>
+                            )}
+                        </div>
                         {description && (
                             <p className="text-xs text-base-content/60 leading-relaxed line-clamp-2">
                                 {description}
@@ -144,9 +180,13 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
 
             {/* Calculations and Stats display */}
             {stats && (
-                <div className="grid grid-cols-2 gap-3 pt-2 border-t border-base-150/40 dark:border-base-800/40">
-                    <div className="flex items-center gap-2.5 bg-base-200/30 dark:bg-base-950/10 p-3 rounded-2xl border border-base-200/30 dark:border-base-850/20">
-                        <CalendarDays className="w-4.5 h-4.5 text-primary/70 shrink-0" />
+                <div className="grid grid-cols-2 gap-3 pt-2 border-t border-base-150/40 dark:border-base-800/40 relative z-10">
+                    <div className={`flex items-center gap-2.5 p-3 rounded-2xl border ${
+                        isToday
+                            ? "bg-primary/10 border-primary/25"
+                            : "bg-base-200/30 dark:bg-base-950/10 border-base-200/30 dark:border-base-850/20"
+                    }`}>
+                        <CalendarDays className={`w-4.5 h-4.5 shrink-0 ${isToday ? "text-primary" : "text-primary/70"}`} />
                         <div className="flex flex-col min-w-0">
                             <span className="text-[10px] text-base-content/40 font-bold uppercase tracking-wider">
                                 Transcurrido
@@ -162,14 +202,18 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5 bg-base-200/30 dark:bg-base-950/10 p-3 rounded-2xl border border-base-200/30 dark:border-base-850/20">
-                        <Hourglass className="w-4.5 h-4.5 text-accent/70 shrink-0" />
+                    <div className={`flex items-center gap-2.5 p-3 rounded-2xl border ${
+                        isToday
+                            ? "bg-secondary/15 border-secondary/30"
+                            : "bg-base-200/30 dark:bg-base-950/10 border-base-200/30 dark:border-base-850/20"
+                    }`}>
+                        <Hourglass className={`w-4.5 h-4.5 shrink-0 ${isToday ? "text-secondary" : "text-accent/70"}`} />
                         <div className="flex flex-col min-w-0">
                             <span className="text-[10px] text-base-content/40 font-bold uppercase tracking-wider">
                                 Siguiente
                             </span>
-                            {stats.daysRemaining === 0 ? (
-                                <span className="text-xs font-bold text-success animate-bounce">
+                            {isToday ? (
+                                <span className="text-xs font-black text-primary flex items-center gap-1">
                                     ¡Hoy es el día! 🎉
                                 </span>
                             ) : (
@@ -183,12 +227,14 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
             )}
 
             {/* Event date details footer */}
-            <div className="flex flex-wrap gap-2 items-center justify-between text-[11px] text-base-content/40 font-semibold px-1">
+            <div className="flex flex-wrap gap-2 items-center justify-between text-[11px] text-base-content/40 font-semibold px-1 relative z-10">
                 <div className="flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5 opacity-60" />
                     <span>Desde el {formatDate(event_date)}</span>
                 </div>
-                <span className="badge badge-sm text-[10px] font-bold py-1 px-2.5 rounded-lg bg-base-200/50 dark:bg-base-800/40 text-base-content/60 border-none">
+                <span className={`badge badge-sm text-[10px] font-bold py-1 px-2.5 rounded-lg border-none ${
+                    isToday ? "bg-primary/20 text-primary font-extrabold" : "bg-base-200/50 dark:bg-base-800/40 text-base-content/60"
+                }`}>
                     {displayRecurrence(recurrence_type)}
                 </span>
             </div>
