@@ -226,11 +226,11 @@ export default function Anniversaries() {
                 </div>
             )}
 
-            <div className="flex items-center justify-center">
+            {/* <div className="flex items-center justify-center">
                 <button type="button" className="btn btn-primary mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-transform font-semibold" onClick={() => navigate('/anniversary')}>
                     Un mensajito para ti mi amor 😚
                 </button>
-            </div>
+            </div> */}
 
             {!isLoading && (
                 <FabAdd onClick={handleOpenCreateModal} />
