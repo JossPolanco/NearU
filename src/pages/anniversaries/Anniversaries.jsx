@@ -10,6 +10,46 @@ import { useRef, useState } from 'react';
 import "react-day-picker/dist/style.css";
 import { es } from "date-fns/locale";
 import { z } from 'zod';
+import { motion } from 'motion/react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 380,
+            damping: 28,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 14, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 360,
+            damping: 26,
+        },
+    },
+};
 
 const anniversarySchema = z.object({
     title: z.string().min(1, "Debes escribir un título para tu aniversario"),
@@ -159,27 +199,45 @@ export default function Anniversaries() {
     const isEmpty = !data || data.length === 0
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+            className="max-w-2xl mx-auto p-4 space-y-6"
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.08 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
 
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
 
-                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.08, rotate: 45 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80"
                     onClick={() => handleRefresh()}
                     aria-label="Refrescar"
                 >
                     <RotateCw className="w-5 h-5" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
             {/* List / Loading / Empty states */}
             {isLoading ? (
@@ -200,7 +258,10 @@ export default function Anniversaries() {
                     ))}
                 </div>
             ) : isEmpty ? (
-                <div className="flex flex-col items-center justify-center py-14 px-6 text-center dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 my-4 shadow-3xs">
+                <motion.div
+                    variants={cardVariants}
+                    className="flex flex-col items-center justify-center py-14 px-6 text-center dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 my-4 shadow-3xs"
+                >
                     <div className="w-16 h-16 rounded-2xl bg-pink-100 dark:bg-pink-950/30 flex items-center justify-center mb-5 text-pink-500">
                         <Heart className="w-8 h-8 text-pink-500 animate-pulse" style={{ animationDuration: '3s' }} />
                     </div>
@@ -208,12 +269,30 @@ export default function Anniversaries() {
                     <p className="text-xs text-base-content/50 max-w-sm mt-2 leading-relaxed">
                         Aún no hay aniversarios registrados. Añade uno para recordar cada momento especial de nuestro camino.
                     </p>
-                    <button type="button" className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-transform font-semibold" onClick={handleOpenCreateModal}>
+                    <motion.button
+                        type="button"
+                        whileHover={touchHover({ scale: 1.03 })}
+                        whileTap={tapFeedback.button}
+                        transition={mobileSpring}
+                        className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs font-semibold"
+                        onClick={handleOpenCreateModal}
+                    >
                         <Plus className="w-4 h-4" /> Registrar primer aniversario
-                    </button>
-                </div>
+                    </motion.button>
+                </motion.div>
             ) : (
-                <div className="flex flex-col gap-3 pb-8">
+                <motion.div
+                    variants={{
+                        hidden: { opacity: 0 },
+                        visible: {
+                            opacity: 1,
+                            transition: {
+                                staggerChildren: 0.07,
+                            },
+                        },
+                    }}
+                    className="flex flex-col gap-3 pb-8"
+                >
                     {data?.map((anniversary) => (
                         <AnniversaryItem
                             key={anniversary.id}
@@ -223,7 +302,7 @@ export default function Anniversaries() {
                             isDeleting={deleteAnniversaryMutation.isPending && deleteAnniversaryMutation.variables === anniversary.id}
                         />
                     ))}
-                </div>
+                </motion.div>
             )}
 
             {/* <div className="flex items-center justify-center">
@@ -396,7 +475,7 @@ export default function Anniversaries() {
                     }}
                 />
             </Modal>
-        </div>
+        </motion.div>
     )
 }
 

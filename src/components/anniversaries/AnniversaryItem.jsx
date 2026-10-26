@@ -1,5 +1,21 @@
 import React from 'react';
 import { Calendar, MoreVertical, Edit2, Trash2, Heart, Hourglass, CalendarDays, Sparkles } from "lucide-react";
+import { motion } from 'motion/react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 12, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 360,
+            damping: 26,
+        },
+    },
+};
 
 // Pure helper functions moved to module scope to avoid re-creation on every render
 const getAnniversaryStats = (eventDateStr, recurrenceType) => {
@@ -90,11 +106,15 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
     const isToday = stats?.isToday;
 
     return (
-        <div
-            className={`group relative flex flex-col gap-4 p-5 rounded-3xl transition-all duration-300 select-none overflow-hidden ${
+        <motion.div
+            variants={cardVariants}
+            whileHover={touchHover({ y: -2, scale: 1.01 })}
+            whileTap={tapFeedback.card}
+            transition={mobileSpring}
+            className={`group relative flex flex-col gap-4 p-5 rounded-3xl select-none overflow-hidden ${
                 isToday
-                    ? "border-2 border-primary/70 bg-linear-to-br from-primary/15 via-secondary/10 to-base-100 shadow-md shadow-primary/10 active:scale-[0.99]"
-                    : "border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 shadow-2xs active:scale-[0.99] md:hover:shadow-xs active:border-primary/20 md:hover:border-primary/20"
+                    ? "border-2 border-primary/70 bg-linear-to-br from-primary/15 via-secondary/10 to-base-100 shadow-md shadow-primary/10"
+                    : "border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 shadow-2xs md:hover:shadow-xs active:border-primary/20 md:hover:border-primary/20"
             }`}
         >
             {/* Glow decorativo de fondo para cuando es hoy */}
@@ -139,14 +159,17 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
 
                 {/* Dropdown Options Menu */}
                 <div className="dropdown dropdown-end shrink-0" onClick={(e) => e.stopPropagation()}>
-                    <button
+                    <motion.button
                         type="button"
                         tabIndex={0}
+                        whileHover={touchHover({ scale: 1.1 })}
+                        whileTap={tapFeedback.icon}
+                        transition={mobileSpring}
                         className="btn btn-ghost btn-circle btn-sm text-base-content/40 active:text-primary active:bg-base-250/20 md:hover:text-primary md:hover:bg-base-250/20 transition-colors"
                         aria-label="Opciones de aniversario"
                     >
                         <MoreVertical className="w-4 h-4" />
-                    </button>
+                    </motion.button>
                     <ul
                         className="dropdown-content menu p-1.5 shadow-xl bg-base-100/95 dark:bg-base-950/95 border border-base-200 dark:border-base-800 rounded-2xl w-36 z-10 backdrop-blur"
                     >
@@ -238,6 +261,6 @@ export default function AnniversaryItem({ anniversary, onEdit, onDelete, isDelet
                     {displayRecurrence(recurrence_type)}
                 </span>
             </div>
-        </div>
+        </motion.div>
     );
 }

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import confetti from 'canvas-confetti';
+import { motion } from 'motion/react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
 
 var heart = confetti.shapeFromPath({
     path: 'M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z',
@@ -64,8 +66,17 @@ export default function SixthMonth() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-base-300 flex items-center justify-center p-4">
-            <div className="relative text-center max-w-2xl bg-base-100 rounded-lg shadow-lg p-8">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="min-h-screen bg-base-300 flex items-center justify-center p-4"
+        >
+            <motion.div
+                initial={{ opacity: 0, scale: 0.94, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={mobileSpring}
+                className="relative text-center max-w-2xl bg-base-100 rounded-3xl shadow-lg p-8"
+            >
                 <h2 className="text-2xl font-bold mb-4">
                     <span className="text-red-500">❤️</span>
                     <span className="text-orange-500">Fe</span>
@@ -91,10 +102,17 @@ export default function SixthMonth() {
                     No te rindas conmigo, te descuide y no es justo, yo aquí sigo y seguiré al cien contigo porque te amo muchísimo, más de lo que a veces sé explicar con palabras <br /> Feliz aniversario mi wowia hermosa 😚❤️.
                 </p>
 
-                <button type="button" className="mt-6 px-4 py-2 bg-primary text-white rounded hover:bg-primary-focus hover:cursor-pointer" onClick={() => navigate(-1)}>
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.03 })}
+                    whileTap={tapFeedback.button}
+                    transition={mobileSpring}
+                    className="mt-6 px-5 py-2.5 bg-primary text-white font-semibold rounded-2xl shadow-xs cursor-pointer"
+                    onClick={() => navigate(-1)}
+                >
                     Wamonos de regreso 🫴
-                </button>
-            </div>
-        </div>
+                </motion.button>
+            </motion.div>
+        </motion.div>
     );
 }

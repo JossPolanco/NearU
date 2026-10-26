@@ -5,6 +5,46 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getPartnerProfile } from '@/services/user';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
+import { motion } from 'motion/react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 380,
+            damping: 28,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 360,
+            damping: 26,
+        },
+    },
+};
 
 const parseDateTime = (dateString) => {
     if (!dateString) return '';
@@ -43,44 +83,72 @@ export default function Pinturillo() {
     const totalPages = historyData?.totalPages || 1
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6 pb-12">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+            className="max-w-2xl mx-auto p-4 space-y-6 pb-12"
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.08 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
 
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
 
-                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.08, rotate: 45 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80"
                     onClick={() => handleRefresh()}
                     aria-label="Refrescar"
                 >
                     <RotateCw className="w-5 h-5" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
             {/* SCORE COMPONENT */}
-            <PinturilloScore />
+            <motion.div variants={cardVariants}>
+                <PinturilloScore />
+            </motion.div>
 
             {/* NUEVA PARTIDA */}
             <div className="pt-1">
-                <button type="button"
-                    className="btn btn-primary btn-lg w-full rounded-2xl font-extrabold shadow-md active:scale-[0.98] transition-transform flex items-center justify-center gap-2 min-h-14 text-base"
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={touchHover({ scale: 1.02 })}
+                    whileTap={tapFeedback.button}
+                    transition={mobileSpring}
+                    className="btn btn-primary btn-lg w-full rounded-2xl font-extrabold shadow-md flex items-center justify-center gap-2 min-h-14 text-base"
                     onClick={() => navigate('/pinturillo/newgame')}
                 >
                     <Plus className="w-5 h-5 stroke-[2.5]" />
                     <span>Nueva Partida</span>
-                </button>
+                </motion.button>
             </div>
 
             {/* JUEGOS PENDIENTES */}
-            <div className="bg-base-100 border border-base-200/80 dark:border-base-800/50 rounded-3xl p-4 sm:p-5 shadow-xs space-y-4">
+            <motion.div
+                variants={cardVariants}
+                className="bg-base-100 border border-base-200/80 dark:border-base-800/50 rounded-3xl p-4 sm:p-5 shadow-xs space-y-4"
+            >
                 <div className="flex items-center justify-between border-b border-base-200/60 pb-3">
                     <div className="flex items-center gap-2">
                         <div className="p-1.5 rounded-xl bg-primary/10 text-primary">
@@ -152,10 +220,13 @@ export default function Pinturillo() {
                         </p>
                     </div>
                 )}
-            </div>
+            </motion.div>
 
             {/* SECCION DEL HISTORIAL */}
-            <div className="bg-base-100 border border-base-200/80 dark:border-base-800/50 rounded-3xl p-4 sm:p-5 shadow-xs space-y-4">
+            <motion.div
+                variants={cardVariants}
+                className="bg-base-100 border border-base-200/80 dark:border-base-800/50 rounded-3xl p-4 sm:p-5 shadow-xs space-y-4"
+            >
                 <div className="flex items-center justify-between border-b border-base-200/60 pb-3">
                     <div className="flex items-center gap-2">
                         <div className="p-1.5 rounded-xl bg-secondary/10 text-secondary">
@@ -235,8 +306,8 @@ export default function Pinturillo() {
                         </p>
                     </div>
                 )}
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     )
 }
 

@@ -1,32 +1,87 @@
-import { ArrowLeft, BookHeart, Heart, Sparkles, Mail } from "lucide-react";
+import { ArrowLeft, BookHeart, Heart, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router";
+import { motion } from "motion/react";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion";
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 380,
+            damping: 28,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 360,
+            damping: 26,
+        },
+    },
+};
 
 export default function Letters() {
     const navigate = useNavigate();
 
     return (
-        <div className="max-w-3xl mx-auto p-4 sm:p-6 space-y-6 pb-24 animate-fade-in">
-            {/* Header / Navigation idéntico al estándar de la app */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 pb-4 mb-2">
-                <button
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+            className="max-w-3xl mx-auto p-4 sm:p-6 space-y-6 pb-24"
+        >
+            {/* Header / Navigation */}
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 pb-4 mb-2"
+            >
+                <motion.button
                     type="button"
-                    className="absolute left-0 btn btn-circle btn-primary text-white active:bg-primary/80 transition-transform duration-200"
+                    whileHover={touchHover({ scale: 1.08 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:bg-primary/80"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
                 <Title />
-            </div>
+            </motion.div>
 
-            {/* Grid para los botones idéntico al de Home */}
+            {/* Grid para los botones */}
             <div className="grid grid-cols-2 gap-3.5 sm:gap-4">
 
                 {/* 6 MESESOTES (2 COLUMNAS DE ANCHO - RESALTADO Y ESPECIAL) */}
-                <button
+                <motion.button
                     type="button"
+                    variants={cardVariants}
+                    whileHover={touchHover({ y: -3, scale: 1.015 })}
+                    whileTap={tapFeedback.card}
+                    transition={mobileSpring}
                     onClick={() => navigate('/letters/sixthmonth')}
-                    className="btn btn-soft btn-secondary col-span-2 min-h-36 sm:min-h-40 h-full w-full rounded-3xl p-5 sm:p-6 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-2 border-secondary/40 relative overflow-hidden"
+                    className="btn btn-soft btn-secondary col-span-2 min-h-36 sm:min-h-40 h-full w-full rounded-3xl p-5 sm:p-6 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md border-2 border-secondary/40 relative overflow-hidden"
                 >
                     <div className="w-full flex items-center justify-between">
                         <span className="badge badge-secondary badge-sm font-semibold tracking-wide gap-1">
@@ -44,13 +99,17 @@ export default function Letters() {
                             Medio año siendo wovios, para mi personita favorita 💕
                         </p>
                     </div>
-                </button>
+                </motion.button>
 
                 {/* DÍA DE LA NOVIA (1 COLUMNA DE ANCHO) */}
-                <button
+                <motion.button
                     type="button"
+                    variants={cardVariants}
+                    whileHover={touchHover({ y: -3, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
+                    transition={mobileSpring}
                     onClick={() => navigate('/girlfriendsday')}
-                    className="btn btn-soft btn-primary col-span-1 min-h-44 sm:min-h-48 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none"
+                    className="btn btn-soft btn-primary col-span-1 min-h-44 sm:min-h-48 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md border-none"
                 >
                     <div className="w-full flex items-center justify-between">
                         <span className="badge badge-primary badge-xs font-medium">01/08</span>
@@ -64,13 +123,17 @@ export default function Letters() {
                             Para recordarte lo perfecta que eres 😚
                         </p>
                     </div>
-                </button>
+                </motion.button>
 
                 {/* 2DO MES (1 COLUMNA DE ANCHO) */}
-                <button
+                <motion.button
                     type="button"
+                    variants={cardVariants}
+                    whileHover={touchHover({ y: -3, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
+                    transition={mobileSpring}
                     onClick={() => navigate('/anniversary')}
-                    className="btn btn-soft btn-accent col-span-1 min-h-44 sm:min-h-48 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none"
+                    className="btn btn-soft btn-accent col-span-1 min-h-44 sm:min-h-48 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md border-none"
                 >
                     <div className="w-full flex items-center justify-between">
                         <span className="badge badge-accent badge-xs font-medium">2 Meses</span>
@@ -84,10 +147,10 @@ export default function Letters() {
                             Nuestros primeros pasitos juntos ✨
                         </p>
                     </div>
-                </button>
+                </motion.button>
 
             </div>
-        </div>
+        </motion.div>
     );
 }
 

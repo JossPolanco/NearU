@@ -6,6 +6,46 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { motion } from 'motion/react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 380,
+            damping: 28,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 360,
+            damping: 26,
+        },
+    },
+};
 
 //  CALCULAR LA DISNTANCIA USANDO LA FORMULA DE HAVERSINE
 function getDistance(lat1, lon1, lat2, lon2) {
@@ -232,23 +272,39 @@ export default function Geolocation() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-4 flex flex-col gap-5 min-h-[90vh]">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+            className="max-w-2xl mx-auto p-4 flex flex-col gap-5 min-h-[90vh]"
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.08 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
 
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
-            </div>
+            </motion.div>
 
             {locationPermission !== "granted" && (
-                <div className="flex flex-col items-center justify-center flex-1 py-16 text-center max-w-md mx-auto space-y-6">
+                <motion.div
+                    variants={cardVariants}
+                    className="flex flex-col items-center justify-center flex-1 py-16 text-center max-w-md mx-auto space-y-6"
+                >
                     <div className="p-5 bg-primary/10 text-primary rounded-full animate-pulse shadow-md">
                         <MapPin size={48} className="stroke-[1.5]" />
                     </div>
@@ -260,12 +316,17 @@ export default function Geolocation() {
                             NearU utiliza tu ubicación mi amor, para mostrarte en el mapa y que nos podamos ver. Solo nosotros dos podremos vernos.
                         </p>
                     </div>
-                    <button type="button" className="btn btn-primary rounded-full px-8 font-semibold shadow-md active:scale-95 transition-transform"
+                    <motion.button
+                        type="button"
+                        whileHover={touchHover({ scale: 1.04 })}
+                        whileTap={tapFeedback.button}
+                        transition={mobileSpring}
+                        className="btn btn-primary rounded-full px-8 font-semibold shadow-md"
                         onClick={() => navigate('/config')}
                     >
                         Configurar Permisos
-                    </button>
-                </div>
+                    </motion.button>
+                </motion.div>
             )}
 
             {locationPermission === "granted" && (
@@ -273,7 +334,10 @@ export default function Geolocation() {
                     {userLocation?.latitude && userLocation?.longitude ? (
                         <div className="flex flex-col gap-4">
                             {/* Leaflet Map Card */}
-                            <div className="relative w-full rounded-3xl overflow-hidden shadow-sm border border-base-200/70 dark:border-base-800/50 bg-base-100 h-96">
+                            <motion.div
+                                variants={cardVariants}
+                                className="relative w-full rounded-3xl overflow-hidden shadow-sm border border-base-200/70 dark:border-base-800/50 bg-base-100 h-96"
+                            >
                                 <MapContainer
                                     center={[userLocation.latitude, userLocation.longitude]}
                                     zoom={13}
@@ -310,10 +374,15 @@ export default function Geolocation() {
 
                                     <MapController userLocation={userLocation} partnerLocation={partnerLocation} resetTrigger={resetTrigger} />
                                 </MapContainer>
-                            </div>
+                            </motion.div>
 
                             {/* CARD DE DISTANCIA Y CONEXIÓN */}
-                            <div className="flex flex-col gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 transition-transform duration-300 shadow-2xs select-none active:border-primary/20">
+                            <motion.div
+                                variants={cardVariants}
+                                whileHover={touchHover({ y: -2 })}
+                                transition={mobileSpring}
+                                className="flex flex-col gap-4 p-5 rounded-3xl border border-base-200/70 dark:border-base-800/50 bg-base-100 dark:bg-base-900/10 shadow-2xs select-none active:border-primary/20"
+                            >
                                 <div className="flex items-center justify-between gap-4">
                                     <div className="flex items-center gap-3.5 min-w-0 flex-1">
                                         <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-3xs bg-error/10 dark:bg-error/15 text-pink-500">
@@ -335,9 +404,17 @@ export default function Geolocation() {
                                                 )}
                                             </p>
                                         </div>
-                                        <button type="button" className='btn btn-primary btn-sm btn-circle shadow-md shadow-primary/20 hover:shadow-lg active:shadow-sm transition-transform duration-300' onClick={() => resetOptions()} aria-label="Centrar mapa">
+                                        <motion.button
+                                            type="button"
+                                            whileHover={touchHover({ scale: 1.1 })}
+                                            whileTap={tapFeedback.icon}
+                                            transition={mobileSpring}
+                                            className='btn btn-primary btn-sm btn-circle shadow-md shadow-primary/20 hover:shadow-lg'
+                                            onClick={() => resetOptions()}
+                                            aria-label="Centrar mapa"
+                                        >
                                             <LocateFixed className='w-4 h-4' />
-                                        </button>
+                                        </motion.button>
                                     </div>
 
                                     {partnerLocation?.latitude && partnerLocation?.longitude && (
@@ -374,17 +451,20 @@ export default function Geolocation() {
                                 </div>
 
                                 <div className="flex gap-2.5 pt-1">
-                                    <button
+                                    <motion.button
                                         onClick={handleRefresh}
+                                        whileHover={touchHover({ scale: 1.01 })}
+                                        whileTap={tapFeedback.button}
+                                        transition={mobileSpring}
                                         disabled={isRefreshing || updateLocationMutation.isPending}
-                                        className="flex-1 btn btn-outline btn-primary rounded-xl gap-2 font-semibold min-h-11 h-11 text-xs transition-transform active:scale-[0.98]"
+                                        className="flex-1 btn btn-outline btn-primary rounded-xl gap-2 font-semibold min-h-11 h-11 text-xs"
                                         type="button"
                                     >
                                         <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing || updateLocationMutation.isPending ? 'animate-spin' : ''}`} />
                                         {isRefreshing || updateLocationMutation.isPending ? "Actualizando..." : "Actualizar mi posición"}
-                                    </button>
+                                    </motion.button>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
                     ) : (
                         <div className="flex flex-col items-center justify-center flex-1 py-16 text-center max-w-md mx-auto space-y-4">
@@ -397,7 +477,7 @@ export default function Geolocation() {
                     )}
                 </>
             )}
-        </div>
+        </motion.div>
     );
 }
 

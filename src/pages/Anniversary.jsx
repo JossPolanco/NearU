@@ -1,12 +1,23 @@
 import React from 'react'
 import { useNavigate } from 'react-router';
+import { motion } from 'motion/react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
 
 export default function Anniversary() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-base-300 flex items-center justify-center p-4">
-            <div className="relative text-center max-w-2xl bg-base-100 rounded-lg shadow-lg p-8">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="min-h-screen bg-base-300 flex items-center justify-center p-4"
+        >
+            <motion.div
+                initial={{ opacity: 0, scale: 0.94, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={mobileSpring}
+                className="relative text-center max-w-2xl bg-base-100 rounded-2xl shadow-lg p-8"
+            >
                 <h2 className="text-2xl font-bold mb-4">
                     <span className="text-red-500">❤️</span>
                     <span className="text-orange-500">Fe</span>
@@ -57,10 +68,17 @@ export default function Anniversary() {
                 </p>
                 <p className="text-xl font-bold text-primary mb-2 mt-6">💕💕 Te amo mucho Evelyn 💕💕</p>
 
-                <button type="button" className="mt-6 px-4 py-2 bg-primary text-white rounded hover:bg-primary-focus hover:cursor-pointer" onClick={() => navigate(-1)}>
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.03 })}
+                    whileTap={tapFeedback.button}
+                    transition={mobileSpring}
+                    className="mt-6 px-4 py-2 bg-primary text-white rounded-xl shadow-xs cursor-pointer font-semibold"
+                    onClick={() => navigate(-1)}
+                >
                     Vamonos de regreso a la app mi amor 😚😚
-                </button>
-            </div>
-        </div>
+                </motion.button>
+            </motion.div>
+        </motion.div>
     )
 }

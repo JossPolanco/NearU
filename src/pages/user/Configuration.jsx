@@ -11,6 +11,46 @@ import Alert from '../../components/Alert';
 import { z } from 'zod';
 import { requestLocationPermission } from '../../utils/geolocation';
 import { setCurrentLocation } from '../../services/geolocation';
+import { motion } from 'motion/react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 380,
+            damping: 28,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 14, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 360,
+            damping: 26,
+        },
+    },
+};
 
 export default function Configuration() {
     const modalRef = useRef(null);
@@ -141,20 +181,33 @@ export default function Configuration() {
     });
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+            className="max-w-2xl mx-auto p-4 space-y-6"
+        >
 
             {/* HEADER */}
-            <div className="space-y-1 py-2 text-center md:text-left">
+            <motion.div
+                variants={headerVariants}
+                className="space-y-1 py-2 text-center md:text-left"
+            >
                 <div className='flex items-center justify-center'>
                     <Title />
                 </div>
                 <p className="text-sm text-base-content/60 text-center">
                     Personaliza tu rincón y administra tu cuenta.
                 </p>
-            </div>
+            </motion.div>
 
             {/* USER CARD */}
-            <div className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm">
+            <motion.div
+                variants={cardVariants}
+                whileHover={touchHover({ y: -2 })}
+                transition={mobileSpring}
+                className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm"
+            >
                 <div className="card-body p-5">
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3 min-w-0">
@@ -181,16 +234,25 @@ export default function Configuration() {
 
                         {/* ACTIONS ROW */}
                         <div className="flex items-center gap-2 shrink-0">
-                            <button className="btn btn-sm btn-ghost gap-1.5 text-primary text-xs font-semibold px-3 rounded-xl bg-primary/5 active:bg-primary/10 transition-colors"
+                            <motion.button
+                                whileHover={touchHover({ scale: 1.05 })}
+                                whileTap={tapFeedback.button}
+                                transition={mobileSpring}
+                                className="btn btn-sm btn-ghost gap-1.5 text-primary text-xs font-semibold px-3 rounded-xl bg-primary/5 active:bg-primary/10"
                                 type="button"
                                 onClick={() => modalRef.current?.open()}
                                 disabled={isAvatarPending}
                             >
                                 <Pencil size={12} />
                                 Editar
-                            </button>
+                            </motion.button>
 
-                            <button type="button" className="btn btn-sm btn-ghost text-error/70 active:text-error active:bg-error/10 hover:bg-error/5 rounded-xl font-medium text-xs px-3"
+                            <motion.button
+                                type="button"
+                                whileHover={touchHover({ scale: 1.05 })}
+                                whileTap={tapFeedback.button}
+                                transition={mobileSpring}
+                                className="btn btn-sm btn-ghost text-error/70 active:text-error active:bg-error/10 hover:bg-error/5 rounded-xl font-medium text-xs px-3"
                                 onClick={() => logoutMutation.mutate()}
                                 disabled={logoutMutation.isPending}
                             >
@@ -199,7 +261,7 @@ export default function Configuration() {
                                 ) : (
                                     "Cerrar sesión"
                                 )}
-                            </button>
+                            </motion.button>
                         </div>
                     </div>
 
@@ -213,10 +275,15 @@ export default function Configuration() {
                         />
                     </Modal>
                 </div>
-            </div>
+            </motion.div>
 
             {/* PASSWORD */}
-            <div className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm">
+            <motion.div
+                variants={cardVariants}
+                whileHover={touchHover({ y: -2 })}
+                transition={mobileSpring}
+                className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm"
+            >
                 <div className="card-body p-6 flex flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <div className="p-3 rounded-2xl bg-warning/10 text-warning shrink-0">
@@ -232,14 +299,26 @@ export default function Configuration() {
                         </div>
                     </div>
 
-                    <button type="button" className="btn btn-primary btn-sm rounded-full px-5 font-semibold text-xs active:scale-95 transition-transform" onClick={() => navigate('/create-password')}>
+                    <motion.button
+                        type="button"
+                        whileHover={touchHover({ scale: 1.05 })}
+                        whileTap={tapFeedback.button}
+                        transition={mobileSpring}
+                        className="btn btn-primary btn-sm rounded-full px-5 font-semibold text-xs"
+                        onClick={() => navigate('/create-password')}
+                    >
                         Cambiar
-                    </button>
+                    </motion.button>
                 </div>
-            </div>
+            </motion.div>
 
             {/* THEME */}
-            <div className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm">
+            <motion.div
+                variants={cardVariants}
+                whileHover={touchHover({ y: -2 })}
+                transition={mobileSpring}
+                className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm"
+            >
                 <div className="card-body p-6 flex flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <div className="p-3 rounded-2xl bg-info/10 text-info shrink-0">
@@ -256,7 +335,14 @@ export default function Configuration() {
                     </div>
 
                     <div className="dropdown dropdown-end shrink-0">
-                        <button type="button" tabIndex={0} className="btn btn-sm px-4 font-semibold text-xs capitalize flex items-center gap-1.5">
+                        <motion.button
+                            type="button"
+                            tabIndex={0}
+                            whileHover={touchHover({ scale: 1.05 })}
+                            whileTap={tapFeedback.button}
+                            transition={mobileSpring}
+                            className="btn btn-sm px-4 font-semibold text-xs capitalize flex items-center gap-1.5"
+                        >
                             {currentTheme}
                             <svg
                                 width="10px"
@@ -266,7 +352,7 @@ export default function Configuration() {
                                 viewBox="0 0 2048 2048">
                                 <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
                             </svg>
-                        </button>
+                        </motion.button>
                         <ul className="dropdown-content bg-base-300 rounded-box z-1 w-40 p-2 shadow-2xl mt-1">
                             {themes.map((theme) => (
                                 <li key={theme}>
@@ -281,10 +367,15 @@ export default function Configuration() {
                         </ul>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             {/* LOCATION PERMISSION */}
-            <div className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm">
+            <motion.div
+                variants={cardVariants}
+                whileHover={touchHover({ y: -2 })}
+                transition={mobileSpring}
+                className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm"
+            >
                 <div className="card-body p-6 flex flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <div className="p-3 rounded-2xl bg-secondary/10 text-secondary shrink-0">
@@ -307,13 +398,16 @@ export default function Configuration() {
                             </span>
                         )}
                         {locationPermission === "prompt" && (
-                            <button
-                                className="btn btn-primary btn-sm rounded-full px-5 font-semibold text-xs active:scale-95 transition-transform"
+                            <motion.button
+                                whileHover={touchHover({ scale: 1.05 })}
+                                whileTap={tapFeedback.button}
+                                transition={mobileSpring}
+                                className="btn btn-primary btn-sm rounded-full px-5 font-semibold text-xs"
                                 type="button"
                                 onClick={handleEnableLocation}
                             >
                                 Habilitar
-                            </button>
+                            </motion.button>
                         )}
                         {locationPermission === "denied" && (
                             <div className="flex flex-col items-end gap-1">
@@ -327,9 +421,9 @@ export default function Configuration() {
                         )}
                     </div>
                 </div>
-            </div>
+            </motion.div>
             <Alert ref={alertRef} />
-        </div>
+        </motion.div>
 
     )
 }

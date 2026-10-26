@@ -1,31 +1,92 @@
 import React from 'react'
 import { ArrowLeft, Palette } from 'lucide-react'
 import { useNavigate } from 'react-router'
+import { motion } from 'motion/react'
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion'
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 380,
+            damping: 28,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 360,
+            damping: 26,
+        },
+    },
+};
 
 export default function Games() {
     const navigate = useNavigate()
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+            className="max-w-2xl mx-auto p-4 space-y-6"
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.08 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
 
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
-            </div>
+            </motion.div>
 
             {/* GRID PARA LOS BOTONES */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
 
-                {/* DIARIO (2C COLUMNAS DE ANCHO) */}
-                <button type="button" onClick={() => navigate('/pinturillo')} className="btn btn-soft btn-primary col-span-2 min-h-35 sm:min-h-40 h-full w-full rounded-3xl p-5 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md active:scale-[0.98] transition-transform duration-200 border-none">
+                {/* PINTURILLO */}
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={touchHover({ y: -3, scale: 1.015 })}
+                    whileTap={tapFeedback.card}
+                    transition={mobileSpring}
+                    onClick={() => navigate('/pinturillo')}
+                    className="btn btn-soft btn-primary col-span-2 min-h-35 sm:min-h-40 h-full w-full rounded-3xl p-5 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md border-none"
+                >
                     <div className="w-full flex items-center justify-between">
                         <span className="badge badge-primary badge-sm font-medium tracking-wide">
                             PINTURILLO
@@ -40,9 +101,9 @@ export default function Games() {
                             Adivina la palabra con dibujos 🎨
                         </p>
                     </div>
-                </button>
+                </motion.button>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
