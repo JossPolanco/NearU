@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 import { useNavigate } from "react-router";
+import { motion } from "motion/react";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion";
 
 const MONTH_NAMES = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -163,25 +165,39 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button type="button" className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-primary md:hover:text-primary transition-transform duration-200"
+                    <motion.button
+                        type="button"
+                        whileHover={touchHover({ scale: 1.05 })}
+                        whileTap={tapFeedback.button}
+                        transition={mobileSpring}
+                        className="btn btn-ghost btn-sm rounded-xl font-bold text-xs px-3 border border-base-200 dark:border-base-800/60 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/80 active:text-primary md:hover:text-primary"
                         onClick={handleGoToday}
                     >
                         Hoy
-                    </button>
+                    </motion.button>
                     <div className="join border border-base-200 dark:border-base-800/60 rounded-xl overflow-hidden">
-                        <button type="button" className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-primary md:hover:text-primary transition-colors"
+                        <motion.button
+                            type="button"
+                            whileHover={touchHover({ scale: 1.08 })}
+                            whileTap={tapFeedback.icon}
+                            transition={mobileSpring}
+                            className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-primary md:hover:text-primary transition-colors"
                             onClick={handlePrevMonth}
                             aria-label="Mes anterior"
                         >
                             <ChevronLeft className="w-4 h-4" />
-                        </button>
-                        <button type="button"
+                        </motion.button>
+                        <motion.button
+                            type="button"
+                            whileHover={touchHover({ scale: 1.08 })}
+                            whileTap={tapFeedback.icon}
+                            transition={mobileSpring}
                             onClick={handleNextMonth}
                             className="btn btn-ghost btn-sm join-item px-2.5 active:bg-base-200/50 md:hover:bg-base-200/50 text-base-content/75 active:text-primary md:hover:text-primary transition-colors"
                             aria-label="Mes siguiente"
                         >
                             <ChevronRight className="w-4 h-4" />
-                        </button>
+                        </motion.button>
                     </div>
                 </div>
             </div>
@@ -200,12 +216,13 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
 
             {/* 42 Positions Day Grid */}
             <div className="grid grid-cols-7 gap-1.5">
-                {cells.map((cell, idx) => {
+                {cells.map((cell) => {
                     const isCellToday = isToday(cell.date);
                     const isCellSelected = isSelected(cell.date);
 
                     return (
-                        <button type="button"
+                        <motion.button
+                            type="button"
                             key={cell.date.toISOString()}
                             onMouseDown={() => startPress(cell.date)}
                             onMouseUp={cancelPress}
@@ -215,14 +232,18 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
                             onTouchMove={handleTouchMove}
                             onClick={(e) => handleCellClick(e, cell.date)}
                             onContextMenu={(e) => e.preventDefault()}
+                            whileHover={touchHover({ scale: 1.06 })}
+                            whileTap={{ scale: 0.90 }}
+                            animate={{ scale: isCellSelected ? 0.96 : 1 }}
+                            transition={mobileSpring}
                             className={`
-                                aspect-square w-full rounded-2xl flex flex-col items-center justify-center relative transition-transform duration-300 select-none text-sm font-semibold
+                                aspect-square w-full rounded-2xl flex flex-col items-center justify-center relative select-none text-sm font-semibold
                                 ${cell.isCurrentMonth
                                     ? "text-base-content active:bg-base-200/65 md:hover:bg-base-200/65 cursor-pointer"
                                     : "text-base-content/25 font-normal active:bg-base-250/20 md:hover:bg-base-250/20 cursor-pointer"
                                 }
                                 ${isCellSelected
-                                    ? "bg-primary! text-primary-content! font-extrabold shadow-md scale-95 z-2"
+                                    ? "bg-primary! text-primary-content! font-extrabold shadow-md z-2"
                                     : ""
                                 }
                                 ${isCellToday && !isCellSelected
@@ -237,7 +258,7 @@ export default function MonthlyCalendar({ currentDate, setCurrentDate }) {
                             {isCellToday && (
                                 <span className={`absolute bottom-1 w-1 h-1 rounded-full ${isCellSelected ? "bg-primary-content" : "bg-primary"}`} />
                             )}
-                        </button>
+                        </motion.button>
                     );
                 })}
             </div>

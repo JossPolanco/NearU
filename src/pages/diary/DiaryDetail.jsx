@@ -8,8 +8,48 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, MoodSelector } from "@/components";
 import { useRef } from 'react';
 import { z } from "zod";
+import { motion } from "motion/react";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion";
 
 import { getMoodData } from "@/utils/getMoods";
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 380,
+            damping: 28,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 14, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 360,
+            damping: 26,
+        },
+    },
+};
 
 const createDiaryEntrySchema = z.object({
     title: z.string().min(1, "El título es obligatorio").max(100, "El título debe tener menos de 100 caracteres"),
@@ -125,30 +165,50 @@ export default function DiaryDetail() {
     const isPending = createDiaryMutation.isPending || updateDiaryMutation.isPending;
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+            className="max-w-2xl mx-auto p-4 space-y-6"
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button"
-                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.08 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-6 h-6" />
-                </button>
+                </motion.button>
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
 
-                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <motion.button
+                    type="button"
+                    whileHover={touchHover({ scale: 1.08, rotate: 45 })}
+                    whileTap={tapFeedback.icon}
+                    transition={mobileSpring}
+                    className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80"
                     onClick={() => handleRefresh()}
                     aria-label="Refrescar"
                 >
                     <RotateCw className="w-5 h-5" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
             {/* Display formatted date */}
-            <div className="text-center py-4 px-6 rounded-3xl bg-base-200/30 dark:bg-base-950/10 border border-base-200/60 dark:border-base-800/20 backdrop-blur-xs">
+            <motion.div
+                variants={cardVariants}
+                className="text-center py-4 px-6 rounded-3xl bg-base-200/30 dark:bg-base-950/10 border border-base-200/60 dark:border-base-800/20 backdrop-blur-xs"
+            >
                 <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary/70">
                     Diario de la pareja
                 </span>
@@ -160,7 +220,7 @@ export default function DiaryDetail() {
                         day: 'numeric'
                     })}
                 </h3>
-            </div>
+            </motion.div>
 
             {isLoading ? (
                 <div className="flex items-center justify-center h-32">
@@ -169,13 +229,16 @@ export default function DiaryDetail() {
             ) : (
                 <div className="flex flex-col gap-6">
                     {diaryEntries.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-14 px-6 text-center bg-base-100/40 dark:bg-base-950/10 border border-dashed border-base-300 dark:border-base-800 rounded-3xl gap-4">
+                        <motion.div
+                            variants={cardVariants}
+                            className="flex flex-col items-center justify-center py-14 px-6 text-center bg-base-100/40 dark:bg-base-950/10 border border-dashed border-base-300 dark:border-base-800 rounded-3xl gap-4"
+                        >
                             <span className="text-4xl">✍️</span>
                             <div>
                                 <h4 className="text-base font-bold text-base-content">Aún no hay entradas</h4>
                                 <p className="text-xs text-base-content/50 max-w-xs mt-1">Ninguno de los dos ha escrito una entrada hoy. ¡Escribe la tuya para empezar!</p>
                             </div>
-                        </div>
+                        </motion.div>
                     ) : (
                         <div className="flex flex-col gap-5">
                             {/* Sort entries so user's entry is shown first or consistent order */}
@@ -187,9 +250,12 @@ export default function DiaryDetail() {
                                 const moodData = getMoodData(profile?.gender, entry.mood);
 
                                 return (
-                                    <div
+                                    <motion.div
                                         key={entry.id}
-                                        className={`card bg-base-100 border rounded-3xl p-5 space-y-4 shadow-2xs relative overflow-hidden transition-transform duration-300 ${isMe
+                                        variants={cardVariants}
+                                        whileHover={touchHover({ y: -2 })}
+                                        transition={mobileSpring}
+                                        className={`card bg-base-100 border rounded-3xl p-5 space-y-4 shadow-2xs relative overflow-hidden ${isMe
                                             ? "from-primary/2 to-base-100 dark:from-primary/1 dark:to-base-950/15 border-primary/20 dark:border-primary/30"
                                             : "from-secondary/2 to-base-100 dark:from-secondary/1 dark:to-base-950/15 border-secondary/20 dark:border-secondary/30"
                                             }`}
@@ -230,7 +296,7 @@ export default function DiaryDetail() {
                                             <h3 className="text-base font-extrabold text-base-content leading-snug">{entry.title}</h3>
                                             <p className="text-sm text-base-content/85 whitespace-pre-wrap leading-relaxed">{entry.content}</p>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 );
                             })}
                         </div>
@@ -238,12 +304,17 @@ export default function DiaryDetail() {
 
                     {/* Action button */}
                     <div className="pt-2">
-                        <button type="button"
-                            className="btn btn-primary rounded-2xl w-full min-h-12 font-bold text-white shadow-xs active:scale-98 active:bg-primary/90 transition-transform duration-150 flex items-center justify-center gap-2"
+                        <motion.button
+                            type="button"
+                            variants={cardVariants}
+                            whileHover={touchHover({ scale: 1.02, y: -1 })}
+                            whileTap={tapFeedback.button}
+                            transition={mobileSpring}
+                            className="btn btn-primary rounded-2xl w-full min-h-12 font-bold text-white shadow-xs flex items-center justify-center gap-2"
                             onClick={handleOpenModal}
                         >
                             {myEntry ? "✏️ Editar mi entrada" : "✍️ Escribir mi entrada"}
-                        </button>
+                        </motion.button>
                     </div>
                 </div>
             )}
@@ -308,19 +379,22 @@ export default function DiaryDetail() {
                         )}
                     />
 
-                    <button
+                    <motion.button
                         type="submit"
-                        className={`btn btn-primary mt-4 rounded-2xl min-h-12 font-bold text-white shadow-xs active:scale-98 transition-transform duration-150`}
+                        whileHover={touchHover({ scale: 1.02 })}
+                        whileTap={tapFeedback.button}
+                        transition={mobileSpring}
+                        className="btn btn-primary mt-4 rounded-2xl min-h-12 font-bold text-white shadow-xs"
                         disabled={isPending}
                     >
                         {isPending && (
                             <span className="loading loading-spinner loading-sm mr-2"></span>
                         )}
                         Guardar
-                    </button>
+                    </motion.button>
                 </form>
             </Modal>
-        </div>
+        </motion.div>
     );
 }
 

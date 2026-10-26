@@ -1,6 +1,8 @@
 import { getUserProfile } from "@/services/user/userService";
 import { getMoodsByGender } from "@/utils/getMoods";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "motion/react";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion";
 
 export default function MoodSelector({ value, onChange, selectedMood, onSelectMood, label, error, disabled = false }) {
     const activeValue = value !== undefined ? value : selectedMood;
@@ -36,20 +38,23 @@ export default function MoodSelector({ value, onChange, selectedMood, onSelectMo
                     {moods.map((mood) => {
                         const isSelected = activeValue ? activeValue.toString().toLowerCase() === mood.title.toLowerCase() : false;
                         return (
-                            <button
+                            <motion.button
                                 key={mood.title}
                                 type="button"
                                 role="radio"
                                 aria-checked={isSelected}
                                 disabled={disabled}
                                 onClick={() => handleSelect && handleSelect(mood.title.toLowerCase())}
+                                whileHover={touchHover({ scale: 1.05, y: -2 })}
+                                whileTap={tapFeedback.card}
+                                animate={{ scale: isSelected ? 1.03 : 1 }}
+                                transition={mobileSpring}
                                 className={`
                                     flex flex-col items-center justify-center py-3 px-1 rounded-2xl border
-                                    transition-transform duration-200 min-h-24 focus:outline-none 
-                                    active:scale-95
+                                    min-h-24 focus:outline-none 
                                     ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}
                                     ${isSelected
-                                        ? `${mood.className || 'border-primary bg-primary/10 text-primary'} ring-2 ring-primary/30 shadow-xs font-bold scale-[1.02]`
+                                        ? `${mood.className || 'border-primary bg-primary/10 text-primary'} ring-2 ring-primary/30 shadow-xs font-bold`
                                         : 'border-base-200/90 dark:border-base-800 bg-base-100/80 dark:bg-base-900/30 text-base-content/75 md:hover:border-base-300 dark:md:hover:border-base-750 md:hover:bg-base-200/40'
                                     }
                                     ${error && !isSelected ? 'border-error/60 dark:border-error/40' : ''}
@@ -71,7 +76,7 @@ export default function MoodSelector({ value, onChange, selectedMood, onSelectMo
                                 <span className={`text-[10px] sm:text-xs font-semibold tracking-wide text-center truncate w-full px-1 select-none ${isSelected ? 'font-bold' : ''}`}>
                                     {mood.title}
                                 </span>
-                            </button>
+                            </motion.button>
                         );
                     })}
                 </div>
