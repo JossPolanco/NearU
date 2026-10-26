@@ -1,5 +1,7 @@
 import enamoradoJo from "../assets/img/stikers/Josue/enamorado_jo.webp";
 import enamoradaEv from "../assets/img/stikers/Evelyn/enamorada_ev.webp";
+import tristeJo from "../assets/img/stikers/Josue/triste_jo.webp";
+import tristeEv from "../assets/img/stikers/Evelyn/triste_ev.webp";
 
 export const MOODS_MALE = [
     {
@@ -34,7 +36,7 @@ export const MOODS_MALE = [
         title: "Triste",
         description: "Ando un poco triste",
         className: "bg-blue-500/10 dark:bg-blue-400/10 border border-blue-500/20 dark:border-blue-400/30 text-base-content",
-        photo: "",
+        photo: tristeJo,
         emoji: "😢",
     },
     {
@@ -107,7 +109,7 @@ export const MOODS_FEMALE = [
         title: "Triste",
         description: "Ando un poco triste",
         className: "bg-blue-500/10 dark:bg-blue-400/10 border border-blue-500/20 dark:border-blue-400/30 text-base-content",
-        photo: "",
+        photo: tristeEv,
         emoji: "😢",
     },
     {

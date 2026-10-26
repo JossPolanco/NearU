@@ -1,11 +1,12 @@
 import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, RotateCw, X, Mail } from 'lucide-react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { getUserPosition } from '@/utils/geolocation';
 import { UserMoodCard } from '@/components';
 import { useNavigate } from 'react-router';
-import confetti from 'canvas-confetti';
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import razones from '@/utils/razones.json';
+import confetti from 'canvas-confetti';
 
 var heart = confetti.shapeFromPath({
     path: 'M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z',
@@ -36,37 +37,29 @@ const containerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.09,
-            delayChildren: 0.04,
+            staggerChildren: 0.04,
+            delayChildren: 0.02,
         },
     },
 };
 
 const headerVariants = {
-    hidden: { opacity: 0, y: -22, scale: 0.98 },
+    hidden: { opacity: 0, y: -10, scale: 0.99 },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: {
-            type: "spring",
-            stiffness: 280,
-            damping: 24,
-        },
+        transition: mobileSpring,
     },
 };
 
 const moodVariants = {
-    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    hidden: { opacity: 0, y: 10, scale: 0.99 },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: {
-            type: "spring",
-            stiffness: 280,
-            damping: 24,
-        },
+        transition: mobileSpring,
     },
 };
 
@@ -75,23 +68,19 @@ const gridVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.05,
-            delayChildren: 0.06,
+            staggerChildren: 0.035,
+            delayChildren: 0.03,
         },
     },
 };
 
 const cardVariants = {
-    hidden: { opacity: 0, y: 22, scale: 0.94 },
+    hidden: { opacity: 0, y: 12, scale: 0.97 },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: {
-            type: "spring",
-            stiffness: 280,
-            damping: 22,
-        },
+        transition: mobileSpring,
     },
 };
 
@@ -162,7 +151,7 @@ export default function Home() {
                 <div className="flex items-center gap-4">
                     <motion.div
                         className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 text-primary shadow-inner"
-                        whileHover={{ rotate: [0, -10, 10, -5, 5, 0], scale: 1.08 }}
+                        whileHover={touchHover({ rotate: [0, -10, 10, -5, 5, 0], scale: 1.08 })}
                         transition={{ duration: 0.45 }}
                     >
                         <Heart className="w-6 h-6 fill-primary animate-pulse" />
@@ -192,8 +181,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -4, scale: 1.015 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={touchHover({ y: -3, scale: 1.015 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/diary')}
                     className="btn btn-soft btn-primary col-span-2 min-h-35 sm:min-h-40 h-full w-full rounded-3xl p-5 flex flex-col justify-between items-start text-left group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
                 >
@@ -217,8 +206,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={touchHover({ y: -3, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/dates')}
                     className="btn btn-soft btn-secondary col-span-1 row-span-2 min-h-55 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-center text-center group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
                 >
@@ -236,8 +225,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -3, scale: 1.03 }}
-                    whileTap={{ scale: 0.96 }}
+                    whileHover={touchHover({ y: -2, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/notes')}
                     className="btn btn-soft btn-info col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
                 >
@@ -251,8 +240,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -3, scale: 1.03 }}
-                    whileTap={{ scale: 0.96 }}
+                    whileHover={touchHover({ y: -2, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/tasks')}
                     className="btn btn-soft btn-success col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
                 >
@@ -266,8 +255,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -3, scale: 1.03 }}
-                    whileTap={{ scale: 0.96 }}
+                    whileHover={touchHover({ y: -2, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/anniversaries')}
                     className="btn btn-soft btn-warning col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
                 >
@@ -281,8 +270,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={touchHover({ y: -3, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/geolocation')}
                     className="btn btn-soft btn-error col-span-1 row-span-2 min-h-55 h-full w-full rounded-3xl p-4 flex flex-col justify-between items-center text-center group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
                 >
@@ -300,8 +289,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -3, scale: 1.03 }}
-                    whileTap={{ scale: 0.96 }}
+                    whileHover={touchHover({ y: -2, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/letters')}
                     className="btn btn-soft btn-primary col-span-1 min-h-26.25 h-full w-full rounded-3xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 group shadow-sm hover:shadow-md transition-shadow duration-200 border-none cursor-pointer"
                 >
@@ -315,8 +304,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={touchHover({ y: -2, scale: 1.015 })}
+                    whileTap={tapFeedback.card}
                     onClick={obtenerRazonAleatoria}
                     className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-between group transition-shadow duration-200 shadow-sm hover:shadow-md cursor-pointer border-none"
                 >
@@ -337,8 +326,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={touchHover({ y: -2, scale: 1.015 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/games')}
                     className="btn btn-soft btn-secondary col-span-2 min-h-23.75 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-center gap-3 group border-2 transition-shadow duration-200 cursor-pointer"
                 >
@@ -355,8 +344,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -3, scale: 1.03 }}
-                    whileTap={{ scale: 0.96 }}
+                    whileHover={touchHover({ y: -2, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/testing')}
                     className="btn btn-soft btn-neutral col-span-1 min-h-23.75 h-full w-full rounded-3xl p-3 flex flex-col items-center justify-center text-center gap-1 group border-2 transition-all duration-200 opacity-80 hover:opacity-100 cursor-pointer"
                 >
@@ -368,8 +357,8 @@ export default function Home() {
                 <motion.button
                     type="button"
                     variants={cardVariants}
-                    whileHover={{ y: -3, scale: 1.03 }}
-                    whileTap={{ scale: 0.96 }}
+                    whileHover={touchHover({ y: -2, scale: 1.02 })}
+                    whileTap={tapFeedback.card}
                     onClick={() => navigate('/config')}
                     className="btn btn-soft btn-neutral col-span-1 min-h-23.75 h-full w-full rounded-3xl p-3 flex flex-col items-center justify-center text-center gap-1 group border-2 transition-all duration-200 opacity-80 hover:opacity-100 cursor-pointer"
                 >

@@ -3,10 +3,12 @@ import { ArrowLeft, Sparkles, ClipboardList, CalendarHeart, Plus, Calendar, Edit
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useResolveSignedUrls } from "@/hooks/images/useResolveSignedUrls";
 import { TaskItem, Modal, GalleryPanel, UploadPanel } from "@/components";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion";
 import { addImageToDate } from "@/services/images/imageMetadata";
-import { imageKeys } from "@/hooks/images/useImages";
 import { useParams, useNavigate } from 'react-router';
+import { imageKeys } from "@/hooks/images/useImages";
 import { useRef, useState } from 'react';
+import { motion } from 'motion/react';
 
 const parseDate = (dateString) => {
     if (!dateString) return ""
@@ -14,6 +16,57 @@ const parseDate = (dateString) => {
     const date = new Date(datePart + 'T00:00:00')
     return date.toLocaleDateString()
 }
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.04,
+            delayChildren: 0.02,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: mobileSpring,
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 12, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: mobileSpring,
+    },
+};
+
+const taskListVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.035,
+            delayChildren: 0.015,
+        },
+    },
+};
+
+const taskItemVariants = {
+    hidden: { opacity: 0, y: 10, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: mobileSpring,
+    },
+};
 
 export default function DateDetail() {
     const { id } = useParams()
@@ -149,27 +202,44 @@ export default function DateDetail() {
     }
 
     return (
-        <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
+        <motion.div
+            className="max-w-md mx-auto p-4 space-y-6 pb-24"
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    whileHover={touchHover({ scale: 1.05 })}
+                    whileTap={tapFeedback.button}
+                    type="button"
+                    className="absolute left-0 btn btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
 
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
 
-                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <motion.button
+                    whileHover={touchHover({ rotate: 180, scale: 1.05 })}
+                    whileTap={tapFeedback.icon}
+                    transition={{ duration: 0.35 }}
+                    type="button"
+                    className="absolute right-0 btn btn-sm btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => handleRefresh()}
                     aria-label="Refrescar"
                 >
                     <RotateCw className="w-5 h-5" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
             {isLoadingDate ? (
                 <div className="flex flex-col items-center justify-center py-16 space-y-3">
@@ -179,13 +249,18 @@ export default function DateDetail() {
             ) : (
                 <>
                     {/* Cover image & main title details */}
-                    <div className="relative overflow-hidden bg-base-100 dark:bg-base-900/40 rounded-3xl border border-base-200/80 dark:border-base-800/60 shadow-xs flex flex-col">
+                    <motion.div
+                        variants={cardVariants}
+                        className="relative overflow-hidden bg-base-100 dark:bg-base-900/40 rounded-3xl border border-base-200/80 dark:border-base-800/60 shadow-xs flex flex-col"
+                    >
                         <div className="relative w-full overflow-hidden bg-base-200 dark:bg-base-800 flex items-center justify-center border-b border-base-200/50 dark:border-base-800/30">
                             {date?.coverUrl ? (
-                                <img
+                                <motion.img
                                     src={date.coverUrl}
                                     alt={date.title}
-                                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-102"
+                                    whileHover={touchHover({ scale: 1.03 })}
+                                    transition={{ duration: 0.4 }}
+                                    className="w-full h-full object-cover"
                                     loading="lazy"
                                 />
                             ) : (
@@ -216,30 +291,39 @@ export default function DateDetail() {
                                 </p>
                             )}
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Memories card (Description) */}
                     {date?.description ? (
-                        <div className="bg-base-100 dark:bg-base-900/30 border border-base-200/60 dark:border-base-850/50 rounded-3xl p-5 shadow-3xs space-y-3 animate-fade-in">
+                        <motion.div
+                            variants={cardVariants}
+                            className="bg-base-100 dark:bg-base-900/30 border border-base-200/60 dark:border-base-850/50 rounded-3xl p-5 shadow-3xs space-y-3"
+                        >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-1.5 text-xs font-bold text-primary/80 tracking-wide uppercase">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     <span>Nuestros Recuerdos</span>
                                 </div>
-                                <button type="button"
+                                <motion.button
+                                    whileHover={touchHover({ scale: 1.1 })}
+                                    whileTap={tapFeedback.icon}
+                                    type="button"
                                     onClick={handleOpenDescriptionModal}
-                                    className="btn btn-ghost btn-circle btn-xs text-base-content/40 active:text-primary active:bg-base-200/50 md:hover:text-primary md:hover:bg-base-200/50 transition-colors"
+                                    className="btn btn-ghost btn-circle btn-xs text-base-content/40 active:text-primary active:bg-base-200/50 md:hover:text-primary md:hover:bg-base-200/50 transition-colors cursor-pointer"
                                     aria-label="Editar recuerdos"
                                 >
                                     <Edit2 className="w-3.5 h-3.5" />
-                                </button>
+                                </motion.button>
                             </div>
                             <p className="text-sm text-base-content/75 leading-relaxed font-medium whitespace-pre-wrap">
                                 {date.description}
                             </p>
-                        </div>
+                        </motion.div>
                     ) : (
-                        <div className="bg-base-100 dark:bg-base-900/30 border border-base-200/60 dark:border-base-850/50 rounded-3xl p-5 shadow-3xs space-y-3 animate-fade-in">
+                        <motion.div
+                            variants={cardVariants}
+                            className="bg-base-100 dark:bg-base-900/30 border border-base-200/60 dark:border-base-850/50 rounded-3xl p-5 shadow-3xs space-y-3"
+                        >
                             <div className="flex items-center gap-1.5 text-xs font-bold text-base-content/40 tracking-wide uppercase">
                                 <Sparkles className="w-3.5 h-3.5" />
                                 <span>Nuestros Recuerdos</span>
@@ -248,26 +332,36 @@ export default function DateDetail() {
                                 <p className="text-sm text-base-content/40 font-medium">
                                     Aún no hay recuerdos escritos para esta cita.
                                 </p>
-                                <button type="button"
+                                <motion.button
+                                    whileHover={touchHover({ scale: 1.03 })}
+                                    whileTap={tapFeedback.button}
+                                    type="button"
                                     onClick={handleOpenDescriptionModal}
-                                    className="btn btn-outline border-primary/20 hover:border-primary/45 active:border-primary/45 text-primary btn-sm rounded-xl mt-3 gap-1.5 font-bold shadow-3xs text-xs active:scale-95 transition-transform"
+                                    className="btn btn-outline border-primary/20 hover:border-primary/45 active:border-primary/45 text-primary btn-sm rounded-xl mt-3 gap-1.5 font-bold shadow-3xs text-xs cursor-pointer"
                                 >
                                     <Plus className="w-3.5 h-3.5" /> Escribir recuerdos
-                                </button>
+                                </motion.button>
                             </div>
-                        </div>
+                        </motion.div>
                     )}
 
                     {/* Tasks/Plans Checklist */}
-                    <div className="space-y-4">
+                    <motion.div variants={cardVariants} className="space-y-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <ClipboardList className="w-5 h-5 text-primary" />
                                 <h2 className="text-lg font-bold text-base-content">Planes juntos</h2>
                             </div>
-                            <button type="button" className="btn btn-ghost btn-circle btn-sm text-primary active:bg-primary/10 md:hover:bg-primary/10 transition-colors" onClick={handleOpenCreateModal} aria-label="Añadir plan">
+                            <motion.button
+                                whileHover={touchHover({ scale: 1.1 })}
+                                whileTap={tapFeedback.icon}
+                                type="button"
+                                className="btn btn-ghost btn-circle btn-sm text-primary active:bg-primary/10 md:hover:bg-primary/10 transition-colors cursor-pointer"
+                                onClick={handleOpenCreateModal}
+                                aria-label="Añadir plan"
+                            >
                                 <Plus className="w-5 h-5" />
-                            </button>
+                            </motion.button>
                         </div>
 
                         {isLoadingTasks ? (
@@ -277,23 +371,34 @@ export default function DateDetail() {
                                 ))}
                             </div>
                         ) : tasks?.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-10 px-4 text-center bg-base-100 dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 shadow-3xs animate-fade-in">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="flex flex-col items-center justify-center py-10 px-4 text-center bg-base-100 dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 shadow-3xs"
+                            >
                                 <span className="text-3xl mb-3">💕</span>
                                 <p className="text-sm font-semibold text-base-content/60">¿Qué haremos?</p>
                                 <p className="text-xs text-base-content/40 mt-1 max-w-60">Añade actividades o cositas pendientes para hacer juntos durante esta cita.</p>
-                                <button type="button"
+                                <motion.button
+                                    whileHover={touchHover({ scale: 1.03 })}
+                                    whileTap={tapFeedback.button}
+                                    type="button"
                                     onClick={handleOpenCreateModal}
-                                    className="btn btn-primary btn-sm rounded-xl mt-4 gap-1.5 font-bold shadow-xs active:scale-95 transition-transform text-xs"
+                                    className="btn btn-primary btn-sm rounded-xl mt-4 gap-1.5 font-bold shadow-xs text-xs cursor-pointer"
                                 >
                                     <Plus className="w-3.5 h-3.5" /> Agregar primer plan
-                                </button>
-                            </div>
+                                </motion.button>
+                            </motion.div>
                         ) : (
-                            <div className="flex flex-col gap-3 animate-fade-in">
+                            <motion.div
+                                className="flex flex-col gap-3"
+                                variants={taskListVariants}
+                            >
                                 {tasks?.map((task) => (
                                     <TaskItem
                                         key={task.id}
                                         task={task}
+                                        variants={taskItemVariants}
                                         onToggle={handleToggle}
                                         onDelete={() => handleDelete(task.id)}
                                         onEdit={() => handleOpenEditModal(task)}
@@ -301,12 +406,12 @@ export default function DateDetail() {
                                         isDeleting={deleteTaskMutation.isPending && deleteTaskMutation.variables?.taskId === task.id}
                                     />
                                 ))}
-                            </div>
+                            </motion.div>
                         )}
-                    </div>
+                    </motion.div>
 
                     {/* Galería y Subida de fotos */}
-                    <div className="space-y-4 pt-4 border-t border-base-200/90 dark:border-base-800/40 animate-fade-in">
+                    <motion.div variants={cardVariants} className="space-y-4 pt-4 border-t border-base-200/90 dark:border-base-800/40">
                         <div className="flex items-center gap-2">
                             <Sparkles className="w-5 h-5 text-primary" />
                             <h2 className="text-lg font-bold text-base-content">Fotitos de la cita</h2>
@@ -326,7 +431,7 @@ export default function DateDetail() {
                                 linkImageMutation.mutate({ imageId: image.id });
                             }}
                         />
-                    </div>
+                    </motion.div>
                 </>
             )}
 
@@ -399,7 +504,7 @@ export default function DateDetail() {
                     </button>
                 </form>
             </Modal>
-        </div>
+        </motion.div>
     )
 }
 

@@ -1,6 +1,6 @@
 import { forwardRef, useId, useImperativeHandle, useState, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import { createPortal } from 'react-dom';
 
 const Modal = forwardRef(function Modal({ className = "", modalTitle, modalSubtitle, children, onClose }, ref) {
     const [isOpen, setIsOpen] = useState(false);

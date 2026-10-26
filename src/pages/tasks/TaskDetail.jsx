@@ -2,17 +2,70 @@ import { getTasks, createTask, deleteTask, completeTask, updateTask } from "../.
 import { ArrowLeft, Sparkles, Heart, ClipboardList, RotateCw } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTaskCategory } from "../../services/tasks/tasksCategoryService";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion"
 import { Modal, FabAdd, TaskItem } from "@/components"
 import { useParams, useNavigate } from "react-router"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useRef, useState } from "react"
+import { motion } from "motion/react"
 import z from "zod"
 
 const createTaskSchema = z.object({
     title: z.string().min(1, "El título es requerido"),
     description: z.string().optional(),
 })
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.04,
+            delayChildren: 0.02,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: mobileSpring,
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 12, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: mobileSpring,
+    },
+};
+
+const listVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.035,
+            delayChildren: 0.015,
+        },
+    },
+};
+
+const taskItemVariants = {
+    hidden: { opacity: 0, y: 10, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: mobileSpring,
+    },
+};
 
 export default function TaskDetail() {
     const { id } = useParams()
@@ -131,27 +184,44 @@ export default function TaskDetail() {
     const isLoading = isLoadingCategory || isLoadingTasks
 
     return (
-        <div className="max-w-md mx-auto p-4 space-y-6 pb-24 animate-fade-in">
+        <motion.div
+            className="max-w-md mx-auto p-4 space-y-6 pb-24"
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    whileHover={touchHover({ scale: 1.05 })}
+                    whileTap={tapFeedback.button}
+                    type="button"
+                    className="absolute left-0 btn btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
 
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
 
-                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <motion.button
+                    whileHover={touchHover({ rotate: 180, scale: 1.05 })}
+                    whileTap={tapFeedback.icon}
+                    transition={{ duration: 0.35 }}
+                    type="button"
+                    className="absolute right-0 btn btn-sm btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => handleRefresh()}
                     aria-label="Refrescar"
                 >
                     <RotateCw className="w-5 h-5" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
             {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-16 space-y-3">
@@ -161,7 +231,10 @@ export default function TaskDetail() {
             ) : (
                 <>
                     {/* Category Details Header Card */}
-                    <div className="bg-linear-to-br from-base-200/60 via-base-100/30 to-base-100 dark:from-base-900/50 dark:via-base-900/20 dark:to-base-950 p-5 rounded-3xl border border-base-200/60 dark:border-base-800/60 shadow-xs space-y-3">
+                    <motion.div
+                        variants={cardVariants}
+                        className="bg-linear-to-br from-base-200/60 via-base-100/30 to-base-100 dark:from-base-900/50 dark:via-base-900/20 dark:to-base-950 p-5 rounded-3xl border border-base-200/60 dark:border-base-800/60 shadow-xs space-y-3"
+                    >
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-2xl bg-primary/10 dark:bg-primary/15 flex items-center justify-center text-primary shadow-xs">
                                 <ClipboardList className="w-6 h-6" />
@@ -182,21 +255,27 @@ export default function TaskDetail() {
                                 </p>
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     {/* Progress Card */}
-                    <div className="bg-base-100 border border-base-200/80 rounded-3xl p-5 shadow-2xs space-y-3">
+                    <motion.div
+                        variants={cardVariants}
+                        className="bg-base-100 border border-base-200/80 rounded-3xl p-5 shadow-2xs space-y-3"
+                    >
                         <div className="flex justify-between items-center">
                             <span className="text-xs font-semibold text-base-content/70">Progreso que llevamos</span>
                             <span className="text-xs font-bold text-primary">
                                 {completedTasksCount}/{totalTasksCount} completadas
                             </span>
                         </div>
-                        <progress
-                            className="progress progress-primary w-full h-2.5 rounded-full bg-base-200/50"
-                            value={percentage}
-                            max="100"
-                        />
+                        <div className="w-full h-2.5 rounded-full bg-base-200/70 overflow-hidden">
+                            <motion.div
+                                className={`h-full rounded-full ${allCompleted ? "bg-success" : "bg-primary"}`}
+                                initial={{ width: 0 }}
+                                animate={{ width: `${percentage}%` }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                            />
+                        </div>
 
                         {/* Personalized Warm Vibe Message */}
                         <div className="text-xs text-center pt-1 font-medium">
@@ -216,30 +295,40 @@ export default function TaskDetail() {
                                 </span>
                             )}
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Tasks List */}
-                    <div className="space-y-3">
+                    <motion.div variants={cardVariants} className="space-y-3">
                         {tasks && tasks.length > 0 ? (
-                            tasks.map((task) => (
-                                <TaskItem
-                                    key={task.id}
-                                    task={task}
-                                    onToggle={handleToggle}
-                                    onEdit={() => handleOpenEditModal(task)}
-                                    onDelete={() => handleDelete(task.id)}
-                                    isToggling={toggleTaskMutation.isPending && toggleTaskMutation.variables?.taskId === task.id}
-                                    isDeleting={deleteTaskMutation.isPending && deleteTaskMutation.variables === task.id}
-                                />
-                            ))
+                            <motion.div
+                                className="flex flex-col gap-3"
+                                variants={listVariants}
+                            >
+                                {tasks.map((task) => (
+                                    <TaskItem
+                                        key={task.id}
+                                        task={task}
+                                        variants={taskItemVariants}
+                                        onToggle={handleToggle}
+                                        onEdit={() => handleOpenEditModal(task)}
+                                        onDelete={() => handleDelete(task.id)}
+                                        isToggling={toggleTaskMutation.isPending && toggleTaskMutation.variables?.taskId === task.id}
+                                        isDeleting={deleteTaskMutation.isPending && deleteTaskMutation.variables === task.id}
+                                    />
+                                ))}
+                            </motion.div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center p-8 border border-dashed border-base-300 rounded-3xl text-center space-y-2">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="flex flex-col items-center justify-center p-8 border border-dashed border-base-300 rounded-3xl text-center space-y-2"
+                            >
                                 <span className="text-2xl">🌱</span>
                                 <p className="text-sm font-semibold text-base-content/60">No hay tareas creadas</p>
                                 <p className="text-xs text-base-content/40 max-w-xs">Agrega una tarea utilizando el botón de abajo para empezar a trabajar juntos.</p>
-                            </div>
+                            </motion.div>
                         )}
-                    </div>
+                    </motion.div>
                 </>
             )}
 
@@ -311,7 +400,7 @@ export default function TaskDetail() {
                     </div>
                 </form>
             </Modal>
-        </div>
+        </motion.div>
     )
 }
 

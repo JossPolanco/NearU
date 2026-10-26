@@ -1,6 +1,7 @@
 import { createTaskCategory, getTaskCategories, updateTaskCategory, deleteTaskCategory } from "@/services/tasks";
 import { ArrowLeft, ClipboardList, Plus, Loader2, RotateCw } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion";
 import { FabAdd, Modal, TasksCategory } from "@/components";
 import { PRESET_ICONS } from "../../utils/getCategoryIcon";
 import { SUGGESTIONS } from "../../utils/getSuggestions";
@@ -8,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
+import { motion } from "motion/react";
 import z from "zod";
 
 const createTaskCategorySchema = z.object({
@@ -15,6 +17,57 @@ const createTaskCategorySchema = z.object({
     description: z.string().min(1, "La descripción es requerida"),
     icon: z.string().optional(),
 })
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.04,
+            delayChildren: 0.02,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: mobileSpring,
+    },
+};
+
+const listVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.035,
+            delayChildren: 0.015,
+        },
+    },
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 12, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: mobileSpring,
+    },
+};
+
+const emptyVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: 10 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: mobileSpring,
+    },
+};
 
 export default function Tasks() {
     const navigate = useNavigate()
@@ -117,27 +170,44 @@ export default function Tasks() {
     const isEmpty = !data || data.length === 0
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
+        <motion.div
+            className="max-w-2xl mx-auto p-4 space-y-6"
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    whileHover={touchHover({ scale: 1.05 })}
+                    whileTap={tapFeedback.button}
+                    type="button"
+                    className="absolute left-0 btn btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
 
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
 
-                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <motion.button
+                    whileHover={touchHover({ rotate: 180, scale: 1.05 })}
+                    whileTap={tapFeedback.icon}
+                    transition={{ duration: 0.35 }}
+                    type="button"
+                    className="absolute right-0 btn btn-sm btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => handleRefresh()}
                     aria-label="Refrescar"
                 >
                     <RotateCw className="w-5 h-5" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
             {isLoading ? (
                 <div className="flex flex-col gap-4">
@@ -161,23 +231,37 @@ export default function Tasks() {
                     ))}
                 </div>
             ) : isEmpty ? (
-                <div className="flex flex-col items-center justify-center py-14 px-6 text-center dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 my-4 shadow-3xs">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-5 text-primary">
+                <motion.div
+                    variants={emptyVariants}
+                    className="flex flex-col items-center justify-center py-14 px-6 text-center dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 my-4 shadow-3xs"
+                >
+                    <motion.div
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        className="w-16 h-16 rounded-2xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-5 text-primary"
+                    >
                         <ClipboardList className="w-8 h-8 text-primary" />
-                    </div>
+                    </motion.div>
                     <h3 className="text-lg font-bold text-base-content leading-snug">¿Comenzamos algo juntitos?</h3>
                     <p className="text-xs text-base-content/50 max-w-sm mt-2 leading-relaxed">
                         Aún no hay listas de tareas creadas. Agrega una lista para organizar planes, peliculas o cositas por hacer.
                     </p>
-                    <button type="button"
+                    <motion.button
+                        whileHover={touchHover({ scale: 1.03 })}
+                        whileTap={tapFeedback.button}
+                        type="button"
                         onClick={handleOpenCreateModal}
-                        className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-transform font-semibold"
+                        className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs font-semibold cursor-pointer"
                     >
                         <Plus className="w-4 h-4" /> Crear primera listita
-                    </button>
-                </div>
+                    </motion.button>
+                </motion.div>
             ) : (
-                <div className="flex flex-col gap-1">
+                <motion.div
+                    className="flex flex-col gap-1"
+                    variants={listVariants}
+                >
                     {data?.map((category) => (
                         <TasksCategory
                             key={category.id}
@@ -187,11 +271,12 @@ export default function Tasks() {
                             totalTask={category.totalTask}
                             icon={category.icon}
                             completedTask={category.completedTask}
+                            variants={itemVariants}
                             onEdit={() => handleOpenEditModal(category)}
                             onDelete={() => handleDeleteCategory(category.id)}
                         />
                     ))}
-                </div>
+                </motion.div>
             )}
 
             <FabAdd onClick={handleOpenCreateModal} />
@@ -322,7 +407,7 @@ export default function Tasks() {
                     </div>
                 </form>
             </Modal>
-        </div>
+        </motion.div>
     )
 }
 

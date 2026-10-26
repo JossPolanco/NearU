@@ -4,6 +4,15 @@
     themes: valentine --default, dark --prefersdark;
 }
 
+/* Mobile-first touch & tap optimizations */
+html, body {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button, a, [role="button"], input, select, textarea {
+    touch-action: manipulation;
+}
+
 /* DaisyUI / Custom Aura Moving Rainbow Border Component */
 @keyframes aura-spin {
     from {

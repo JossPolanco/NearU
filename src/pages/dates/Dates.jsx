@@ -1,5 +1,6 @@
 import { ArrowLeft, Plus, Loader2, CalendarHeart, Calendar, RotateCw } from "lucide-react";
 import { createDate, updateDate, deleteDate, getDatesByStatus } from "@/services/dates";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FabAdd, Modal, DateItem, UploadPanel } from "@/components";
 import { useForm, Controller } from "react-hook-form";
@@ -9,6 +10,7 @@ import { DayPicker } from "react-day-picker";
 import { useNavigate } from "react-router";
 import "react-day-picker/dist/style.css";
 import { useRef, useState } from "react";
+import { motion } from "motion/react";
 import { es } from "date-fns/locale";
 import z from "zod";
 
@@ -42,6 +44,66 @@ const formatDateForDB = (dateVal) => {
     }
     return String(dateVal)
 }
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.04,
+            delayChildren: 0.02,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: mobileSpring,
+    },
+};
+
+const filterVariants = {
+    hidden: { opacity: 0, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: mobileSpring,
+    },
+};
+
+const listVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.035,
+            delayChildren: 0.015,
+        },
+    },
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 12, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: mobileSpring,
+    },
+};
+
+const emptyVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: 10 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: mobileSpring,
+    },
+};
 
 export default function Dates() {
     const [selectedTab, setSelectedTab] = useState("todas")
@@ -166,49 +228,67 @@ export default function Dates() {
     const isEmpty = !data || data.length === 0
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
+        <motion.div
+            className="max-w-2xl mx-auto p-4 space-y-6"
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    whileHover={touchHover({ scale: 1.05 })}
+                    whileTap={tapFeedback.button}
+                    type="button"
+                    className="absolute left-0 btn btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-6 h-6" />
-                </button>
+                </motion.button>
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
 
-                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <motion.button
+                    whileHover={touchHover({ rotate: 180, scale: 1.05 })}
+                    whileTap={tapFeedback.icon}
+                    transition={{ duration: 0.35 }}
+                    type="button"
+                    className="absolute right-0 btn btn-sm btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => handleRefresh()}
                     aria-label="Refrescar"
                 >
                     <RotateCw className="w-5 h-5" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
             {/* FILTRO DE CITAS */}
-            <div className="flex justify-center">
+            <motion.div variants={filterVariants} className="flex justify-center">
                 <div className="grid grid-cols-3 gap-1 bg-base-200/50 dark:bg-base-950/40 p-1.5 rounded-2xl border border-base-200/60 dark:border-base-850/60 w-full max-w-sm">
                     {[
                         { id: "todas", label: "Todas" },
                         { id: "yap", label: "Yap" },
                         { id: "nop", label: "Nop" }
                     ].map((tab) => (
-                        <button
+                        <motion.button
                             key={tab.id}
                             type="button"
+                            whileTap={tapFeedback.button}
                             onClick={() => setSelectedTab(tab.id)}
-                            className={`py-2 px-3 rounded-xl text-xs font-bold transition-transform duration-200 transform active:scale-105 ease-in-out ${selectedTab === tab.id
+                            className={`py-2 px-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${selectedTab === tab.id
                                 ? "bg-primary text-white shadow-xs"
-                                : "text-base-content/60 active:bg-base-300/35 dark:active:bg-base-900/40"
+                                : "text-base-content/60 hover:text-base-content hover:bg-base-300/35 dark:hover:bg-base-900/40"
                                 }`}
                         >
                             {tab.label}
-                        </button>
+                        </motion.button>
                     ))}
                 </div>
-            </div>
+            </motion.div>
 
             {/* MAIN CONTENT LIST */}
             {isLoading ? (
@@ -219,7 +299,7 @@ export default function Dates() {
                             className="w-full bg-base-100 dark:bg-base-900/40 border border-base-200 dark:border-base-800/60 rounded-3xl p-5 animate-pulse flex items-center justify-between gap-4"
                         >
                             <div className="flex items-center gap-3.5 flex-1 min-w-0">
-                                <div className="w-12 h-12 rounded-2xl bg-base-200 dark:bg-base-850 shrink-0" />
+                                <div className="w-20 h-20 rounded-2xl bg-base-200 dark:bg-base-850 shrink-0" />
                                 <div className="flex flex-col flex-1 gap-2">
                                     <div className="h-5 bg-base-200 dark:bg-base-850 rounded-lg w-1/3" />
                                     <div className="h-3 bg-base-200 dark:bg-base-850 rounded-lg w-2/3" />
@@ -229,30 +309,48 @@ export default function Dates() {
                     ))}
                 </div>
             ) : isEmpty ? (
-                <div className="flex flex-col items-center justify-center py-14 px-6 text-center dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 my-4 shadow-3xs">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-5 text-primary">
+                <motion.div
+                    variants={emptyVariants}
+                    className="flex flex-col items-center justify-center py-14 px-6 text-center dark:bg-base-900/10 rounded-3xl border border-dashed border-base-300 dark:border-base-800/80 my-4 shadow-3xs"
+                >
+                    <motion.div
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        className="w-16 h-16 rounded-2xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-5 text-primary"
+                    >
                         <CalendarHeart className="w-8 h-8 text-primary" />
-                    </div>
+                    </motion.div>
                     <h3 className="text-lg font-bold text-base-content leading-snug">¿Nuestra primera cita?</h3>
                     <p className="text-xs text-base-content/50 max-w-sm mt-2 leading-relaxed">
                         Aún no hay citas registradas en el calendario. Añade una cita para recordar ese día especial por siempre.
                     </p>
-                    <button type="button" className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs active:scale-[0.98] md:hover:scale-[1.02] transition-transform font-semibold" onClick={handleOpenCreateModal}>
+                    <motion.button
+                        whileHover={touchHover({ scale: 1.03 })}
+                        whileTap={tapFeedback.button}
+                        type="button"
+                        className="btn btn-primary btn-sm rounded-xl mt-6 gap-1.5 shadow-xs font-semibold cursor-pointer"
+                        onClick={handleOpenCreateModal}
+                    >
                         <Plus className="w-4 h-4" /> Registrar primera cita
-                    </button>
-                </div>
+                    </motion.button>
+                </motion.div>
             ) : (
-                <div className="flex flex-col gap-3">
+                <motion.div
+                    className="flex flex-col gap-3"
+                    variants={listVariants}
+                >
                     {data?.map((date) => (
                         <DateItem
                             key={date.id}
                             date={date}
+                            variants={itemVariants}
                             onEdit={() => handleOpenEditModal(date)}
                             onDelete={() => handleDeleteDate(date.id)}
                             isDeleting={deleteDateMutation.isPending && deleteDateMutation.variables === date.id}
                         />
                     ))}
-                </div>
+                </motion.div>
             )}
 
             {/* Floating Action Button */}
@@ -428,7 +526,7 @@ export default function Dates() {
                     }}
                 />
             </Modal>
-        </div>
+        </motion.div>
     )
 }
 
