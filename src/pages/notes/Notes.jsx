@@ -2,12 +2,44 @@ import { useResolveSignedUrls } from "../../hooks/images/useResolveSignedUrls";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { FabAdd, Modal, Drawer, CarouselNotes, Alert } from "@/components";
 import { ArrowLeft, Loader2, StickyNote, RotateCw } from "lucide-react";
+import { touchHover, tapFeedback, mobileSpring } from "@/utils/motion";
 import { useImageUpload } from "../../hooks/images/useImageUpload";
 import { createNote, getLast5Notes } from "@/services/notes";
 import { getUserId } from "../../services/user/userService";
 import { imageKeys } from "../../hooks/images/useImages";
 import { useNavigate } from 'react-router';
+import { motion } from 'motion/react';
 import { useRef } from 'react';
+
+const pageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.05,
+            delayChildren: 0.02,
+        },
+    },
+};
+
+const headerVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: mobileSpring,
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 12, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: mobileSpring,
+    },
+};
 
 export default function Notes() {
     const navigate = useNavigate();
@@ -105,46 +137,74 @@ export default function Notes() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-6">
+        <motion.div
+            className="max-w-2xl mx-auto p-4 space-y-6"
+            initial="hidden"
+            animate="visible"
+            variants={pageVariants}
+        >
             {/* Header / Navigation */}
-            <div className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2">
-                <button type="button" className="absolute left-0 btn btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+            <motion.div
+                variants={headerVariants}
+                className="relative flex items-center justify-center border-b border-base-200/90 dark:border-base-800/40 mb-2"
+            >
+                <motion.button
+                    whileHover={touchHover({ scale: 1.05 })}
+                    whileTap={tapFeedback.button}
+                    type="button"
+                    className="absolute left-0 btn btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => navigate(-1)}
                     aria-label="Volver"
                 >
                     <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
                 <div className="flex items-center justify-center py-4">
                     <Title />
                 </div>
 
-                <button type="button" className="absolute right-0 btn btn-sm btn-circle btn-primary text-white active:text-white md:hover:text-white active:bg-primary/80 md:hover:bg-primary/80 transition-transform duration-200"
+                <motion.button
+                    whileHover={touchHover({ rotate: 180, scale: 1.05 })}
+                    whileTap={tapFeedback.icon}
+                    transition={{ duration: 0.35 }}
+                    type="button"
+                    className="absolute right-0 btn btn-sm btn-circle btn-primary text-white cursor-pointer transition-shadow shadow-xs hover:shadow-md"
                     onClick={() => handleRefresh()}
                     aria-label="Refrescar"
                 >
                     <RotateCw className="w-5 h-5" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
-
-            <div className="w-full">
-                {/* <h2 className="text-xl font-semibold text-center">Ultimas 5 notitas</h2> */}
+            <motion.div variants={cardVariants} className="w-full">
                 <CarouselNotes notes={notes} isLoading={isLoading} />
-            </div>
+            </motion.div>
 
-            <FabAdd onClick={() => refModal.current.open()} />
+            <FabAdd onClick={() => refModal.current?.open()} />
 
             {/* View Previous Notes Button */}
-            <button type="button" className="btn btn-primary rounded-2xl w-full min-h-12.5 flex items-center justify-center gap-2 text-sm font-semibold transition-transform duration-200 active:scale-[0.98] shadow-md border-0"
-                onClick={() => navigate("/notes-gallery")}>
+            <motion.button
+                variants={cardVariants}
+                whileHover={touchHover({ scale: 1.02 })}
+                whileTap={tapFeedback.button}
+                type="button"
+                className="btn btn-primary rounded-2xl w-full min-h-12.5 flex items-center justify-center gap-2 text-sm font-semibold shadow-md border-0 cursor-pointer"
+                onClick={() => navigate("/notes-gallery")}
+            >
                 <StickyNote className="w-5 h-5" />
                 Ver todas las notitas 🐜eriores
-            </button>
+            </motion.button>
 
             <Modal ref={refModal} modalTitle={modalTitle} modalSubtitle={modalSubtitle}>
                 <Drawer ref={drawerRef} />
 
-                <button type="button" className="btn btn-primary w-full mt-4 rounded-xl transform active:scale-110 ease-in-out" onClick={handleSaveNote} disabled={isSaving}>
+                <motion.button
+                    whileHover={touchHover({ scale: 1.02 })}
+                    whileTap={tapFeedback.button}
+                    type="button"
+                    className="btn btn-primary w-full mt-4 rounded-xl cursor-pointer"
+                    onClick={handleSaveNote}
+                    disabled={isSaving}
+                >
                     {isSaving ? (
                         <>
                             <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -153,7 +213,7 @@ export default function Notes() {
                     ) : (
                         "Guardar notita"
                     )}
-                </button>
+                </motion.button>
 
                 {state.error && (
                     <p className="text-error text-xs text-center mt-2 font-semibold">{state.error}</p>
@@ -161,7 +221,7 @@ export default function Notes() {
             </Modal>
             
             <Alert ref={alertRef} />
-        </div>
+        </motion.div>
     )
 }
 

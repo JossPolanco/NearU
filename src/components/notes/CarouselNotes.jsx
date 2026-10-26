@@ -1,4 +1,6 @@
 import { X, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 
 const parseDateTime = (dateString) => {
@@ -61,7 +63,12 @@ export default function CarouselNotes({ notes, isLoading }) {
                     <div className={`carousel carousel-center backdrop-blur-md rounded-3xl w-full gap-6 p-6 ${getJustifyClass()}`}>
                         {/* ITEMS */}
                         {notes?.map((note, index) => (
-                            <button type="button" className="carousel-item flex-col text-left bg-base-100 dark:bg-base-900/50 p-3.5 pb-6 rounded-3xl shadow-md border border-base-200/60 dark:border-base-800/40 w-72 min-w-72 rotate-[-1.5deg]  transition-transform duration-300 md:hover:rotate-0 md:hover:scale-[1.02] cursor-pointer active:scale-98"
+                            <motion.button
+                                whileHover={touchHover({ y: -3, rotate: 0, scale: 1.02 })}
+                                whileTap={tapFeedback.card}
+                                transition={mobileSpring}
+                                type="button"
+                                className="carousel-item flex-col text-left bg-base-100 dark:bg-base-900/50 p-3.5 pb-6 rounded-3xl shadow-md border border-base-200/60 dark:border-base-800/40 w-72 min-w-72 rotate-[-1.5deg] cursor-pointer"
                                 key={note.id}
                                 id={`item${index + 1}`}
                                 onClick={() => setSelectedNote(note)}
@@ -72,96 +79,138 @@ export default function CarouselNotes({ notes, isLoading }) {
                                         alt="Nuestros momentos"
                                     />
                                     {note.favorite && (
-                                        <div className="absolute top-2.5 right-2.5 w-8.5 h-8.5 flex items-center justify-center rounded-full bg-base-100/90 dark:bg-base-950/90 text-red-500 shadow-sm border border-base-300/10">
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={mobileSpring}
+                                            className="absolute top-2.5 right-2.5 w-8.5 h-8.5 flex items-center justify-center rounded-full bg-base-100/90 dark:bg-base-950/90 text-red-500 shadow-sm border border-base-300/10"
+                                        >
                                             <Heart className="w-4 h-4 fill-red-500 text-red-500 animate-pulse" />
-                                        </div>
+                                        </motion.div>
                                     )}
                                 </div>
                                 <p className="mt-4 font-serif italic text-center text-base-content/85 text-sm px-2 truncate w-full">{note.title}</p>
                                 <span className="text-base-content/50 text-xs mt-1.5 text-center font-mono">{parseDateTime(note.created_at)}</span>
-                            </button>
+                            </motion.button>
                         ))}
                     </div>
 
                     <div className="flex w-full justify-center gap-3 py-2 max-w-xs mx-auto">
                         {notes?.map((note, index) => (
-                            <a key={note.id} href={`#item${index + 1}`} className="btn btn-xs btn-primary mask mask-heart text-white w-7 h-7 flex items-center justify-center p-0 transition-transform active:scale-125 duration-150">
+                            <motion.a
+                                whileTap={{ scale: 0.85 }}
+                                key={note.id}
+                                href={`#item${index + 1}`}
+                                className="btn btn-xs btn-primary mask mask-heart text-white w-7 h-7 flex items-center justify-center p-0"
+                            >
                                 {index + 1}
-                            </a>
+                            </motion.a>
                         ))}
                     </div>
                 </>
             )}
 
-            {/* Lightbox Modal Premium */}
-            {selectedNote && (
-                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md animate-fade-in"
-                    onClick={() => setSelectedNote(null)}
-                >
-                    {/* BOTON CERRAR */}
-                    <button className="absolute top-4 right-4 btn btn-circle btn-ghost text-white/80 hover:text-white z-50"
+            {/* Lightbox Modal Premium con Framer Motion */}
+            <AnimatePresence>
+                {selectedNote && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md"
                         onClick={() => setSelectedNote(null)}
-                        type="button"
-                        aria-label="Cerrar"
                     >
-                        <X className="w-6 h-6" />
-                    </button>
-
-                    {/* FLECHA ANTERIOR */}
-                    {notes?.length > 1 && (
-                        <button className="absolute left-4 btn btn-circle btn-ghost text-white/80 hover:text-white hover:bg-white/10 hidden md:flex z-50"
-                            onClick={handlePrev}
+                        {/* BOTON CERRAR */}
+                        <motion.button
+                            whileHover={touchHover({ scale: 1.1 })}
+                            whileTap={tapFeedback.icon}
+                            className="absolute top-4 right-4 btn btn-circle btn-ghost text-white/80 hover:text-white z-50"
+                            onClick={() => setSelectedNote(null)}
                             type="button"
-                            aria-label="Anterior"
+                            aria-label="Cerrar"
                         >
-                            <ChevronLeft className="w-8 h-8" />
-                        </button>
-                    )}
+                            <X className="w-6 h-6" />
+                        </motion.button>
 
-                    {/* IMAGEN PRINCIPAL Y CONTENEDOR*/}
-                    <div className="max-w-4xl max-h-[85vh] px-4 flex flex-col items-center justify-center relative select-none animate-scale-up"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <img
-                            src={selectedNote.coverUrl || selectedNote.image_metadata?.storage_path}
-                            alt={selectedNote.title ?? 'Nota'}
-                            className="max-w-full max-h-[75vh] rounded-3xl object-contain shadow-2xl border border-white/10"
-                        />
-                        <div className="text-center mt-4 text-white space-y-1">
-                            <p className="font-semibold text-sm truncate max-w-xs md:max-w-md">
-                                {selectedNote.title ?? 'Nota de amor'}
-                            </p>
-                            <p className="text-xs text-white/60">
-                                {parseDateTime(selectedNote.created_at)}
-                            </p>
-                        </div>
-                    </div>
+                        {/* FLECHA ANTERIOR */}
+                        {notes?.length > 1 && (
+                            <motion.button
+                                whileHover={touchHover({ scale: 1.1 })}
+                                whileTap={tapFeedback.icon}
+                                className="absolute left-4 btn btn-circle btn-ghost text-white/80 hover:text-white hover:bg-white/10 hidden md:flex z-50"
+                                onClick={handlePrev}
+                                type="button"
+                                aria-label="Anterior"
+                            >
+                                <ChevronLeft className="w-8 h-8" />
+                            </motion.button>
+                        )}
 
-                    {/* FLECHA DERECHA */}
-                    {notes?.length > 1 && (
-                        <button
-                            className="absolute right-4 btn btn-circle btn-ghost text-white/80 hover:text-white hover:bg-white/10 hidden md:flex z-50"
-                            onClick={handleNext}
-                            type="button"
-                            aria-label="Siguiente"
+                        {/* IMAGEN PRINCIPAL Y CONTENEDOR*/}
+                        <motion.div
+                            initial={{ scale: 0.92, opacity: 0, y: 15 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.92, opacity: 0, y: 10 }}
+                            transition={mobileSpring}
+                            className="max-w-4xl max-h-[85vh] px-4 flex flex-col items-center justify-center relative select-none"
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <ChevronRight className="w-8 h-8" />
-                        </button>
-                    )}
+                            <img
+                                src={selectedNote.coverUrl || selectedNote.image_metadata?.storage_path}
+                                alt={selectedNote.title ?? 'Nota'}
+                                className="max-w-full max-h-[75vh] rounded-3xl object-contain shadow-2xl border border-white/10"
+                            />
+                            <div className="text-center mt-4 text-white space-y-1">
+                                <p className="font-semibold text-sm truncate max-w-xs md:max-w-md">
+                                    {selectedNote.title ?? 'Nota de amor'}
+                                </p>
+                                <p className="text-xs text-white/60">
+                                    {parseDateTime(selectedNote.created_at)}
+                                </p>
+                            </div>
+                        </motion.div>
 
-                    {/* CONTROLES DE SWIPE/NAVIGATION MÓVILES (ABAJO) */}
-                    {notes?.length > 1 && (
-                        <div className="absolute bottom-6 flex gap-4 md:hidden z-50">
-                            <button className="btn btn-circle btn-sm btn-ghost text-white border border-white/20" onClick={handlePrev} type="button" aria-label="Nota anterior">
-                                <ChevronLeft className="w-5 h-5" />
-                            </button>
-                            <button className="btn btn-circle btn-sm btn-ghost text-white border border-white/20" onClick={handleNext} type="button" aria-label="Siguiente nota">
-                                <ChevronRight className="w-5 h-5" />
-                            </button>
-                        </div>
-                    )}
-                </div>
-            )}
+                        {/* FLECHA DERECHA */}
+                        {notes?.length > 1 && (
+                            <motion.button
+                                whileHover={touchHover({ scale: 1.1 })}
+                                whileTap={tapFeedback.icon}
+                                className="absolute right-4 btn btn-circle btn-ghost text-white/80 hover:text-white hover:bg-white/10 hidden md:flex z-50"
+                                onClick={handleNext}
+                                type="button"
+                                aria-label="Siguiente"
+                            >
+                                <ChevronRight className="w-8 h-8" />
+                            </motion.button>
+                        )}
+
+                        {/* CONTROLES DE SWIPE/NAVIGATION MÓVILES (ABAJO) */}
+                        {notes?.length > 1 && (
+                            <div className="absolute bottom-6 flex gap-4 md:hidden z-50">
+                                <motion.button
+                                    whileTap={tapFeedback.icon}
+                                    className="btn btn-circle btn-sm btn-ghost text-white border border-white/20"
+                                    onClick={handlePrev}
+                                    type="button"
+                                    aria-label="Nota anterior"
+                                >
+                                    <ChevronLeft className="w-5 h-5" />
+                                </motion.button>
+                                <motion.button
+                                    whileTap={tapFeedback.icon}
+                                    className="btn btn-circle btn-sm btn-ghost text-white border border-white/20"
+                                    onClick={handleNext}
+                                    type="button"
+                                    aria-label="Siguiente nota"
+                                >
+                                    <ChevronRight className="w-5 h-5" />
+                                </motion.button>
+                            </div>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     )
 }
