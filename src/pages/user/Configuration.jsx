@@ -1,18 +1,18 @@
+import { Lock, Palette, Camera, Pencil, User, AtSign, Trash2, MapPin, ChevronDown, Check, Sun, Moon } from 'lucide-react';
 import { updateInfo, getUserProfile, uploadAvatar, deleteAvatar } from '../../services/user/userService';
-import { Lock, Palette, Camera, Pencil, User, AtSign, Trash2, MapPin } from 'lucide-react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
+import { requestLocationPermission } from '../../utils/geolocation';
+import { setCurrentLocation } from '../../services/geolocation';
 import { logoutUser } from "../../services/auth/authService";
+import { motion, AnimatePresence } from 'motion/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useForm } from 'react-hook-form';
 import Modal from '../../components/Modal';
 import Alert from '../../components/Alert';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { requestLocationPermission } from '../../utils/geolocation';
-import { setCurrentLocation } from '../../services/geolocation';
-import { motion } from 'motion/react';
-import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
 
 const pageVariants = {
     hidden: { opacity: 0 },
@@ -59,10 +59,16 @@ export default function Configuration() {
     const queryClient = useQueryClient();
 
     const [currentTheme, setCurrentTheme] = useState(() => {
-        return localStorage.getItem('theme') || 'evelyn';
+        return localStorage.getItem('theme') || 'valentine';
     });
+    const [isThemeOpen, setIsThemeOpen] = useState(false);
+    const themeDropdownRef = useRef(null);
 
     const [locationPermission, setLocationPermission] = useState("prompt");
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', currentTheme);
+    }, [currentTheme]);
 
     useEffect(() => {
         let active = true;
@@ -118,17 +124,32 @@ export default function Configuration() {
         );
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (themeDropdownRef.current && !themeDropdownRef.current.contains(event.target)) {
+                setIsThemeOpen(false);
+            }
+        };
+
+        if (isThemeOpen) {
+            window.addEventListener('pointerdown', handleClickOutside);
+        }
+
+        return () => {
+            window.removeEventListener('pointerdown', handleClickOutside);
+        };
+    }, [isThemeOpen]);
+
     const changeTheme = (theme) => {
-        document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
         setCurrentTheme(theme);
+        setIsThemeOpen(false);
     };
 
     const themes = [
-        'valentine',
-        'dark',        
-        // 'modern-dark',
-    ]
+        { id: 'valentine', label: 'Valentine', icon: Sun },
+        { id: 'dark', label: 'Oscuro', icon: Moon },
+    ];
 
     const uploadAvatarMutation = useMutation({
         mutationFn: uploadAvatar,
@@ -317,7 +338,9 @@ export default function Configuration() {
                 variants={cardVariants}
                 whileHover={touchHover({ y: -2 })}
                 transition={mobileSpring}
-                className="card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm"
+                className={`card bg-base-100 rounded-3xl border border-base-200/50 shadow-sm relative ${
+                    isThemeOpen ? 'z-30' : 'z-10'
+                }`}
             >
                 <div className="card-body p-6 flex flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
@@ -334,37 +357,94 @@ export default function Configuration() {
                         </div>
                     </div>
 
-                    <div className="dropdown dropdown-end shrink-0">
+                    <div className="relative shrink-0" ref={themeDropdownRef}>
                         <motion.button
                             type="button"
-                            tabIndex={0}
-                            whileHover={touchHover({ scale: 1.05 })}
+                            onClick={() => setIsThemeOpen(prev => !prev)}
+                            whileHover={touchHover({ scale: 1.03 })}
                             whileTap={tapFeedback.button}
                             transition={mobileSpring}
-                            className="btn btn-sm px-4 font-semibold text-xs capitalize flex items-center gap-1.5"
+                            aria-expanded={isThemeOpen}
+                            aria-haspopup="listbox"
+                            className="btn btn-sm px-3.5 font-semibold text-xs capitalize flex items-center gap-2 rounded-2xl bg-base-200/80 hover:bg-base-200 border-base-300/50 shadow-sm transition-colors"
                         >
-                            {currentTheme}
-                            <svg
-                                width="10px"
-                                height="10px"
-                                className="inline-block fill-current opacity-60"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 2048 2048">
-                                <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
-                            </svg>
+                            <span className="flex items-center gap-1.5">
+                                {currentTheme === 'dark' ? (
+                                    <Moon size={14} className="text-secondary" />
+                                ) : (
+                                    <Sun size={14} className="text-primary" />
+                                )}
+                                <span>{currentTheme}</span>
+                            </span>
+                            <motion.span
+                                animate={{ rotate: isThemeOpen ? 180 : 0 }}
+                                transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1.0] }}
+                                className="flex items-center"
+                            >
+                                <ChevronDown size={14} className="opacity-60" />
+                            </motion.span>
                         </motion.button>
-                        <ul className="dropdown-content bg-base-300 rounded-box z-1 w-40 p-2 shadow-2xl mt-1">
-                            {themes.map((theme) => (
-                                <li key={theme}>
-                                    <button type="button"
-                                        className="btn btn-sm btn-ghost justify-start w-full capitalize"
-                                        onClick={() => changeTheme(theme)}
-                                    >
-                                        {theme}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
+
+                        <AnimatePresence>
+                            {isThemeOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95, y: -6, filter: 'blur(4px)' }}
+                                    animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+                                    exit={{ opacity: 0, scale: 0.95, y: -4, filter: 'blur(4px)' }}
+                                    transition={{
+                                        duration: 0.2,
+                                        ease: [0.16, 1, 0.3, 1]
+                                    }}
+                                    className="absolute right-0 top-full mt-2 w-52 p-1.5 rounded-2xl bg-base-100/95 backdrop-blur-md border border-base-200 shadow-xl z-50 overflow-hidden"
+                                >
+                                    <div className="px-2.5 py-1.5 text-[10px] font-bold tracking-wider uppercase text-base-content/40">
+                                        Selecciona un tema
+                                    </div>
+                                    <div className="space-y-1">
+                                        {themes.map((theme) => {
+                                            const isSelected = currentTheme === theme.id;
+                                            const ThemeIcon = theme.icon;
+                                            return (
+                                                <motion.button
+                                                    key={theme.id}
+                                                    type="button"
+                                                    onClick={() => changeTheme(theme.id)}
+                                                    whileHover={{ scale: 1.01, x: 2 }}
+                                                    whileTap={{ scale: 0.98 }}
+                                                    className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all ${
+                                                        isSelected
+                                                            ? 'bg-primary/10 text-primary font-medium'
+                                                            : 'hover:bg-base-200/60 text-base-content/80'
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center gap-2.5">
+                                                        <div className={`p-1.5 rounded-lg ${
+                                                            isSelected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
+                                                        }`}>
+                                                            <ThemeIcon size={14} />
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-xs font-medium leading-tight">
+                                                                {theme.label}
+                                                            </div>                                        
+                                                        </div>
+                                                    </div>
+                                                    {isSelected && (
+                                                        <motion.div
+                                                            initial={{ scale: 0 }}
+                                                            animate={{ scale: 1 }}
+                                                            transition={mobileSpring}
+                                                        >
+                                                            <Check size={14} className="text-primary mr-1" />
+                                                        </motion.div>
+                                                    )}
+                                                </motion.button>
+                                            );
+                                        })}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </motion.div>
