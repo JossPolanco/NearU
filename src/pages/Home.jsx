@@ -3,10 +3,12 @@ import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getUserPosition } from '@/utils/geolocation';
+import nearULogo from '../assets/img/NearU.png'
 import { UserMoodCard } from '@/components';
 import { useNavigate } from 'react-router';
 import razones from '@/utils/razones.json';
 import confetti from 'canvas-confetti';
+
 
 var heart = confetti.shapeFromPath({
     path: 'M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z',
@@ -149,13 +151,13 @@ export default function Home() {
             >
                 <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
                 <div className="flex items-center gap-4">
-                    <motion.div
+                    <motion.img
+						src={nearULogo}
                         className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 text-primary shadow-inner"
                         whileHover={touchHover({ rotate: [0, -10, 10, -5, 5, 0], scale: 1.08 })}
                         transition={{ duration: 0.45 }}
-                    >
-                        <Heart className="w-6 h-6 fill-primary animate-pulse" />
-                    </motion.div>
+                    >                        
+                    </motion.img>
                     <div className="space-y-0.5">
                         <h1 className="text-lg sm:text-xl font-bold tracking-tight text-base-content">
                             NearU <span className="text-primary font-normal">|</span> Our app bbyyyy ✨
@@ -334,7 +336,7 @@ export default function Home() {
                     <div className="p-2.5 rounded-2xl bg-primary/20 text-primary group-hover:scale-110 transition-transform duration-200">
                         <MessageCircleHeart className="w-6 h-6 fill-primary/20 text-primary" />
                     </div>
-                    <span className="text-sm sm:text-base font-bold text-base-content">Desde Secundaria</span>
+                    <span className="text-sm sm:text-base font-bold text-base-content">Our chat</span>
                 </motion.button>
 
                 {/* JUEGOS (2 COLUMNAS DE ANCHO) */}
@@ -356,7 +358,7 @@ export default function Home() {
                 </motion.button>
 
                 {/* PRUEBAS (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <motion.button
+                {/* <motion.button
                     type="button"
                     variants={cardVariants}
                     whileHover={touchHover({ y: -2, scale: 1.02 })}
@@ -366,10 +368,10 @@ export default function Home() {
                 >
                     <FlaskConical className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                     <span className="text-xs font-semibold">Pruebas</span>
-                </motion.button>
+                </motion.button> */}
 
                 {/* AJUSTES (1 COLUMNA DE ANCHO - 1 FILA DE ALTO) */}
-                <motion.button
+                {/* <motion.button
                     type="button"
                     variants={cardVariants}
                     whileHover={touchHover({ y: -2, scale: 1.02 })}
@@ -379,7 +381,7 @@ export default function Home() {
                 >
                     <Settings className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                     <span className="text-xs font-semibold">Ajustes</span>
-                </motion.button>
+                </motion.button> */}
             </motion.div>
 
             {/* MODAL / OVERLAY PARA MOSTRAR LA RAZÓN DE AMOR */}
