@@ -1,4 +1,4 @@
-import { Mail, Lock, Heart, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { loginUser } from '../../services/auth/authService';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import nearULogo from '../../assets/img/NearU.png';
 
 const loginSchema = z.object({
     email: z.string().email("Ingresa un correo electrónico válido"),
@@ -49,10 +50,11 @@ export default function Login() {
         <div className="min-h-screen bg-base-300 flex flex-col items-center justify-center px-4 py-8">
             <div className="w-full max-w-md">
                 <div className="flex flex-col items-center text-center mb-6 px-2">
-                    <div className="bg-primary/10 p-4 rounded-full mb-4 animate-pulse">
-                        <Heart
-                            size={32}
-                            className="text-primary fill-primary"
+                    <div className="mb-4">
+                        <img
+                            src={nearULogo}
+                            alt="NearU Logo"
+                            className="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-lg select-none object-contain"
                         />
                     </div>
 
