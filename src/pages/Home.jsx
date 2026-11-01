@@ -1,4 +1,4 @@
-import { BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, RotateCw, X, Mail } from 'lucide-react';
+import { MessageCircleHeart, BookHeart, CalendarHeart, StickyNote, CheckSquare, Sparkles, MapPin, Palette, FlaskConical, Settings, Heart, RotateCw, X, Mail } from 'lucide-react';
 import { touchHover, tapFeedback, mobileSpring } from '@/utils/motion';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -320,6 +320,21 @@ export default function Home() {
                             <span className="text-xs opacity-75 font-normal block">Toca para descubrir una razón</span>
                         </div>
                     </div>
+                </motion.button>
+
+				{/* DESDE SECUNDARIA - CHAT HISTÓRICO (2 COLUMNAS DE ANCHO) */}
+                <motion.button
+                    type="button"
+                    variants={cardVariants}
+                    whileHover={touchHover({ y: -2, scale: 1.015 })}
+                    whileTap={tapFeedback.card}
+                    onClick={() => navigate('/chat-archive')}
+                    className="btn btn-soft btn-primary col-span-2 min-h-20 h-full w-full rounded-3xl p-4 flex flex-row items-center justify-center gap-3 group transition-shadow duration-200 shadow-sm hover:shadow-md cursor-pointer border-none"
+                >
+                    <div className="p-2.5 rounded-2xl bg-primary/20 text-primary group-hover:scale-110 transition-transform duration-200">
+                        <MessageCircleHeart className="w-6 h-6 fill-primary/20 text-primary" />
+                    </div>
+                    <span className="text-sm sm:text-base font-bold text-base-content">Desde Secundaria</span>
                 </motion.button>
 
                 {/* JUEGOS (2 COLUMNAS DE ANCHO) */}

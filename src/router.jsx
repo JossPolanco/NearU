@@ -37,6 +37,7 @@ const DrawingPage = lazyRetry(() => import("./pages/drawer/DrawingPage"));
 const TestingPage = lazyRetry(() => import("./pages/TestingPage"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
 const Chat = lazyRetry(() => import("./pages/chat/Chat"));
+const ChatArchive = lazyRetry(() => import("./pages/chatArchive/ChatArchive"));
 const StarredMessages = lazyRetry(() => import("./pages/chat/StarredMessages"));
 const Tasks = lazyRetry(() => import("./pages/tasks/Tasks"));
 const TaskDetail = lazyRetry(() => import("./pages/tasks/TaskDetail"));
@@ -176,6 +177,12 @@ export const router = createBrowserRouter([
                 path: "/chat",
                 element: (
                     <LazyPage><Chat /></LazyPage>
+                )
+            },
+            {
+                path: "/chat-archive",
+                element: (
+                    <LazyPage><ChatArchive /></LazyPage>
                 )
             },
             {
